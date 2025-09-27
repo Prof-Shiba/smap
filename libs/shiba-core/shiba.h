@@ -30,7 +30,7 @@ typedef unsigned long long uint64;
 #define PI 3.14159265358979323846
 
 #if !defined(SHIBA_MEM_DEBUG_OFF)
-#define SHIBA_MEM_DEBUG
+//#define SHIBA_MEM_DEBUG
 #endif
 
 #ifdef SHIBA_MEM_DEBUG
