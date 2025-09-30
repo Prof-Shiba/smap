@@ -56,6 +56,7 @@ typedef unsigned long long uint64;
 
 extern void shiba_memory_debug_init(void (*lock)(void* mutex), void (*unlock)(void* mutex), void* mutex);
 extern void shiba_memory_debug_add(void* ptr, uint size, char* file, uint line);
+extern boolean shiba_memory_debug_remove(void* buf);
 extern void* shiba_memory_debug_malloc(uint size, char* file, uint line);
 extern void* shiba_memory_debug_realloc(void* ptr, uint size, char* file, uint line);
 extern void shiba_memory_debug_free(void* buffer);

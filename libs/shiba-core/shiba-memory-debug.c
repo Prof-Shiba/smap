@@ -154,8 +154,34 @@ void* shiba_memory_debug_realloc(void* ptr, uint size, char* file, uint line) {
   // TODO:
 }
 
+boolean shiba_memory_debug_remove(void* buf) {
+  for (int i = 0; i < shiba_alloc_line_count; i++) {
+    for (int j = 0; j < shiba_alloc_lines[i].alloc_count; j++)
+    {
+      if (shiba_alloc_lines[i].allocs[j].buffer == buf) {
+        for (int k = 0; k < SHIBA_MEM_OVER_ALLOC; k++)
+        {
+          if (((uint8* ) buf)[shiba_alloc_lines[i].allocs[j].size + k] != SHIBA_MEM_MAGIC_NUM)
+            break;
+
+          if (k < SHIBA_MEM_OVER_ALLOC)
+            fprintf(stderr, "MEMORY ERROR: Wrote past allocated buffer at line %u in file %s!\n", shiba_alloc_lines[i].line, shiba_alloc_lines[i].file);
+
+          shiba_alloc_lines[i].size -= shiba_alloc_lines[i].allocs[j].size;
+          shiba_alloc_lines[i].allocs[j] = shiba_alloc_lines[i].allocs[--shiba_alloc_lines[i].alloc_count];
+          shiba_alloc_lines[i].freed++;
+
+          return TRUE;
+        }
+      }
+    }
+  }
+  return FALSE;
+}
+
 void shiba_memory_debug_free(void* buffer) {
-  // TODO:
+  if (shiba_alloc_mutex)
+    shiba_alloc_mutex_lock(shiba_alloc_mutex);
 }
 
 void shiba_memory_debug_print(uint min_allocations) {
