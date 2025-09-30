@@ -27,6 +27,14 @@ typedef unsigned char boolean;
 typedef signed long long int64;
 typedef unsigned long long uint64;
 
+#if !defined(TRUE)
+#define TRUE 1
+#endif
+
+#if !defined(FALSE)
+#define FALSE 0
+#endif
+
 #define PI 3.14159265358979323846
 
 #if !defined(SHIBA_MEM_DEBUG_OFF)
@@ -47,8 +55,9 @@ typedef unsigned long long uint64;
 // we wrote outside of program memory.
 
 extern void shiba_memory_debug_init(void (*lock)(void* mutex), void (*unlock)(void* mutex), void* mutex);
-extern void shiba_memory_debug_malloc(uint size, char* file, uint line);
-extern void shiba_memory_debug_realloc(void* ptr, uint size, char* file, uint line);
+extern void shiba_memory_debug_add(void* ptr, uint size, char* file, uint line);
+extern void* shiba_memory_debug_malloc(uint size, char* file, uint line);
+extern void* shiba_memory_debug_realloc(void* ptr, uint size, char* file, uint line);
 extern void shiba_memory_debug_free(void* buffer);
 extern void shiba_memory_debug_print(uint min_allocations);
 extern void shiba_memory_debug_reset();
