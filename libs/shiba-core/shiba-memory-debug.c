@@ -182,6 +182,15 @@ boolean shiba_memory_debug_remove(void* buf) {
 void shiba_memory_debug_free(void* buffer) {
   if (shiba_alloc_mutex)
     shiba_alloc_mutex_lock(shiba_alloc_mutex);
+
+  if (!shiba_memory_debug_remove(buffer)) {
+    uint *pay_attention_bro = NULL;
+    pay_attention_bro[0] = 420;
+  }
+  free(buffer);
+
+  if (shiba_alloc_mutex)
+    shiba_alloc_mutex_unlock(shiba_alloc_mutex);
 }
 
 void shiba_memory_debug_print(uint min_allocations) {
