@@ -274,5 +274,15 @@ void shiba_memory_debug_print(uint min_allocations) {
 }
 
 void shiba_memory_debug_reset() {
-  // TODO:
+  if (shiba_alloc_mutex)
+    shiba_alloc_mutex_lock(shiba_alloc_mutex);
+
+  for (int i = 0; i < shiba_alloc_line_count; i++) {
+    free(shiba_alloc_lines[i].allocs);
+
+    shiba_alloc_line_count = 0;
+
+    if (shiba_alloc_mutex)
+      shiba_alloc_mutex_unlock(shiba_alloc_mutex);
+  }
 }
