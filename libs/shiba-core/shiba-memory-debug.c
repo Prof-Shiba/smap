@@ -284,3 +284,18 @@ void shiba_memory_debug_reset() {
   if (shiba_alloc_mutex)
     shiba_alloc_mutex_unlock(shiba_alloc_mutex);
 }
+
+uint32 shiba_memory_debug_mem_usage() {
+  uint sum = 0;
+  if (shiba_alloc_mutex)
+    shiba_alloc_mutex_lock(shiba_alloc_mutex);
+
+  for (int i = 0; i < shiba_alloc_line_count; i++) {
+    sum += shiba_alloc_lines[i].size;
+  }
+
+  if (shiba_alloc_mutex)
+    shiba_alloc_mutex_unlock(shiba_alloc_mutex);
+
+  return sum;
+}

@@ -63,6 +63,7 @@ extern void shiba_memory_debug_free(void* buffer);
 extern void shiba_memory_debug_print(uint min_allocations);
 extern void shiba_memory_debug_reset();
 extern boolean shiba_memory_debug();
+extern uint32 shiba_memory_debug_mem_usage();
 
 #define malloc(n) shiba_memory_debug_malloc(n, __FILE__, __LINE__)
 #define realloc(n, m) shiba_memory_debug_realloc(n, m, __FILE__, __LINE__)
