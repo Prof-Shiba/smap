@@ -151,24 +151,24 @@ void* shiba_memory_debug_malloc(uint size, char* file, uint line) {
 }
 
 boolean shiba_memory_debug_remove(void* buf) {
+  int k;
   for (int i = 0; i < shiba_alloc_line_count; i++) {
     for (int j = 0; j < shiba_alloc_lines[i].alloc_count; j++)
     {
-      if (shiba_alloc_lines[i].allocs[j].buffer == buf) {
-        for (int k = 0; k < SHIBA_MEM_OVER_ALLOC; k++)
-        {
+      if (shiba_alloc_lines[i].allocs[j].buffer == buf)
+      {
+        for (k = 0; k < SHIBA_MEM_OVER_ALLOC; k++)
           if (((uint8* ) buf)[shiba_alloc_lines[i].allocs[j].size + k] != SHIBA_MEM_MAGIC_NUM)
             break;
 
-          if (k < SHIBA_MEM_OVER_ALLOC)
-            fprintf(stderr, "MEMORY ERROR: Wrote past allocated buffer at line %u in file %s!\n", shiba_alloc_lines[i].line, shiba_alloc_lines[i].file);
+        if (k < SHIBA_MEM_OVER_ALLOC)
+          fprintf(stderr, "MEMORY ERROR: Wrote past allocated buffer at line %u in file %s!\n", shiba_alloc_lines[i].line, shiba_alloc_lines[i].file);
 
-          shiba_alloc_lines[i].size -= shiba_alloc_lines[i].allocs[j].size;
-          shiba_alloc_lines[i].allocs[j] = shiba_alloc_lines[i].allocs[--shiba_alloc_lines[i].alloc_count];
-          shiba_alloc_lines[i].freed++;
+        shiba_alloc_lines[i].size -= shiba_alloc_lines[i].allocs[j].size;
+        shiba_alloc_lines[i].allocs[j] = shiba_alloc_lines[i].allocs[--shiba_alloc_lines[i].alloc_count];
+        shiba_alloc_lines[i].freed++;
 
-          return TRUE;
-        }
+        return TRUE;
       }
     }
   }
@@ -184,15 +184,15 @@ void* shiba_memory_debug_realloc(void* ptr, uint size, char* file, uint line) {
   if (shiba_alloc_mutex)
     shiba_alloc_mutex_lock(shiba_alloc_mutex);
 
-  for (i = 0; i < shiba_alloc_line_count; i++) {
+  for (i = 0; i < shiba_alloc_line_count; i++)
+  {
     for (j = 0; j < shiba_alloc_lines[i].alloc_count; j++)
-    {
       if (shiba_alloc_lines[i].allocs[j].buffer == ptr)
         break;
 
-      if (j < shiba_alloc_lines[i].alloc_count)
-        break;
-    }
+    if (j < shiba_alloc_lines[i].alloc_count)
+      break;
+  }
     
     if (i == shiba_alloc_line_count) {
       fprintf(stderr, "MEMORY ERROR: Rellocation of pointer %p in %s line %u failed. Pointer was never allocated!\n", ptr, file, line);
@@ -202,8 +202,7 @@ void* shiba_memory_debug_realloc(void* ptr, uint size, char* file, uint line) {
         uint* buf = shiba_alloc_lines[i].allocs[j].buffer;
         for (k = 0; k < shiba_alloc_lines[i].allocs[j].size; k++) {
           if (&buf[k] == ptr)
-            printf("Trying to reallocate pointer of %u bytes (out of %u) into alloc made in %s on line %u!\n", k shiba_alloc_lines[i].allocs[j].size, shiba_alloc_lines[i].file, shiba_alloc_lines[i].line);
-        }
+            printf("Trying to reallocate pointer of %u bytes (out of %u) into alloc made in %s on line %u!\n", k, shiba_alloc_lines[i].allocs[j].size, shiba_alloc_lines[i].file, shiba_alloc_lines[i].line);
       }
     }
     exit(0);
@@ -277,12 +276,11 @@ void shiba_memory_debug_reset() {
   if (shiba_alloc_mutex)
     shiba_alloc_mutex_lock(shiba_alloc_mutex);
 
-  for (int i = 0; i < shiba_alloc_line_count; i++) {
+  for (int i = 0; i < shiba_alloc_line_count; i++)
     free(shiba_alloc_lines[i].allocs);
 
-    shiba_alloc_line_count = 0;
+  shiba_alloc_line_count = 0;
 
-    if (shiba_alloc_mutex)
-      shiba_alloc_mutex_unlock(shiba_alloc_mutex);
-  }
+  if (shiba_alloc_mutex)
+    shiba_alloc_mutex_unlock(shiba_alloc_mutex);
 }
