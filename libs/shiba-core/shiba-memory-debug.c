@@ -4,29 +4,32 @@
 #define SHIBA_MEM_DEBUG_OFF
 #include "shiba.h"
 
-#define SHIBA_MEM_OVER_ALLOC 32
-#define SHIBA_MEM_MAGIC_NUM 132
+#define SHIBA_MEM_OVER_ALLOC 32 // extra bytes, if someone writes into it, they overran their buffer
+#define SHIBA_MEM_MAGIC_NUM 132 // this is the value we use to test if it was written into
 
 extern void shiba_memory_debug_print(uint min_allocations);
 
 typedef struct {
   uint size;
   void* buffer;
-}STMemAllocBuf;
+}ST_MemAllocBuf;
 
 typedef struct {
-  STMemAllocBuf* allocs;
+  ST_MemAllocBuf* allocs;
   uint line;
   uint alloc_count;
-  uint alloc_allocated;
+  uint alloc_allocated; // capacity
   uint size;
   uint allocated;
   uint freed;
   char file[256];
-}STMemAllocLine;
+}ST_MemAllocLine;
 
-STMemAllocLine shiba_alloc_lines[1024];
+// global tracking array
+ST_MemAllocLine shiba_alloc_lines[1024];
+// track how many lines are in use
 uint shiba_alloc_line_count = 0;
+
 void* shiba_alloc_mutex = NULL;
 void (*shiba_alloc_mutex_lock)(void* mutex) = NULL;
 void (*shiba_alloc_mutex_unlock)(void* mutex) = NULL;
@@ -50,9 +53,12 @@ boolean shiba_memory_debug() {
       uint8* buf = shiba_alloc_lines[i].allocs[j].buffer;
       uint size = shiba_alloc_lines[i].allocs[j].size;
 
-      for (k = 0; k < SHIBA_MEM_OVER_ALLOC; k++)
+      // check if any of the extra allocated bytes are NOT
+      // our magic number. This means we wrote too far if so.
+      for (k = 0; k < SHIBA_MEM_OVER_ALLOC; k++) {
         if (buf[size + k] != SHIBA_MEM_MAGIC_NUM)
           break;
+      }
 
       if (k < SHIBA_MEM_OVER_ALLOC) {
         fprintf(stderr, "MEMORY ERROR: We wrote past the end of our allocated buffer at line %u in file %s!\n", shiba_alloc_lines[i].line, shiba_alloc_lines[i].file);
@@ -104,8 +110,10 @@ void shiba_memory_debug_add(void* ptr, uint size, char* file, uint line) {
   else {
     if (i < 1024) {
       shiba_alloc_lines[i].line = line;
-      for (j = 0; j < 255 && file[j] != 0; j++)
+
+      for (j = 0; j < 255 && file[j] != 0; j++) {
         shiba_alloc_lines[i].file[j] = file[j];
+      }
 
       shiba_alloc_lines[i].file[j] = 0;
       shiba_alloc_lines[i].alloc_allocated = 256;
@@ -139,8 +147,12 @@ void* shiba_memory_debug_malloc(uint size, char* file, uint line) {
     exit(0);
   }
 
-  for (uint i = 0; i < size + SHIBA_MEM_OVER_ALLOC; i++)
+  // initialize the entire allocation with 133s
+  // (canary bytes are 132), 133 means they havent written
+  // here yet
+  for (uint i = 0; i < size + SHIBA_MEM_OVER_ALLOC; i++) {
     ((uint8* ) ptr)[i] = SHIBA_MEM_MAGIC_NUM + 1;
+  }
 
   shiba_memory_debug_add(ptr, size, file, line);
 
@@ -157,9 +169,10 @@ boolean shiba_memory_debug_remove(void* buf) {
     {
       if (shiba_alloc_lines[i].allocs[j].buffer == buf)
       {
-        for (k = 0; k < SHIBA_MEM_OVER_ALLOC; k++)
+        for (k = 0; k < SHIBA_MEM_OVER_ALLOC; k++) {
           if (((uint8* ) buf)[shiba_alloc_lines[i].allocs[j].size + k] != SHIBA_MEM_MAGIC_NUM)
             break;
+        }
 
         if (k < SHIBA_MEM_OVER_ALLOC)
           fprintf(stderr, "MEMORY ERROR: Wrote past allocated buffer at line %u in file %s!\n", shiba_alloc_lines[i].line, shiba_alloc_lines[i].file);
@@ -245,7 +258,7 @@ void shiba_memory_debug_free(void* buffer) {
     shiba_alloc_mutex_lock(shiba_alloc_mutex);
 
   if (!shiba_memory_debug_remove(buffer)) {
-    uint *pay_attention_bro = NULL;
+    uint* pay_attention_bro = NULL;
     pay_attention_bro[0] = 420;
   }
   free(buffer);
