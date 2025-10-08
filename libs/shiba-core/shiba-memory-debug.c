@@ -271,7 +271,7 @@ void shiba_memory_debug_print(uint32 min_allocations) {
   if (shiba_alloc_mutex)
     shiba_alloc_mutex_lock(shiba_alloc_mutex);
 
-  printf("\n<-------------- MEMORY STATUS -------------->\n");
+  printf("\n<--------------------- MEMORY STATUS ---------------------->\n");
 
   for (int i = 0; i < shiba_alloc_line_count; i++) {
     if (min_allocations < shiba_alloc_lines[i].allocated) {
@@ -279,7 +279,7 @@ void shiba_memory_debug_print(uint32 min_allocations) {
       printf(" - Bytes allocated: %u\n - Allocations: %u\n - Frees: %u\n\n", shiba_alloc_lines[i].size, shiba_alloc_lines[i].allocated, shiba_alloc_lines[i].freed);
     }
   }
-  printf("\n<------------------------------------------->\n");
+  printf("<---------------------------------------------------------->\n");
 
   if (shiba_alloc_mutex)
     shiba_alloc_mutex_unlock(shiba_alloc_mutex);
