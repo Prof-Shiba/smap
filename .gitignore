@@ -1,0 +1,17 @@
+build/
+
+CMakeCache.txt
+CMakeFiles/
+smap
+*.out
+*.exe
+*.o
+*.a
+*.dll
+*.so
+Makefile
+
+.vs
+.vscode/
+.idea/
+.name
