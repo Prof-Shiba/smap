@@ -7,28 +7,28 @@
 #define SHIBA_MEM_OVER_ALLOC 32 // extra bytes, if someone writes into it, they overran their buffer
 #define SHIBA_MEM_MAGIC_NUM 132 // this is the value we use to test if it was written into
 
-extern void shiba_memory_debug_print(uint min_allocations);
+extern void shiba_memory_debug_print(uint32 min_allocations);
 
 typedef struct {
-  uint size;
+  uint32 size;
   void* buffer;
 }ST_MemAllocBuf;
 
 typedef struct {
   ST_MemAllocBuf* allocs;
-  uint line;
-  uint alloc_count;
-  uint alloc_allocated; // capacity
-  uint size;
-  uint allocated;
-  uint freed;
+  uint32 line;
+  uint32 alloc_count;
+  uint32 alloc_allocated; // capacity
+  uint32 size;
+  uint32 allocated;
+  uint32 freed;
   char file[256];
 }ST_MemAllocLine;
 
 // global tracking array
 ST_MemAllocLine shiba_alloc_lines[1024];
 // track how many lines are in use
-uint shiba_alloc_line_count = 0;
+uint32 shiba_alloc_line_count = 0;
 
 void* shiba_alloc_mutex = NULL;
 void (*shiba_alloc_mutex_lock)(void* mutex) = NULL;
@@ -42,7 +42,7 @@ void shiba_memory_debug_init(void (*lock)(void* mutex), void (*unlock)(void* mut
 
 boolean shiba_memory_debug() {
   boolean output = FALSE;
-  uint k;
+  uint32 k;
   
   if (shiba_alloc_mutex)
     shiba_alloc_mutex_lock(shiba_alloc_mutex);
@@ -51,7 +51,7 @@ boolean shiba_memory_debug() {
     for (int j = 0; j < shiba_alloc_lines[i].alloc_count; j++)
     {
       uint8* buf = shiba_alloc_lines[i].allocs[j].buffer;
-      uint size = shiba_alloc_lines[i].allocs[j].size;
+      uint32 size = shiba_alloc_lines[i].allocs[j].size;
 
       // check if any of the extra allocated bytes are NOT
       // our magic number. This means we wrote too far if so.
@@ -65,7 +65,7 @@ boolean shiba_memory_debug() {
 
         // kill it
         {
-          uint* pay_attention_bro = NULL;
+          uint32* pay_attention_bro = NULL;
           pay_attention_bro[0] = 69;
         }
 
@@ -80,8 +80,8 @@ boolean shiba_memory_debug() {
   return output;
 }
 
-void shiba_memory_debug_add(void* ptr, uint size, char* file, uint line) {
-  uint i, j;
+void shiba_memory_debug_add(void* ptr, uint32 size, char* file, uint32 line) {
+  uint32 i, j;
 
   for (i = 0; i < SHIBA_MEM_OVER_ALLOC; i++)
     ((uint8*) ptr)[size + i] = SHIBA_MEM_MAGIC_NUM;
@@ -129,7 +129,7 @@ void shiba_memory_debug_add(void* ptr, uint size, char* file, uint line) {
   }
 }
 
-void* shiba_memory_debug_malloc(uint size, char* file, uint line) {
+void* shiba_memory_debug_malloc(uint32 size, char* file, uint32 line) {
   void* ptr;
 
   if (shiba_alloc_mutex != NULL)
@@ -150,7 +150,7 @@ void* shiba_memory_debug_malloc(uint size, char* file, uint line) {
   // initialize the entire allocation with 133s
   // (canary bytes are 132), 133 means they havent written
   // here yet
-  for (uint i = 0; i < size + SHIBA_MEM_OVER_ALLOC; i++) {
+  for (uint32 i = 0; i < size + SHIBA_MEM_OVER_ALLOC; i++) {
     ((uint8* ) ptr)[i] = SHIBA_MEM_MAGIC_NUM + 1;
   }
 
@@ -188,8 +188,8 @@ boolean shiba_memory_debug_remove(void* buf) {
   return FALSE;
 }
 
-void* shiba_memory_debug_realloc(void* ptr, uint size, char* file, uint line) {
-  void* ptr2; uint i, j, k, move;
+void* shiba_memory_debug_realloc(void* ptr, uint32 size, char* file, uint32 line) {
+  void* ptr2; uint32 i, j, k, move;
 
   if (!ptr)
     return shiba_memory_debug_malloc(size, file, line);
@@ -212,7 +212,7 @@ void* shiba_memory_debug_realloc(void* ptr, uint size, char* file, uint line) {
 
       for (i = 0; i < shiba_alloc_line_count; i++)
       {
-        uint* buf = shiba_alloc_lines[i].allocs[j].buffer;
+        uint32* buf = shiba_alloc_lines[i].allocs[j].buffer;
         for (k = 0; k < shiba_alloc_lines[i].allocs[j].size; k++) {
           if (&buf[k] == ptr)
             printf("Trying to reallocate pointer of %u bytes (out of %u) into alloc made in %s on line %u!\n", k, shiba_alloc_lines[i].allocs[j].size, shiba_alloc_lines[i].file, shiba_alloc_lines[i].line);
@@ -258,7 +258,7 @@ void shiba_memory_debug_free(void* buffer) {
     shiba_alloc_mutex_lock(shiba_alloc_mutex);
 
   if (!shiba_memory_debug_remove(buffer)) {
-    uint* pay_attention_bro = NULL;
+    uint32* pay_attention_bro = NULL;
     pay_attention_bro[0] = 420;
   }
   free(buffer);
@@ -267,7 +267,7 @@ void shiba_memory_debug_free(void* buffer) {
     shiba_alloc_mutex_unlock(shiba_alloc_mutex);
 }
 
-void shiba_memory_debug_print(uint min_allocations) {
+void shiba_memory_debug_print(uint32 min_allocations) {
   if (shiba_alloc_mutex)
     shiba_alloc_mutex_lock(shiba_alloc_mutex);
 
@@ -299,7 +299,7 @@ void shiba_memory_debug_reset() {
 }
 
 uint32 shiba_memory_debug_mem_usage() {
-  uint sum = 0;
+  uint32 sum = 0;
   if (shiba_alloc_mutex)
     shiba_alloc_mutex_lock(shiba_alloc_mutex);
 

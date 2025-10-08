@@ -9,12 +9,6 @@
 #if !defined(TYPES_H)
 #define TYPES_H
 
-#if defined _WIN32
-typedef unsigned int uint;
-#else
-#include <sys/types.h>
-#endif
-
 typedef signed char int8;
 typedef unsigned char uint8;
 typedef signed short int16;
@@ -38,7 +32,7 @@ typedef unsigned long long uint64;
 #define PI 3.14159265358979323846
 
 #if !defined(SHIBA_MEM_DEBUG_OFF)
-//#define SHIBA_MEM_DEBUG
+#define SHIBA_MEM_DEBUG
 #endif
 
 #ifdef SHIBA_MEM_DEBUG
@@ -55,12 +49,12 @@ typedef unsigned long long uint64;
 // we wrote outside of program memory.
 
 extern void shiba_memory_debug_init(void (*lock)(void* mutex), void (*unlock)(void* mutex), void* mutex);
-extern void shiba_memory_debug_add(void* ptr, uint size, char* file, uint line);
+extern void shiba_memory_debug_add(void* ptr, uint32 size, char* file, uint32 line);
 extern boolean shiba_memory_debug_remove(void* buf);
-extern void* shiba_memory_debug_malloc(uint size, char* file, uint line);
-extern void* shiba_memory_debug_realloc(void* ptr, uint size, char* file, uint line);
+extern void* shiba_memory_debug_malloc(uint32 size, char* file, uint32 line);
+extern void* shiba_memory_debug_realloc(void* ptr, uint32 size, char* file, uint32 line);
 extern void shiba_memory_debug_free(void* buffer);
-extern void shiba_memory_debug_print(uint min_allocations);
+extern void shiba_memory_debug_print(uint32 min_allocations);
 extern void shiba_memory_debug_reset();
 extern boolean shiba_memory_debug();
 extern uint32 shiba_memory_debug_mem_usage();
@@ -77,6 +71,6 @@ extern uint32 shiba_memory_debug_mem_usage();
 /* | |___ >  <| |_| | | (_| | */
 /* |_____/_/\_\\__|_|  \__,_| */
 
-extern uint shiba_random_int(uint32 num); // pseudo-random num gen
+extern uint32 shiba_random_int(uint32 num); // pseudo-random num gen
 
 #endif
