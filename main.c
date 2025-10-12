@@ -1,21 +1,21 @@
 #include "./libs/shiba-core/shiba.h"
+#include "./libs/shiba-network/shiba-network.h"
 #include <stdio.h>
 
 int main(int argc, char *argv[])
 {
-  printf("smap starting...\n");
-  uint32 test = 218437; 
-  uint16 d = 2;
+  printf("smap starting...\n\n");
 
-  printf("%d\n", test);
-  printf("%d\n", d);
+  int32 port = -1;
+  char* addr = "192.168.12.27";
 
-  uint8* mal;
-  mal = malloc(sizeof(*mal));
+  if (is_valid_port(port))
+    printf("Valid port!\n");
+  else
+    printf("Invalid port!\n");
 
-  uint16* mal2;
-  mal2 = malloc(sizeof(*mal2));
-
-  free(mal2);
-  shiba_memory_debug_print(0);
+  if (is_valid_ipv4_address(addr))
+    printf("valid ipv4 address!\n");
+  else
+    printf("Invalid ipv4 addr!\n");
 }
