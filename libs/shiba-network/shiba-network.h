@@ -19,4 +19,4 @@
 #endif
 
 extern boolean is_valid_ipv4_address(const char* ip_addr);
-extern boolean is_valid_port(const uint16 port);
+extern boolean is_valid_port(const int32 port);
