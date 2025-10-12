@@ -18,5 +18,8 @@
 #include <arpa/inet.h>
 #endif
 
-extern boolean is_valid_ipv4_address(const char* ip_addr);
-extern boolean is_valid_port(const int32 port);
+extern boolean shiba_network_is_valid_ipv4_address(const char* ip_addr);
+extern boolean shiba_network_is_valid_port(const int32 port);
+
+// will need a create_socket function
+// and 

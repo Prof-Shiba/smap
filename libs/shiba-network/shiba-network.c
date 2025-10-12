@@ -1,7 +1,7 @@
 #include "shiba-network.h"
 
 
-boolean is_valid_ipv4_address(const char* ip_addr) {
+boolean shiba_network_is_valid_ipv4_address(const char* ip_addr) {
   if (!ip_addr)
     return 0;
 
@@ -14,7 +14,7 @@ boolean is_valid_ipv4_address(const char* ip_addr) {
   #endif
 }
 
-boolean is_valid_port(const int32 port) {
+boolean shiba_network_is_valid_port(const int32 port) {
   if (!port)
     return 0;
 
