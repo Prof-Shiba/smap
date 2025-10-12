@@ -14,4 +14,9 @@ else()
 endif()
 
 add_subdirectory(libs/shiba-core)
-target_link_libraries(${PROJECT_NAME} PRIVATE shiba-core)
+add_subdirectory(libs/shiba-network)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE
+  shiba-core
+  shiba-network
+)
