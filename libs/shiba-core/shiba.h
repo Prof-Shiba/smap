@@ -31,6 +31,8 @@ typedef unsigned long long uint64;
 
 #define PI 3.14159265358979323846
 
+#endif
+
 #if !defined(SHIBA_MEM_DEBUG_OFF)
 #define SHIBA_MEM_DEBUG
 #endif
@@ -72,5 +74,3 @@ extern uint32 shiba_memory_debug_mem_usage();
 /* |_____/_/\_\\__|_|  \__,_| */
 
 extern uint32 shiba_random_int(uint32 num); // pseudo-random num gen
-
-#endif
