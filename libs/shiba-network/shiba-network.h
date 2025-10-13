@@ -7,9 +7,7 @@
 #include <errno.h>
 
 #if defined _WIN32
-// windows stuff here
-// ill add this once i know
-// how to work with windows sockets
+#include <WinSock2.h>
 #else
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -18,8 +16,20 @@
 #include <arpa/inet.h>
 #endif
 
+typedef struct shiba_network_socket_t {
+  #if defined _WIN32
+      SOCKET handle;
+  #else
+      int handle;
+  #endif
+}shiba_network_socket_t;
+
 extern boolean shiba_network_is_valid_ipv4_address(const char* ip_addr);
 extern boolean shiba_network_is_valid_port(const int32 port);
 
-// will need a create_socket function
-// and 
+// mostly for windows currently
+extern boolean shiba_network_init(void);
+extern void shiba_network_cleanup(void);
+
+extern shiba_network_socket_t* shiba_network_create_socket(int AF, int TYPE, int PROTOCOL);
+extern void shiba_network_destroy_socket(shiba_network_socket_t* socket);
