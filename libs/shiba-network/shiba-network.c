@@ -35,11 +35,14 @@ boolean shiba_network_is_valid_port(const int32 port) {
 boolean shiba_network_init(void) {
 #if defined _WIN32
   int result = WSAStartup(MAKEWORD(2, 2), &wsa_data);
-  if (result != 0) return FALSE;
+  if (result != 0) {
+    fprintf(stderr, "WSA Startup failed! Exiting program...\n");
+    exit(1);
+  }
 
   return TRUE;
 #else
-  // we can do linux stuff here
+  return 0; // not doing anything on linux rn
 #endif
 }
 
@@ -51,9 +54,12 @@ void shiba_network_cleanup(void) {
 #endif
 }
 
+// NOTE: If we need sudo privs, then kill it with a message. otherwise
+// it is probably recoverable. we may run out of FD's when doing multi-threading.
+// It should be left up to the caller how to handle the error.
 shiba_network_socket_t* shiba_network_create_socket(int AF, int TYPE, int PROTOCOL) {
+shiba_network_socket_t* sock = malloc(sizeof(*sock));
 #if defined _WIN32
-  shiba_network_socket_t* sock = malloc(sizeof(*sock));
   SOCKET s = socket(AF, TYPE, PROTOCOL);
 
   // NOTE: check here if smth fails:
@@ -61,13 +67,20 @@ shiba_network_socket_t* shiba_network_create_socket(int AF, int TYPE, int PROTOC
   if (s == INVALID_SOCKET) {
     fprintf(stderr, "Failed to create a new socket! WSA Error code %d!\n", WSAGetLastError());
     WSACleanup();
-    exit(1);
+    return NULL;
   }
 
   sock->handle = s;
   return sock;
 #else
-  // linux
+  int socket_fd = socket(AF, TYPE, PROTOCOL);
+  if (socket_fd == -1) {
+    perror("Socket Creation Failed!\n");
+    return NULL;
+  }
+
+  sock->handle = socket_fd;
+  return sock;
 #endif
 }
 
@@ -83,6 +96,12 @@ void shiba_network_destroy_socket(shiba_network_socket_t* socket) {
   socket = NULL;
   return;
 #else
-  // linux
+  int close_result = close(socket->handle);
+  if (close_result != 0) {
+    perror("Failed to close socket handle!\n");
+    exit(1);
+  }
+
+  return;
 #endif
 }
