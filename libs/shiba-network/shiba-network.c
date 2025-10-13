@@ -1,5 +1,6 @@
 #include "shiba-network.h"
 
+static WSADATA wsa_data;
 
 boolean shiba_network_is_valid_ipv4_address(const char* ip_addr) {
   if (!ip_addr)
@@ -24,4 +25,26 @@ boolean shiba_network_is_valid_port(const int32 port) {
     return 0;
 
   return 1;
+}
+
+// This currently is basically only for windows,
+// but in the future, maybe some UNIX stuff can
+// get done here.
+boolean shiba_network_init(void) {
+#if defined _WIN32
+  int result = WSAStartup(MAKEWORD(2, 2), &wsa_data);
+  if (result != 0) return FALSE;
+
+  return TRUE;
+#else
+  // we can do linux stuff here
+#endif
+}
+
+void shiba_network_cleanup(void) {
+#if defined _WIN32
+  WSACleanup();
+#else
+  // linux stuff here
+#endif
 }
