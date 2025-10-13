@@ -6,16 +6,9 @@ int main(int argc, char *argv[])
 {
   printf("smap starting...\n\n");
 
-  int32 port = -1;
-  char* addr = "192.168.12.27";
+  char* addr = "110.128.59.255";
+  int32 port = 65535;
 
-  if (shiba_network_is_valid_port(port))
-    printf("Valid port!\n");
-  else
-    printf("Invalid port!\n");
-
-  if (shiba_network_is_valid_ipv4_address(addr))
-    printf("valid ipv4 address!\n");
-  else
-    printf("Invalid ipv4 addr!\n");
+  shiba_network_is_valid_ipv4_address(addr) ? printf("Valid IPv4 Address!\n") : printf("Invalid IPv4 Address!\n");
+  shiba_network_is_valid_port(port) ? printf("Valid Port!\n") : printf("Invalid Port!\n");
 }
