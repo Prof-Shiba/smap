@@ -14,6 +14,7 @@
 #include <sys/time.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <unistd.h>
 #endif
 
 typedef struct shiba_network_socket_t {
