@@ -1,6 +1,8 @@
 #include "shiba-network.h"
 
-static WSADATA wsa_data;
+#if defined _WIN32
+  static WSADATA wsa_data;
+#endif
 
 boolean shiba_network_is_valid_ipv4_address(const char* ip_addr) {
   if (!ip_addr)
