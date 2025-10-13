@@ -48,3 +48,39 @@ void shiba_network_cleanup(void) {
   // linux stuff here
 #endif
 }
+
+shiba_network_socket_t* shiba_network_create_socket(int AF, int TYPE, int PROTOCOL) {
+#if defined _WIN32
+  shiba_network_socket_t* sock = malloc(sizeof(*sock));
+  SOCKET s = socket(AF, TYPE, PROTOCOL);
+
+  // NOTE: check here if smth fails:
+  // https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-socket
+  if (s == INVALID_SOCKET) {
+    fprintf(stderr, "Failed to create a new socket! WSA Error code %d!\n", WSAGetLastError());
+    WSACleanup();
+    exit(1);
+  }
+
+  sock->handle = s;
+  return sock;
+#else
+  // linux
+#endif
+}
+
+void shiba_network_destroy_socket(shiba_network_socket_t* socket) {
+#if defined _WIN32
+  int close_result = closesocket(socket->handle);
+  if (close_result == SOCKET_ERROR) {
+    fprintf(stderr, "Close Socket failed with error: %d\n", WSAGetLastError());
+    WSACleanup();
+    exit(1);
+  }
+
+  socket = NULL;
+  return;
+#else
+  // linux
+#endif
+}
