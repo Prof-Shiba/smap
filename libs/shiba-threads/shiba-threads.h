@@ -7,3 +7,14 @@
 #else
   #include <pthread.h>
 #endif
+
+typedef struct shiba_threads_thread_t {
+#if defined _WIN32
+  HANDLE thread;
+  DWORD thread_id; // might be able to see which threads get blocked or have issues
+#else
+  pthread_t thread;
+#endif
+} shiba_threads_thread_t;
+
+// TODO: Shiba_thread create func, shiba_thread_join, shiba_thread_close, etc
