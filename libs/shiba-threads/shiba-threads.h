@@ -3,7 +3,7 @@
 #include "../shiba-core/shiba.h"
 
 #if defined _WIN32
-  // windows
+  #include <Windows.h>
 #else
   #include <pthread.h>
 #endif
