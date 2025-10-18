@@ -90,18 +90,16 @@ void shiba_network_destroy_socket(shiba_network_socket_t* socket) {
   if (close_result == SOCKET_ERROR) {
     fprintf(stderr, "Close Socket failed with error: %d\n", WSAGetLastError());
     WSACleanup();
+    free(socket);
     exit(1);
   }
-
-  socket = NULL;
-  return;
 #else
   int close_result = close(socket->handle);
   if (close_result != 0) {
     perror("Failed to close socket handle!\n");
+    free(socket);
     exit(1);
   }
-
-  return;
 #endif
+  free(socket);
 }
