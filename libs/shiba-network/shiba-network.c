@@ -42,7 +42,7 @@ boolean shiba_network_init(void) {
 
   return TRUE;
 #else
-  return 0; // not doing anything on linux rn
+  return TRUE; // not doing anything on linux rn
 #endif
 }
 
