@@ -5,7 +5,16 @@ uint32 shiba_threads_thread_create(shiba_threads_thread_t* handle, void* (*funct
 }
 
 uint32 shiba_threads_thread_join(shiba_threads_thread_t* handle, void** retval) {
-  // TODO:
+  #if defined _WIN32
+    DWORD ret = WaitForSingleObject(handle->thread, INFINITE);
+    if (ret != WAIT_OBJECT_0) return 1;
+
+    if (retval) 
+      *retval = NULL; // WARN: im just going to ignore it on windows for now...ill implement it if i need later
+
+    return 0;
+  #else
+  #endif
 }
 
 uint32 shiba_threads_thread_destroy(shiba_threads_thread_t* handle) {
