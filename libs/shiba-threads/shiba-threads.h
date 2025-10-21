@@ -18,4 +18,4 @@ typedef struct shiba_threads_thread_t {
 } shiba_threads_thread_t;
 
 // TODO: Shiba_thread create func, shiba_thread_join, shiba_thread_close, etc
-// Read this: http://www.cs.rpi.edu/academics/courses/netprog/WindowsThreads.html
+// Read this: https://web.archive.org/web/20121023005749/http://www.cs.rpi.edu/academics/courses/netprog/WindowsThreads.html 
