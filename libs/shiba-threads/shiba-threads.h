@@ -36,13 +36,21 @@ DWORD WINAPI function(LPVOID lpParam) {
 
 this needs to be converted^
 */
+
+// Creates a thread, returns 0 on success
 uint32 shiba_threads_thread_create(shiba_threads_thread_t* handle, void* (*function) (void*), void* arg);
+// Join thread, returns 0 on success
 uint32 shiba_threads_thread_join(shiba_threads_thread_t* handle, void** retval);
+// Destroy a thread, returns 0 on success. shouldn't fail unless you pass an invalid thread
 uint32 shiba_threads_thread_destroy(shiba_threads_thread_t* handle);
 
+// init a mutex, returns 0 on success
 uint32 shiba_threads_mutex_init(shiba_threads_mutex_t* handle);
+// lock a mutex, returns 0 on success
 uint32 shiba_threads_mutex_lock(shiba_threads_mutex_t* handle);
+// unlock a mutex, returns 0 on success
 uint32 shiba_threads_mutex_unlock(shiba_threads_mutex_t* handle);
+// destroy a mutex, returns 0 on success. shouldn't fail unless you passed an invalid mutex
 uint32 shiba_threads_mutex_destroy(shiba_threads_mutex_t* handle);
 
 // TODO: Shiba_thread create func, shiba_thread_join, shiba_thread_close, etc
