@@ -14,11 +14,16 @@ uint32 shiba_threads_thread_join(shiba_threads_thread_t* handle, void** retval) 
 
     return 0;
   #else
+    // linux
   #endif
 }
 
 void shiba_threads_thread_destroy(shiba_threads_thread_t* handle) {
-  // TODO:
+  #if defined _WIN32
+    ExitThread(handle->thread);
+  #else
+    // linux
+  #endif
 }
 
 uint32 shiba_threads_mutex_init(shiba_threads_mutex_t* handle) {
@@ -34,11 +39,22 @@ uint32 shiba_threads_mutex_init(shiba_threads_mutex_t* handle) {
 }
 
 uint32 shiba_threads_mutex_lock(shiba_threads_mutex_t* handle) {
-  // TODO:
+  #if defined _WIN32
+  DWORD ret = WaitForSingleObject(handle->mutex, INFINITE);
+  if (ret != WAIT_OBJECT_0) return 1;
+  return 0;
+  #else
+    // linux
+  #endif
 }
 
 uint32 shiba_threads_mutex_unlock(shiba_threads_mutex_t* handle) {
-  // TODO:
+  #if defined _WIN32
+    if (!ReleaseMutex(handle->mutex)) return 1;
+    return 0;
+  #else
+    // linux
+  #endif
 }
 
 uint32 shiba_threads_mutex_destroy(shiba_threads_mutex_t* handle) {
