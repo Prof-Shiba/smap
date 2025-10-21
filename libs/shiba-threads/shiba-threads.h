@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../shiba-core/shiba.h"
+#include <stdio.h>
 
 #if defined _WIN32
   #include <Windows.h>
@@ -35,14 +36,14 @@ DWORD WINAPI function(LPVOID lpParam) {
 
 this needs to be converted^
 */
-uint32 shiba_threads_thread_create(shiba_threads_thread_t* thread, void* (*function) (void*), void* arg);
-uint32 shiba_threads_thread_join(shiba_threads_thread_t* thread, void** retval);
-uint32 shiba_threads_thread_destroy(shiba_threads_thread_t* thread);
+uint32 shiba_threads_thread_create(shiba_threads_thread_t* handle, void* (*function) (void*), void* arg);
+uint32 shiba_threads_thread_join(shiba_threads_thread_t* handle, void** retval);
+uint32 shiba_threads_thread_destroy(shiba_threads_thread_t* handle);
 
-uint32 shiba_threads_mutex_init(shiba_threads_mutex_t* mutex);
-uint32 shiba_threads_mutex_lock(shiba_threads_mutex_t* mutex);
-uint32 shiba_threads_mutex_unlock(shiba_threads_mutex_t* mutex);
-uint32 shiba_threads_mutex_destroy(shiba_threads_mutex_t* mutex);
+uint32 shiba_threads_mutex_init(shiba_threads_mutex_t* handle);
+uint32 shiba_threads_mutex_lock(shiba_threads_mutex_t* handle);
+uint32 shiba_threads_mutex_unlock(shiba_threads_mutex_t* handle);
+uint32 shiba_threads_mutex_destroy(shiba_threads_mutex_t* handle);
 
 // TODO: Shiba_thread create func, shiba_thread_join, shiba_thread_close, etc
 // Read this: https://web.archive.org/web/20121023005749/http://www.cs.rpi.edu/academics/courses/netprog/WindowsThreads.html 
