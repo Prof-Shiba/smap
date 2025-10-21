@@ -41,8 +41,8 @@ this needs to be converted^
 uint32 shiba_threads_thread_create(shiba_threads_thread_t* handle, void* (*function) (void*), void* arg);
 // Join thread, returns 0 on success
 uint32 shiba_threads_thread_join(shiba_threads_thread_t* handle, void** retval);
-// Destroy a thread, returns 0 on success. shouldn't fail unless you pass an invalid thread
-uint32 shiba_threads_thread_destroy(shiba_threads_thread_t* handle);
+// Destroy a thread
+void shiba_threads_thread_destroy(shiba_threads_thread_t* handle);
 
 // init a mutex, returns 0 on success
 uint32 shiba_threads_mutex_init(shiba_threads_mutex_t* handle);

@@ -17,7 +17,7 @@ uint32 shiba_threads_thread_join(shiba_threads_thread_t* handle, void** retval) 
   #endif
 }
 
-uint32 shiba_threads_thread_destroy(shiba_threads_thread_t* handle) {
+void shiba_threads_thread_destroy(shiba_threads_thread_t* handle) {
   // TODO:
 }
 
