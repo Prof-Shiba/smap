@@ -53,7 +53,6 @@ uint32 shiba_threads_mutex_unlock(shiba_threads_mutex_t* handle);
 // destroy a mutex, returns 0 on success. shouldn't fail unless you passed an invalid mutex
 uint32 shiba_threads_mutex_destroy(shiba_threads_mutex_t* handle);
 
-// TODO: Shiba_thread create func, shiba_thread_join, shiba_thread_close, etc
 // Read this: https://web.archive.org/web/20121023005749/http://www.cs.rpi.edu/academics/courses/netprog/WindowsThreads.html 
 
 /*
@@ -70,27 +69,5 @@ HANDLE CreateThread(
 
 example:
 HANDLE CreateThread(NULL, 0, &func_here, &arg_to_func, 0, &ptr_to_thread_id); // returns a HANDLE if success, NULL if fail
-
-windows equivalent to pthread_join:
-
-DWORD WaitForSingleObject(
-  HANDLE hHandle,        // handle to object to wait for
-  DWORD dwMilliseconds   // time-out interval in milliseconds
-);
-
-ghMutex = CreateMutex( 
-    NULL,              // default security attributes - USE NULL
-    FALSE,             // initially not owned - USE FALSE
-    NULL);             // unnamed mutex - USE NULL
-
-if (ghMutex == NULL) 
-{
-    printf("CreateMutex error: %d\n", GetLastError());
-    return 1;
-}
-
-CloseHandle(aThread[i]);
-CloseHandle(ghMutex);
-
 */
 
