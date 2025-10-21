@@ -26,6 +26,15 @@ typedef struct shiba_threads_mutex_t {
 
 // NOTE: windows wants DWORD WINAPI ThreadFunc(LPVOID lpParam) where DWORD = int32 and LPVOID is just a void*
 // WINAPI should just be like __stdcall or something
+
+/*
+DWORD WINAPI function(LPVOID lpParam) {
+  printf("some text\n");
+  return 0;
+}
+
+this needs to be converted^
+*/
 uint32 shiba_threads_thread_create(shiba_threads_thread_t* thread, void* (*function) (void*), void* arg);
 uint32 shiba_threads_thread_join(shiba_threads_thread_t* thread, void** retval);
 uint32 shiba_threads_thread_destroy(shiba_threads_thread_t* thread);
