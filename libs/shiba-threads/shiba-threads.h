@@ -7,13 +7,14 @@
   #include <Windows.h>
 #else
   #include <pthread.h>
+  #include <semaphore.h>
 #endif
 
 #if defined _WIN32
   typedef struct shiba_threads_win_convert_t {
     void* arg;
     void* (*function) (void*);
-    uintptr_t result;
+    uintptr_t result; // shoutout to zorky for helping with this :)
   }shiba_threads_win_convert_t;
 
   static DWORD WINAPI shiba_threads_windows_thread_create(LPVOID param) {
@@ -25,6 +26,7 @@
   }
 #endif
 
+// THREAD TYPE
 typedef struct shiba_threads_thread_t {
 #if defined _WIN32
   HANDLE thread;
@@ -34,6 +36,7 @@ typedef struct shiba_threads_thread_t {
 #endif
 } shiba_threads_thread_t;
 
+// MUTEX TYPE
 typedef struct shiba_threads_mutex_t {
 #if defined _WIN32
   HANDLE mutex;
@@ -41,6 +44,15 @@ typedef struct shiba_threads_mutex_t {
   pthread_mutex_t mutex;
 #endif
 } shiba_threads_mutex_t;
+
+// SEMAPHORE TYPE
+typedef struct shiba_threads_sem_t {
+#if defined _WIN32
+  HANDLE sem;
+#else
+  sem_t sem;
+#endif
+} shiba_threads_sem_t;
 
 // Creates a thread, returns 0 on success
 uint32 shiba_threads_thread_create(shiba_threads_thread_t* handle, void* (*function) (void*), void* arg);
@@ -55,3 +67,23 @@ uint32 shiba_threads_mutex_lock(shiba_threads_mutex_t* handle);
 uint32 shiba_threads_mutex_unlock(shiba_threads_mutex_t* handle);
 // destroy a mutex, returns 0 on success. shouldn't fail unless you passed an invalid mutex
 uint32 shiba_threads_mutex_destroy(shiba_threads_mutex_t* handle);
+
+// creates a semaphore, returns 0 on success, 1 on failure. If shared is 0, semaphore is shared between threads of a process,
+// and must be visible to all threads. If non-zero, it's shared between process, and must be in region of shared memory.
+uint32 shiba_threads_semaphore_init(shiba_threads_sem_t* handle, const char* name, uint8 shared, uint32 value); // NOTE: this signature might need to change
+// locks the semaphore pointed to by handle. returns 0 on success
+uint32 shiba_threads_semaphore_wait(shiba_threads_sem_t* handle);
+// unlocks semaphore pointed to by handle. returns 0 on success.
+uint32 shiba_threads_semaphore_post(shiba_threads_sem_t* handle);
+// destroys a semaphore, returns 0 on success, 1 on failure
+uint32 shiba_threads_semaphore_destroy(shiba_threads_sem_t* handle);
+
+/*
+windows: 
+ HANDLE CreateSemaphoreA(
+  [in, optional] LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
+  [in]           LONG                  lInitialCount,
+  [in]           LONG                  lMaximumCount,
+  [in, optional] LPCSTR                lpName
+);
+ */
