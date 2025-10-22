@@ -36,7 +36,6 @@ boolean shiba_network_init(void) {
 #if defined _WIN32
   int result = WSAStartup(MAKEWORD(2, 2), &wsa_data);
   if (result != 0) {
-    fprintf(stderr, "WSA Startup failed! Exiting program...\n");
     exit(1);
   }
 
@@ -65,7 +64,6 @@ shiba_network_socket_t* sock = malloc(sizeof(*sock));
   // NOTE: check here if smth fails:
   // https://learn.microsoft.com/en-us/windows/win32/api/winsock2/nf-winsock2-socket
   if (s == INVALID_SOCKET) {
-    fprintf(stderr, "Failed to create a new socket! WSA Error code %d!\n", WSAGetLastError());
     WSACleanup();
     return NULL;
   }
@@ -75,7 +73,6 @@ shiba_network_socket_t* sock = malloc(sizeof(*sock));
 #else
   int socket_fd = socket(AF, TYPE, PROTOCOL);
   if (socket_fd == -1) {
-    perror("Socket Creation Failed!\n");
     return NULL;
   }
 
@@ -88,7 +85,6 @@ void shiba_network_destroy_socket(shiba_network_socket_t* socket) {
 #if defined _WIN32
   int close_result = closesocket(socket->handle);
   if (close_result == SOCKET_ERROR) {
-    fprintf(stderr, "Close Socket failed with error: %d\n", WSAGetLastError());
     WSACleanup();
     free(socket);
     exit(1);
@@ -96,7 +92,6 @@ void shiba_network_destroy_socket(shiba_network_socket_t* socket) {
 #else
   int close_result = close(socket->handle);
   if (close_result != 0) {
-    perror("Failed to close socket handle!\n");
     free(socket);
     exit(1);
   }
