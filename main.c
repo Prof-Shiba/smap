@@ -14,6 +14,7 @@ void* function(void* arg) {
     j++;
   }
   shiba_threads_mutex_unlock(&mutex);
+  return NULL;
 }
 
 int main(int argc, char* argv[])
