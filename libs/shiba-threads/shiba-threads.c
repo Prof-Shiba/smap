@@ -94,6 +94,24 @@ uint32 shiba_threads_mutex_destroy(shiba_threads_mutex_t* handle) {
   #endif
 }
 
+uint32 shiba_threads_semaphore_post(shiba_threads_sem_t* handle) {
+  #if defined _WIN32
+    // windows
+  #else
+    if (sem_post(&handle->sem) != 0) return 1;
+    return 0;
+  #endif
+}
+
+uint32 shiba_threads_semaphore_wait(shiba_threads_sem_t* handle) {
+  #if defined _WIN32
+    // WaitForSingleObject?
+  #else
+    if (sem_wait(&handle->sem) != 0) return 1;
+    return 0;
+  #endif
+}
+
 uint32 shiba_threads_semaphore_destroy(shiba_threads_sem_t* handle) {
   #if defined _WIN32
     if (!CloseHandle(handle->sem)) return 1;
