@@ -1,7 +1,27 @@
 #include "./shiba-threads.h"
 
 uint32 shiba_threads_thread_create(shiba_threads_thread_t* handle, void* (*function) (void*), void* arg) {
-  // TODO:
+  #if defined _WIN32
+    shiba_threads_win_convert_t* win = malloc(sizeof(*win));
+    if (!win) return 1;
+
+    win->arg = arg;
+    win->function = function;
+    win->result = 0;
+
+    handle->result_context = win;
+    handle->thread = CreateThread(NULL, 0, shiba_threads_windows_thread_create, win, 0, NULL);
+
+    if (handle->thread == NULL) {
+      free(win);
+      handle->result_context = NULL;
+      return 1;
+    }
+
+    return 0;
+  #else
+    // linux
+  #endif
 }
 
 uint32 shiba_threads_thread_join(shiba_threads_thread_t* handle, void** retval) {
@@ -10,17 +30,15 @@ uint32 shiba_threads_thread_join(shiba_threads_thread_t* handle, void** retval) 
     if (ret != WAIT_OBJECT_0) return 1;
 
     if (retval) 
-      *retval = NULL; // WARN: im just going to ignore it on windows for now...ill implement it if i need later
+      *retval = (void*)handle->result_context->result;
+
+    free(handle->result_context);
+    handle->result_context = NULL;
+
+    CloseHandle(handle->thread);
+    handle->thread = NULL;
 
     return 0;
-  #else
-    // linux
-  #endif
-}
-
-void shiba_threads_thread_destroy(shiba_threads_thread_t* handle) {
-  #if defined _WIN32
-    ExitThread(handle->thread);
   #else
     // linux
   #endif
