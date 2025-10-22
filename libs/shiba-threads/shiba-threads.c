@@ -20,7 +20,9 @@ uint32 shiba_threads_thread_create(shiba_threads_thread_t* handle, void* (*funct
 
     return 0;
   #else
-    // linux
+    if (pthread_create(&handle->thread, NULL, function, arg) != 0)
+        return 1;
+    return 0;
   #endif
 }
 
@@ -40,7 +42,8 @@ uint32 shiba_threads_thread_join(shiba_threads_thread_t* handle, void** retval) 
 
     return 0;
   #else
-    // linux
+    if (pthread_join(handle->thread, retval) != 0) return 1;
+    return 0;
   #endif
 }
 
@@ -52,7 +55,8 @@ uint32 shiba_threads_mutex_init(shiba_threads_mutex_t* handle) {
 
   return 0;
   #else
-    // linux
+    pthread_mutex_init(&handle->mutex, NULL); // this function always returns 0
+    return 0;
   #endif
 }
 
@@ -62,7 +66,8 @@ uint32 shiba_threads_mutex_lock(shiba_threads_mutex_t* handle) {
   if (ret != WAIT_OBJECT_0) return 1;
   return 0;
   #else
-    // linux
+    if (pthread_mutex_lock(&handle->mutex) != 0) return 1;
+    return 0;
   #endif
 }
 
@@ -72,6 +77,8 @@ uint32 shiba_threads_mutex_unlock(shiba_threads_mutex_t* handle) {
     return 0;
   #else
     // linux
+    if (pthread_mutex_unlock(&handle->mutex) != 0) return 1;
+    return 0;
   #endif
 }
 
@@ -81,5 +88,7 @@ uint32 shiba_threads_mutex_destroy(shiba_threads_mutex_t* handle) {
     return 0;
   #else
     // linux
+    if (pthread_mutex_destroy(&handle->mutex) != 0) return 1;
+    return 0;
   #endif
 }
