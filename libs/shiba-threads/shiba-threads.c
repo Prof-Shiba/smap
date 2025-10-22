@@ -1,4 +1,5 @@
 #include "./shiba-threads.h"
+#include <semaphore.h>
 
 uint32 shiba_threads_thread_create(shiba_threads_thread_t* handle, void* (*function) (void*), void* arg) {
   #if defined _WIN32
@@ -89,6 +90,17 @@ uint32 shiba_threads_mutex_destroy(shiba_threads_mutex_t* handle) {
   #else
     // linux
     if (pthread_mutex_destroy(&handle->mutex) != 0) return 1;
+    return 0;
+  #endif
+}
+
+uint32 shiba_threads_semaphore_destroy(shiba_threads_sem_t* handle) {
+  #if defined _WIN32
+    if (!CloseHandle(handle->sem)) return 1;
+    return 0;
+  #else
+    if (sem_destroy(&handle->sem) != 0)
+        return 1;
     return 0;
   #endif
 }
