@@ -1,5 +1,4 @@
 #include "./shiba-threads.h"
-#include <semaphore.h>
 
 uint32 shiba_threads_thread_create(shiba_threads_thread_t* handle, void* (*function) (void*), void* arg) {
   #if defined _WIN32
@@ -77,7 +76,6 @@ uint32 shiba_threads_mutex_unlock(shiba_threads_mutex_t* handle) {
     if (!ReleaseMutex(handle->mutex)) return 1;
     return 0;
   #else
-    // linux
     if (pthread_mutex_unlock(&handle->mutex) != 0) return 1;
     return 0;
   #endif
@@ -88,33 +86,51 @@ uint32 shiba_threads_mutex_destroy(shiba_threads_mutex_t* handle) {
     if (!CloseHandle(handle->mutex)) return 1;
     return 0;
   #else
-    // linux
     if (pthread_mutex_destroy(&handle->mutex) != 0) return 1;
     return 0;
   #endif
 }
 
-uint32 shiba_threads_semaphore_post(shiba_threads_sem_t* handle) {
+shiba_threads_semaphore_t* shiba_threads_semaphore_init(const char* name, uint32 init_value) {
+  shiba_threads_semaphore_t* handle = malloc(sizeof(*handle));
   #if defined _WIN32
-    // windows
+    handle->sem = CreateSemaphore(NULL, init_value, init_value, name);
+    if (handle->sem == ERROR_ALREADY_EXISTS || handle->sem == NULL) return NULL;
+    return handle;
+  #else
+    // Linux. If name != null, do call sem_open, else call sem_init. Use 0600 perms. Prepend a / to the beginning of name.
+  #endif
+}
+
+uint32 shiba_threads_semaphore_post(shiba_threads_semaphore_t* handle) {
+  #if defined _WIN32
+  if (ReleaseSemaphore(handle->sem, 1, NULL) == 0) return 1;
+  return 0;
   #else
     if (sem_post(&handle->sem) != 0) return 1;
     return 0;
   #endif
 }
 
-uint32 shiba_threads_semaphore_wait(shiba_threads_sem_t* handle) {
+uint32 shiba_threads_semaphore_wait(shiba_threads_semaphore_t* handle) {
   #if defined _WIN32
-    // WaitForSingleObject?
+    DWORD ret = WaitForSingleObject(handle->sem, INFINITE);
+    if (ret != WAIT_OBJECT_0) return 1;
+    return 0;
   #else
     if (sem_wait(&handle->sem) != 0) return 1;
     return 0;
   #endif
 }
 
-uint32 shiba_threads_semaphore_destroy(shiba_threads_sem_t* handle) {
+uint32 shiba_threads_semaphore_destroy(shiba_threads_semaphore_t* handle) {
   #if defined _WIN32
-    if (!CloseHandle(handle->sem)) return 1;
+    if (!CloseHandle(handle->sem)) {
+      free(handle);
+      return 1;
+    }
+
+    free(handle);
     return 0;
   #else
     if (sem_destroy(&handle->sem) != 0)
