@@ -58,6 +58,7 @@ void shiba_network_cleanup(void) {
 // It should be left up to the caller how to handle the error.
 shiba_network_socket_t* shiba_network_create_socket(int AF, int TYPE, int PROTOCOL) {
 shiba_network_socket_t* sock = malloc(sizeof(*sock));
+if (!sock) return NULL;
 #if defined _WIN32
   SOCKET s = socket(AF, TYPE, PROTOCOL);
 
@@ -82,6 +83,7 @@ shiba_network_socket_t* sock = malloc(sizeof(*sock));
 }
 
 void shiba_network_destroy_socket(shiba_network_socket_t* socket) {
+if (!socket) return;
 #if defined _WIN32
   int close_result = closesocket(socket->handle);
   if (close_result == SOCKET_ERROR) {
