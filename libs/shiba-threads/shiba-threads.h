@@ -46,13 +46,13 @@ typedef struct shiba_threads_mutex_t {
 } shiba_threads_mutex_t;
 
 // SEMAPHORE TYPE
-typedef struct shiba_threads_sem_t {
+typedef struct shiba_threads_semaphore_t {
 #if defined _WIN32
   HANDLE sem;
 #else
   sem_t sem;
 #endif
-} shiba_threads_sem_t;
+} shiba_threads_semaphore_t;
 
 // Creates a thread, returns 0 on success
 uint32 shiba_threads_thread_create(shiba_threads_thread_t* handle, void* (*function) (void*), void* arg);
@@ -68,22 +68,11 @@ uint32 shiba_threads_mutex_unlock(shiba_threads_mutex_t* handle);
 // destroy a mutex, returns 0 on success. shouldn't fail unless you passed an invalid mutex
 uint32 shiba_threads_mutex_destroy(shiba_threads_mutex_t* handle);
 
-// creates a semaphore, returns 0 on success, 1 on failure. If shared is 0, semaphore is shared between threads of a process,
-// and must be visible to all threads. If non-zero, it's shared between process, and must be in region of shared memory.
-uint32 shiba_threads_semaphore_init(shiba_threads_sem_t* handle, const char* name, uint8 shared, uint32 value); // NOTE: this signature might need to change
+// creates a semaphore. Returns a semaphore on success, NULL on fail.
+shiba_threads_semaphore_t* shiba_threads_semaphore_init(const char* name, uint32 init_value);
 // locks the semaphore pointed to by handle. returns 0 on success
-uint32 shiba_threads_semaphore_wait(shiba_threads_sem_t* handle);
+uint32 shiba_threads_semaphore_wait(shiba_threads_semaphore_t* handle);
 // unlocks semaphore pointed to by handle. returns 0 on success.
-uint32 shiba_threads_semaphore_post(shiba_threads_sem_t* handle);
-// destroys a semaphore, returns 0 on success, 1 on failure
-uint32 shiba_threads_semaphore_destroy(shiba_threads_sem_t* handle);
-
-/*
-windows: 
- HANDLE CreateSemaphoreA(
-  [in, optional] LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
-  [in]           LONG                  lInitialCount,
-  [in]           LONG                  lMaximumCount,
-  [in, optional] LPCSTR                lpName
-);
- */
+uint32 shiba_threads_semaphore_post(shiba_threads_semaphore_t* handle);
+// Takes a semaphore handle. returns 0 on success, 1 on failure
+uint32 shiba_threads_semaphore_destroy(shiba_threads_semaphore_t* handle);
