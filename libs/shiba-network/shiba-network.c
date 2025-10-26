@@ -6,13 +6,13 @@
 
 boolean shiba_network_is_valid_ipv4_address(const char* ip_addr) {
   if (!ip_addr)
-    return 0;
+    return 1;
 
 #ifdef _WIN32
   int result = inet_addr(ip_addr);
   if (result == INADDR_NONE || result == INADDR_ANY)
-      return 0;
-  return 1;
+      return 1;
+  return 0;
 #else
   struct in_addr addr;
   return inet_pton(AF_INET, ip_addr, &addr) == 1;
@@ -21,12 +21,12 @@ boolean shiba_network_is_valid_ipv4_address(const char* ip_addr) {
 
 boolean shiba_network_is_valid_port(const int32 port) {
   if (!port)
-    return 0;
+    return 1;
 
   if (port < 1 || port > 65535)
-    return 0;
+    return 1;
 
-  return 1;
+  return 0;
 }
 
 // This currently is basically only for windows,
@@ -36,6 +36,7 @@ boolean shiba_network_init(void) {
 #if defined _WIN32
   int result = WSAStartup(MAKEWORD(2, 2), &wsa_data);
   if (result != 0) {
+    fprintf(stderr, "WSA Startup Failed! Error: %d\n", GetLastError());
     exit(1);
   }
 
@@ -92,11 +93,7 @@ if (!socket) return;
     exit(1);
   }
 #else
-  int close_result = close(socket->handle);
-  if (close_result != 0) {
-    free(socket);
-    exit(1);
-  }
+  close(socket->handle);
 #endif
   free(socket);
 }
