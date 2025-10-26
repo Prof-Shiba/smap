@@ -129,11 +129,11 @@ uint32 shiba_threads_semaphore_wait(shiba_threads_semaphore_t* handle) {
 uint32 shiba_threads_semaphore_destroy(shiba_threads_semaphore_t* handle) {
   #if defined _WIN32
     if (!CloseHandle(handle->sem)) {
-      free(handle);
+      if (handle) free(handle);
       return 1;
     }
 
-    free(handle);
+    if (handle) free(handle);
     return 0;
   #else
     if (sem_destroy(&handle->sem) != 0)
