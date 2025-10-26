@@ -95,7 +95,10 @@ shiba_threads_semaphore_t* shiba_threads_semaphore_init(const char* name, uint32
   shiba_threads_semaphore_t* handle = malloc(sizeof(*handle));
   #if defined _WIN32
     handle->sem = CreateSemaphore(NULL, init_value, init_value, name);
-    if (handle->sem == ERROR_ALREADY_EXISTS || handle->sem == NULL) return NULL;
+    if (handle->sem == ERROR_ALREADY_EXISTS || handle->sem == NULL) {
+      free(handle);
+      return NULL;
+    }
     return handle;
   #else
     // Linux. If name != null, do call sem_open, else call sem_init. Use 0600 perms. Prepend a / to the beginning of name.
