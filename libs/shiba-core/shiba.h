@@ -1,4 +1,6 @@
 #pragma once
+#include <stdio.h>
+#include <stdlib.h>
 /*  _____                       */
 /* |_   _|   _ _ __   ___  ___  */
 /*   | || | | | '_ \ / _ \/ __| */
