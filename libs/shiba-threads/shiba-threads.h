@@ -2,6 +2,7 @@
 
 #include "../shiba-core/shiba.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 #if defined _WIN32
   #include <Windows.h>
