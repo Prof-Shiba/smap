@@ -99,7 +99,7 @@ uint32 shiba_threads_mutex_destroy(shiba_threads_mutex_t* handle) {
 
 shiba_threads_semaphore_t* shiba_threads_semaphore_init(const char* name, uint32 init_value) {
   shiba_threads_semaphore_t* handle = malloc(sizeof(*handle));
-  if (!handle) return 2;
+  if (!handle) return NULL;
   #if defined _WIN32
     handle->sem = CreateSemaphore(NULL, init_value, init_value, name);
     if (handle->sem == ERROR_ALREADY_EXISTS || handle->sem == NULL) {
