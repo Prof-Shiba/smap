@@ -58,8 +58,7 @@ uint32 shiba_threads_mutex_init(shiba_threads_mutex_t* handle) {
 
   return 0;
   #else
-    pthread_mutex_init(&handle->mutex, NULL); // this function always returns 0
-    return 0;
+    return pthread_mutex_init(&handle->mutex, NULL); // this function always returns 0
   #endif
 }
 
@@ -108,7 +107,32 @@ shiba_threads_semaphore_t* shiba_threads_semaphore_init(const char* name, uint32
     }
     return handle;
   #else
-    // Linux. If name != null, do call sem_open, else call sem_init. Use 0600 perms. Prepend a / to the beginning of name.
+    if (name == NULL) {
+      if (sem_init(&handle->sem, 0, init_value) != 0) {
+        free(handle);
+        return NULL;
+      }
+    }
+    else {
+      int len_name = strlen(name) + 2; // we need to append a '/' to the string
+      char new_name[len_name];
+      new_name[0] = '/';
+
+      for (int i = 1; i < len_name - 1; i++)
+        new_name[i] = name[i - 1];
+
+      new_name[len_name - 1] = '\0';
+      printf("DEBUG: String contents: %s\n", new_name);
+      sem_unlink(new_name); // in case we crashed and this name is in memory
+  
+      sem_t* sem_ptr = sem_open(new_name, O_CREAT, 0644, init_value);
+      if (sem_ptr == SEM_FAILED) {
+        free(handle);
+        return NULL;
+      }
+      handle->sem = *sem_ptr;
+    }
+    return handle;
   #endif
 }
 
