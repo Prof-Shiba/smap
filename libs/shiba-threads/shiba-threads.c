@@ -122,7 +122,6 @@ shiba_threads_semaphore_t* shiba_threads_semaphore_init(const char* name, uint32
         new_name[i] = name[i - 1];
 
       new_name[len_name - 1] = '\0';
-      printf("DEBUG: String contents: %s\n", new_name);
       sem_unlink(new_name); // in case we crashed and this name is in memory
   
       sem_t* sem_ptr = sem_open(new_name, O_CREAT, 0644, init_value);
