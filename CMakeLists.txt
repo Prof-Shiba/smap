@@ -17,11 +17,13 @@ endif()
 add_subdirectory(libs/shiba-core)
 add_subdirectory(libs/shiba-network)
 add_subdirectory(libs/shiba-threads)
+add_subdirectory(arg-parsing)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
   shiba-core
   shiba-network
   shiba-threads
+  arg-parser
 )
 
 if(WIN32)
