@@ -1,14 +1,21 @@
 #include "./arg-parser.h"
 #include "../libs/shiba-core/shiba.h"
 
-// we need some struct here that can store information about
-// flags and arguments they need
+// TODO: We will start by just making sure we can print the usage function
+// with '-h' or '--help' and expand from there
 
 int parse_args(int argc, char *argv[]) {
   if (argc <= 1) {
     print_usage();
     exit(1);
   }
+
+  // custom getopt_long_only function that works on both windows and linux
+  // looks like while((arg = getopt_long_only(argc, argv, shortopts, long_options, &option_index)) != EOF) {
+  //  switch (arg) {
+  //    
+  //  }
+  // }
 
   return 0;
 }
