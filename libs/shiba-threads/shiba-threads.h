@@ -56,24 +56,24 @@ typedef struct shiba_threads_semaphore_t {
 } shiba_threads_semaphore_t;
 
 // Creates a thread, returns 0 on success, 1 on fail, 2 on handle invalid
-uint32 shiba_threads_thread_create(shiba_threads_thread_t* handle, void* (*function) (void*), void* arg);
+extern uint32 shiba_threads_thread_create(shiba_threads_thread_t* handle, void* (*function) (void*), void* arg);
 // Join thread, returns 0 on success, 1 on fail, 2 on handle invalid. also cleansup
-uint32 shiba_threads_thread_join(shiba_threads_thread_t* handle, void** retval);
+extern uint32 shiba_threads_thread_join(shiba_threads_thread_t* handle, void** retval);
 
 // init a mutex, returns 0 on success, 1 on fail, 2 on handle invalid
-uint32 shiba_threads_mutex_init(shiba_threads_mutex_t* handle);
+extern uint32 shiba_threads_mutex_init(shiba_threads_mutex_t* handle);
 // lock a mutex, returns 0 on success, 1 on fail, 2 on handle invalid
-uint32 shiba_threads_mutex_lock(shiba_threads_mutex_t* handle);
+extern uint32 shiba_threads_mutex_lock(shiba_threads_mutex_t* handle);
 // unlock a mutex, returns 0 on success, 1 on fail, 2 on handle invalid
-uint32 shiba_threads_mutex_unlock(shiba_threads_mutex_t* handle);
+extern uint32 shiba_threads_mutex_unlock(shiba_threads_mutex_t* handle);
 // destroy a mutex, returns 0 on success. shouldn't fail unless you passed an invalid mutex or handle
-uint32 shiba_threads_mutex_destroy(shiba_threads_mutex_t* handle);
+extern uint32 shiba_threads_mutex_destroy(shiba_threads_mutex_t* handle);
 
 // creates a semaphore. Returns a semaphore on success, NULL on fail.
-shiba_threads_semaphore_t* shiba_threads_semaphore_init(const char* name, uint32 init_value);
+extern shiba_threads_semaphore_t* shiba_threads_semaphore_init(const char* name, uint32 init_value);
 // locks the semaphore pointed to by handle. returns 0 on success, 1 on fail, 2 on handle invalid
-uint32 shiba_threads_semaphore_wait(shiba_threads_semaphore_t* handle);
+extern uint32 shiba_threads_semaphore_wait(shiba_threads_semaphore_t* handle);
 // unlocks semaphore pointed to by handle. returns 0 on success, 1 on fail, 2 on handle invalid
-uint32 shiba_threads_semaphore_post(shiba_threads_semaphore_t* handle);
+extern uint32 shiba_threads_semaphore_post(shiba_threads_semaphore_t* handle);
 // Takes a semaphore handle. returns 0 on success, 1 on failure, 2 if handle invalid.
-uint32 shiba_threads_semaphore_destroy(shiba_threads_semaphore_t* handle);
+extern uint32 shiba_threads_semaphore_destroy(shiba_threads_semaphore_t* handle);
