@@ -1,8 +1,12 @@
 #pragma once
+// Shoutout to nmap for this :)
+
 #include "../shiba-core/shiba.h"
 
-// TODO: Create a cross-platform 'getopt_long' function to use for
-// general purpose arg parsing
+#define no_argument 0
+#define required_argument 1
+#define optional_argument 2
+
 struct option {
   const char* name;
   int has_arg;
@@ -10,6 +14,8 @@ struct option {
   int val;
 };
 
-#define no_argument 0
-#define required_argument 1
-#define optional_argument 2
+extern int getopt_long(int argc, char* argv[], const char* short_opts,
+    const struct option* long_opts, int* long_index);
+
+extern int getopt_long_only(int argc, char* argv[], const char* short_opts,
+    const struct option* long_opts, int* long_index);
