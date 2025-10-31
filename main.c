@@ -9,4 +9,6 @@ int main(int argc, char *argv[]) {
     fprintf(stderr, "Failed to parse args!\n"); // temp
     return 1;
   }
+
+  printf("\nShiba mapper finished properly!\n");
 }
