@@ -24,3 +24,6 @@ extern int getopt_long(int argc, char* argv[], const char* short_opts,
 
 extern int getopt_long_only(int argc, char* argv[], const char* short_opts,
     const struct option* long_opts, int* long_index);
+
+extern int _getopt_internal(int argc, char* argv[], const char* short_opts,
+    const struct option* long_opts, int* long_index, int long_only);
