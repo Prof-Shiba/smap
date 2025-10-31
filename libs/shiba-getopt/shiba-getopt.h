@@ -2,6 +2,7 @@
 // Shoutout to nmap for this :)
 
 #include "../shiba-core/shiba.h"
+#include <string.h>
 
 #define no_argument 0
 #define required_argument 1
