@@ -11,7 +11,7 @@ int getopt_reset(void) {
   return 0;
 }
 
-extern int _getopt_internal(int argc, char* argv[], const char* short_opts,
+int _getopt_internal(int argc, char* argv[], const char* short_opts,
             const struct option* long_opts, int* long_index, int long_only)
 {
   // TODO:
