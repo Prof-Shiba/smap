@@ -114,7 +114,7 @@ shiba_threads_semaphore_t* shiba_threads_semaphore_init(const char* name, uint32
       }
     }
     else {
-      int len_name = strlen(name) + 2; // we need to append a '/' to the string
+      int len_name = strlen(name) + 2; // we need to prepend a '/' to the string
       char new_name[len_name];
       new_name[0] = '/';
 
