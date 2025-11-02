@@ -4,7 +4,7 @@
 
 int parse_args(int argc, char *argv[]) {
   if (argc <= 1) {
-    print_usage();
+    print_usage(argv);
     exit(1);
   }
 
@@ -22,22 +22,22 @@ int parse_args(int argc, char *argv[]) {
     switch (arg) {
 
       case '?':
-      print_usage();
+      print_usage(argv);
       exit(1);
       break;
 
       case 'h':
-      print_usage();
+      print_usage(argv);
       exit(0);
       break;
 
       case 'v':
-      print_version();
+      print_version(argv);
       exit(0);
       break;
 
       default:
-      fprintf(stderr, "smap -- Unknown argument: %c\n", arg);
+      fprintf(stderr, "%s -- Unknown argument: %c\n", argv[0], arg);
       exit(1);
     }
   }
@@ -45,18 +45,18 @@ int parse_args(int argc, char *argv[]) {
   return 0;
 }
 
-void print_version(void) {
-  printf("smap version 0.1 -- made by ProfShiba\n");
+void print_version(char* argv[]) {
+  printf("%s version 0.1 -- made by ProfShiba\n", argv[0]);
   exit(0);
 }
 
-void print_usage(void) {
-  printf("smap (shiba mapper)\nUsage: smap <FLAGS> <TARGET>\n");
+void print_usage(char* argv[]) {
+  printf("%s (shiba mapper)\nUsage: %s <FLAGS> <TARGET>\n", argv[0], argv[0]);
   printf("\nOPTIONS:\n");
   printf("-h,  --help    Display this help message\n");
   printf("-v,  --version    Display the version information\n");
   printf("\nEXAMPLES:\n");
-  printf("smap --help\n");
-  printf("smap -v\n");
+  printf("%s --help\n", argv[0]);
+  printf("%s -v\n", argv[0]);
   // printf("smap -p 22,80,443,445 8.8.8.8\n");
 }
