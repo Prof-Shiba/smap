@@ -1,8 +1,12 @@
 #pragma once
 #include "../libs/shiba-core/shiba.h"
 
+#define WIN32_LEAN_AND_MEAN 
+
 #ifndef _WIN32
 #include <unistd.h>
+#else
+#include <Windows.h>
 #endif
 
 typedef enum {
