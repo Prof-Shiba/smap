@@ -1,4 +1,5 @@
 #include "./libs/shiba-core/shiba.h"
+#include "./smap-options/smap-options.h"
 #include "./libs/shiba-network/shiba-network.h"
 #include "./libs/shiba-threads/shiba-threads.h"
 #include "./arg-parsing/arg-parser.h"
