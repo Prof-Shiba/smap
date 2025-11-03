@@ -1,6 +1,14 @@
 #include "./arg-parser.h"
+#include "../smap-options/smap-options.h"
 #include "../libs/shiba-core/shiba.h"
 #include "../libs/shiba-getopt/shiba-getopt.h"
+
+// TODO: 1. -st TCP-Connect Scanning
+// 2. -ss SYN scanning
+// 2. -sf FIN scanning
+// 2. -su UDP scanning
+// 2. -sn ping scanning
+// 3. Specify Ports
 
 int parse_args(int argc, char *argv[]) {
   if (argc <= 1) {
@@ -11,14 +19,22 @@ int parse_args(int argc, char *argv[]) {
   // uint16* port_list = NULL;
   int option_index = 0;
   int arg = 0;
+  scan_type_t scan_type = SCAN_TCP;
+  boolean is_root = check_if_root();
 
   struct option long_options[] = {
+    // misc stuff
     {"help", no_argument, NULL, 'h'},
     {"version", no_argument, NULL, 'v'},
+
+    // probe stuff
+    {"port", required_argument, NULL, 'p'},
+
+    // NULL TERM
     {0, 0, 0, 0}
   };
 
-  while ((arg = getopt_long_only(argc, argv, "hv", long_options, &option_index)) != EOF) {
+  while ((arg = getopt_long_only(argc, argv, "hvp:s:", long_options, &option_index)) != EOF) {
     switch (arg) {
 
       case '?':
@@ -29,6 +45,27 @@ int parse_args(int argc, char *argv[]) {
       case 'h':
       print_usage(argv);
       exit(0);
+      break;
+
+      case 's':
+      if (strcmp(opt_arg, "T") == 0)
+        scan_type = SCAN_TCP;
+      else if (strcmp(opt_arg, "S") == 0)
+        scan_type = SCAN_SYN;
+      else if (strcmp(opt_arg, "U") == 0)
+        scan_type = SCAN_UDP;
+      else if (strcmp(opt_arg, "F") == 0)
+        scan_type = SCAN_FIN;
+      else if (strcmp(opt_arg, "N") == 0)
+        scan_type = SCAN_PING;
+      else {
+        fprintf(stderr, "Unknown scan type: %s\n", opt_arg);
+        exit(1);
+      }
+      break;
+
+      case 'p':
+      printf("TODO: Port stuff\n");
       break;
 
       case 'v':
@@ -58,5 +95,5 @@ void print_usage(char* argv[]) {
   printf("\nEXAMPLES:\n");
   printf("%s --help\n", argv[0]);
   printf("%s -v\n", argv[0]);
-  // printf("smap -p 22,80,443,445 8.8.8.8\n");
+  printf("smap -p 22,80,443,445 8.8.8.8\n");
 }
