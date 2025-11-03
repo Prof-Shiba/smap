@@ -62,6 +62,11 @@ int parse_args(int argc, char *argv[]) {
         fprintf(stderr, "Unknown scan type: %s\n", opt_arg);
         exit(1);
       }
+      if (scan_type == SCAN_SYN || scan_type == SCAN_UDP || scan_type == SCAN_FIN)
+        if (is_root == FALSE) {
+          fprintf(stderr, "Elevated privileges required to run a -s%s scan!\n", opt_arg);
+          exit(1);
+      }
       break;
 
       case 'p':
