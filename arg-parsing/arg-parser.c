@@ -3,32 +3,25 @@
 #include "../libs/shiba-core/shiba.h"
 #include "../libs/shiba-getopt/shiba-getopt.h"
 
-// TODO: 1. -st TCP-Connect Scanning
-// 2. -ss SYN scanning
-// 2. -sf FIN scanning
-// 2. -su UDP scanning
-// 2. -sn ping scanning
-// 3. Specify Ports
+// TODO: fill port list
 
-int parse_args(int argc, char *argv[]) {
+int parse_args(int argc, char *argv[], scan_info_t* s) {
   if (argc <= 1) {
     print_usage(argv);
     exit(1);
   }
 
-  // uint16* port_list = NULL;
   int option_index = 0;
   int arg = 0;
-  scan_type_t scan_type = SCAN_TCP;
-  boolean is_root = check_if_root();
+  boolean is_root = check_if_root(); // we need elevated privs for packet manipulation
 
   struct option long_options[] = {
     // misc stuff
-    {"help", no_argument, NULL, 'h'},
-    {"version", no_argument, NULL, 'v'},
+    {"help", NULL, no_argument, 'h'},
+    {"version", NULL, no_argument, 'v'},
 
     // probe stuff
-    {"port", required_argument, NULL, 'p'},
+    {"port", NULL, required_argument, 'p'},
 
     // NULL TERM
     {0, 0, 0, 0}
@@ -49,22 +42,22 @@ int parse_args(int argc, char *argv[]) {
 
       case 's':
       if (strcmp(opt_arg, "T") == 0)
-        scan_type = SCAN_TCP;
+        s->scan_type = SCAN_TCP;
       else if (strcmp(opt_arg, "S") == 0)
-        scan_type = SCAN_SYN;
+        s->scan_type = SCAN_SYN;
       else if (strcmp(opt_arg, "U") == 0)
-        scan_type = SCAN_UDP;
+        s->scan_type = SCAN_UDP;
       else if (strcmp(opt_arg, "F") == 0)
-        scan_type = SCAN_FIN;
+        s->scan_type = SCAN_FIN;
       else if (strcmp(opt_arg, "N") == 0)
-        scan_type = SCAN_PING;
+        s->scan_type = SCAN_PING;
       else {
         fprintf(stderr, "Unknown scan type: %s\n", opt_arg);
         exit(1);
       }
-      if (scan_type == SCAN_SYN || scan_type == SCAN_UDP || scan_type == SCAN_FIN)
+      if (s->scan_type == SCAN_SYN || s->scan_type == SCAN_UDP || s->scan_type == SCAN_FIN)
         if (is_root == FALSE) {
-          fprintf(stderr, "Elevated privileges required to run a -s%s scan!\n", opt_arg);
+          fprintf(stderr, "Elevated privileges required to run a -s%s scan!\nTerminating due to insufficient privilege level!\n", opt_arg);
           exit(1);
       }
       break;
@@ -79,7 +72,7 @@ int parse_args(int argc, char *argv[]) {
       break;
 
       default:
-      fprintf(stderr, "%s -- Unknown argument: %c\n", argv[0], arg);
+      fprintf(stderr, "smap -- Unknown argument: %c\n", arg);
       exit(1);
     }
   }
@@ -88,12 +81,12 @@ int parse_args(int argc, char *argv[]) {
 }
 
 void print_version(char* argv[]) {
-  printf("%s version 0.1 -- made by ProfShiba\n", argv[0]);
+  printf("smap version 0.1 -- made by ProfShiba\n");
   exit(0);
 }
 
 void print_usage(char* argv[]) {
-  printf("%s (shiba mapper)\nUsage: %s <FLAGS> <TARGET>\n", argv[0], argv[0]);
+  printf("smap (shiba mapper)\nUsage: %s <FLAGS> <TARGET>\n", argv[0]);
   printf("\nOPTIONS:\n");
   printf("-h,  --help    Display this help message\n");
   printf("-v,  --version    Display the version information\n");
