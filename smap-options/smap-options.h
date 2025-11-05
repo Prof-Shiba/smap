@@ -38,4 +38,3 @@ typedef struct {
 } scan_info_t;
 
 extern boolean check_if_root(void);
-extern void scan_info_init(scan_info_t* s);
