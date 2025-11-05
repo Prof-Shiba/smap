@@ -1,4 +1,8 @@
 #pragma once
+
+// This file includes things such as scan information, port state information,
+// scan types, and functions needed to help with these
+
 #include "../libs/shiba-core/shiba.h"
 
 #define WIN32_LEAN_AND_MEAN 
@@ -24,4 +28,14 @@ typedef enum {
   FAILED
 } port_state_t;
 
+typedef struct {
+  char* address;
+  uint16* port_list;
+  scan_type_t scan_type; // enums are 4 bytes
+  uint16 num_ports;
+  uint16 closed_ports;
+  uint16 open_ports;
+} scan_info_t;
+
 extern boolean check_if_root(void);
+extern void scan_info_init(scan_info_t* s);
