@@ -10,8 +10,8 @@
 
 struct option {
   const char* name;
-  int has_arg;
   int* flag;
+  int has_arg;
   int val;
 };
 
