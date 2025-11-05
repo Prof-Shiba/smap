@@ -10,8 +10,8 @@
 extern void shiba_memory_debug_print(uint32 min_allocations);
 
 typedef struct {
-  uint32 size;
   void* buffer;
+  uint32 size;
 }ST_MemAllocBuf;
 
 typedef struct {
