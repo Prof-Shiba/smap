@@ -4,8 +4,11 @@
 // scan types, and functions needed to help with these
 
 #include "../libs/shiba-core/shiba.h"
+#define MAX_PORT 65535
 
+#ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN 
+#endif
 
 #ifndef _WIN32
 #include <unistd.h>
@@ -29,8 +32,8 @@ typedef enum {
 } port_state_t;
 
 typedef struct {
-  char* address;
-  uint16* port_list;
+  char* targets;
+  boolean port_list[MAX_PORT + 1];
   scan_type_t scan_type; // enums are 4 bytes
   uint16 num_ports;
   uint16 closed_ports;
@@ -38,3 +41,4 @@ typedef struct {
 } scan_info_t;
 
 extern boolean check_if_root(void);
+extern void init_scan_info(scan_info_t* s);
