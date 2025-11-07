@@ -9,4 +9,4 @@
 // TODO: Port ranges: -p 1-1024
 
 // ports must be passed in without spaces, separated by commas. Returns 1 on fail, 0 on success
-extern int get_ports(char* port_list, scan_info_t* s);
+extern int get_ports(char* ports, scan_info_t* s);
