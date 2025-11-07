@@ -2,8 +2,7 @@
 #include "../smap-options/smap-options.h"
 #include "../libs/shiba-core/shiba.h"
 #include "../libs/shiba-getopt/shiba-getopt.h"
-
-// TODO: fill port list
+#include "../port-engine/port-list.h"
 
 int parse_args(int argc, char *argv[], scan_info_t* s) {
   if (argc <= 1) {
@@ -63,7 +62,7 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
       break;
 
       case 'p':
-      printf("TODO: Port stuff\n");
+      get_ports(opt_arg, s);
       break;
 
       case 'v':
