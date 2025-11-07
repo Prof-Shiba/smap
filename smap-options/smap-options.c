@@ -28,3 +28,14 @@ Cleanup:
 	return is_elevated; 
 #endif
 }
+
+void init_scan_info(scan_info_t* s) {
+  s->targets = NULL;
+  s->num_ports = 0;
+  s->closed_ports = 0;
+  s->open_ports = 0;
+  s->scan_type = SCAN_SYN;
+
+  for (int i = 0; i < MAX_PORT + 1; i++)
+    s->port_list[i] = FALSE;
+}
