@@ -51,13 +51,11 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
       else if (strcmp(opt_arg, "N") == 0)
         s->scan_type = SCAN_PING;
       else {
-        fprintf(stderr, "Unknown scan type: %s\n", opt_arg);
-        exit(1);
+        shiba_fatal("Unknown scan type: %s", opt_arg);
       }
       if (s->scan_type == SCAN_SYN || s->scan_type == SCAN_UDP || s->scan_type == SCAN_FIN)
         if (is_root == FALSE) {
-          fprintf(stderr, "Elevated privileges required to run a -s%s scan!\nTerminating due to insufficient privilege level!\n", opt_arg);
-          exit(1);
+          shiba_fatal("Elevated privileges required to run a -s%s scan!\nTerminating due to insufficient privilege level!", opt_arg);
       }
       break;
 
@@ -71,8 +69,7 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
       break;
 
       default:
-      fprintf(stderr, "smap -- Unknown argument: %c\n", arg);
-      exit(1);
+      shiba_fatal("smap -- Unknown argument: %c", arg);
     }
   }
 
@@ -81,7 +78,6 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
 
 void print_version(char* argv[]) {
   printf("smap version 0.1 -- made by ProfShiba\n");
-  exit(0);
 }
 
 void print_usage(char* argv[]) {
