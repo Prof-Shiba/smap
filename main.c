@@ -23,7 +23,15 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  s->targets = argv[argc - 1]; // FIXME: what if we want multiple IP addresses? Let's just assume all extra input are addresses
+  for (int i = 1; i <= MAX_PORT; i++) {
+    if (s->port_list[i] == TRUE)
+      printf("Port %d is marked for scanning!\n", i);
+    else
+      s->ignored_ports++;
+  }
+  printf("%d ports ignored for scanning!\n", s->ignored_ports);
+
+  // s->targets = argv[argc - 1]; // FIXME: what if we want multiple IP addresses? Let's just assume all extra input are addresses
 
   // TODO: Call network handling functions. Will validate address, scan ports, etc
 
