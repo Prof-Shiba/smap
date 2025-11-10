@@ -29,13 +29,13 @@ add_subdirectory(smap-options)
 add_subdirectory(port-engine)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
-  shiba-core
-  shiba-network
-  shiba-threads
   arg-parser
   smap-options
   shiba-getopt
   port-engine
+  shiba-core
+  shiba-network
+  shiba-threads
 )
 
 if(WIN32)
