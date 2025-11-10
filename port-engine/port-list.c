@@ -29,9 +29,13 @@ int get_ports(const char* ports, scan_info_t* s) {
           shiba_fatal("Invalid port passed to -p! Ports must be an integer between 1-65535");
         }
 
-        // TODO: Check for duplicate ports
-        s->num_ports++;
-        s->port_list[current_port] = TRUE;
+        if (s->port_list[current_port] == FALSE) {
+          s->port_list[current_port] = TRUE;
+          s->num_ports++;
+        }
+        else {
+          printf("You've entered that port (%lld) already! Pay attention, you might bring a whole network down!\n", current_port);
+        }
         memset(temp, 0, sizeof(temp));
         arr_index = 0;
 
