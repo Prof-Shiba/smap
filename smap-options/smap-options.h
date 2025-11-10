@@ -38,6 +38,7 @@ typedef struct {
   uint16 num_ports;
   uint16 closed_ports;
   uint16 open_ports;
+  uint16 ignored_ports;
 } scan_info_t;
 
 extern boolean check_if_root(void);
