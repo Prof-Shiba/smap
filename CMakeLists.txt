@@ -5,6 +5,13 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 
 project(smap C)
+
+option(DEBUG "Build the project in debug mode" OFF)
+if (DEBUG)
+  set(CMAKE_BUILD_TYPE Debug)
+  message(STATUS "Debug build enabled")
+endif()
+
 add_executable(${PROJECT_NAME} main.c)
 
 if(MSVC)
@@ -12,7 +19,6 @@ if(MSVC)
 else()
   add_compile_options(-Wall -Wfatal-errors)
 endif()
-
 
 add_subdirectory(libs/shiba-core)
 add_subdirectory(libs/shiba-network)
