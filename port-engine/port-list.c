@@ -23,12 +23,12 @@ int get_ports(const char* ports, scan_info_t* s) {
       }
       else {
         current_port = strtol(temp, &endptr, 10);
-        if (endptr == ports || *endptr != '\0') {
+
+        if (endptr == ports || *endptr != '\0'
+          || current_port <= 0 || current_port > MAX_PORT) {
           error_invalid_port();
         }
-        else if (current_port <= 0 || current_port > MAX_PORT) {
-          error_invalid_port();
-        }
+
         // TODO: Check for duplicate ports
         s->num_ports++;
         s->port_list[current_port] = TRUE;
