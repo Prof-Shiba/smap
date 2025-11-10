@@ -35,6 +35,7 @@ void init_scan_info(scan_info_t* s) {
   s->closed_ports = 0;
   s->open_ports = 0;
   s->scan_type = SCAN_SYN;
+  s->ignored_ports = 0;
 
   for (int i = 0; i < MAX_PORT + 1; i++)
     s->port_list[i] = FALSE;
