@@ -3,10 +3,12 @@
 #include "../smap-options/smap-options.h"
 #include <string.h>
 
+// TODO: Port ranges: -p 1-1024
+
 // This file contains port handling functions, like parsing ports
 // such as -p 21,22,445,1337 or -p- for all 65535 ports
 
-// TODO: Port ranges: -p 1-1024
-
-// ports must be passed in without spaces, separated by commas. Returns 1 on fail, 0 on success
-extern int get_ports(char* ports, scan_info_t* s);
+// parses and gets ports entered by user. Kills program on fail, 0 on success
+extern int get_ports(const char* ports, scan_info_t* s);
+// kills the program with message
+extern void error_invalid_port(void);
