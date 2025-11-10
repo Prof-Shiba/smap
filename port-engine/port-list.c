@@ -18,7 +18,7 @@ int get_ports(const char* ports, scan_info_t* s) {
     for (int i = 0; i <= strlen(ports); i++) {
       if (ports[i] != ',' && ports[i] != '\0') {
         if (arr_index >= 6)
-          error_invalid_port();
+          shiba_fatal("Invalid port passed to -p! Ports must be an integer between 1-65535");
         temp[arr_index++] = ports[i];
       }
       else {
@@ -26,7 +26,7 @@ int get_ports(const char* ports, scan_info_t* s) {
 
         if (endptr == ports || *endptr != '\0'
           || current_port <= 0 || current_port > MAX_PORT) {
-          error_invalid_port();
+          shiba_fatal("Invalid port passed to -p! Ports must be an integer between 1-65535");
         }
 
         // TODO: Check for duplicate ports
@@ -40,9 +40,4 @@ int get_ports(const char* ports, scan_info_t* s) {
   }
 
   return 0;
-}
-
-void error_invalid_port(void) {
-    fprintf(stderr, "Invalid port passed to -p! Ports must be an integer between 1-65535!\n");
-    exit(1);
 }
