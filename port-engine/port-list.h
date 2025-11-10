@@ -10,5 +10,3 @@
 
 // parses and gets ports entered by user. Kills program on fail, 0 on success
 extern int get_ports(const char* ports, scan_info_t* s);
-// kills the program with message
-extern void error_invalid_port(void);
