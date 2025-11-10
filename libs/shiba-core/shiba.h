@@ -1,6 +1,7 @@
 #pragma once
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 /*  _____                       */
 /* |_   _|   _ _ __   ___  ___  */
 /*   | || | | | '_ \ / _ \/ __| */
@@ -75,5 +76,9 @@ extern uint32 shiba_memory_debug_mem_usage();
 /* | |___ >  <| |_| | | (_| | */
 /* |_____/_/\_\\__|_|  \__,_| */
 
-extern uint32 shiba_random_int(uint32 num); // pseudo-random num gen
-extern fint32 shiba_fast_inv_square_root(fint32 number); // fast inverse square root calculation
+// pseudo-random num gen
+extern uint32 shiba_random_int(uint32 num);
+// fast inverse square root calculation
+extern fint32 shiba_fast_inv_square_root(fint32 number);
+// fatal error. print message and kill prog
+extern void shiba_fatal(const char* message, ...);
