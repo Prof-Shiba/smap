@@ -38,7 +38,6 @@ int get_ports(const char* ports, scan_info_t* s) {
         }
         memset(temp, 0, sizeof(temp));
         arr_index = 0;
-
       }
     }
   }

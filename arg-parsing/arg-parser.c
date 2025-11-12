@@ -55,7 +55,7 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
       }
       if (s->scan_type == SCAN_SYN || s->scan_type == SCAN_UDP || s->scan_type == SCAN_FIN)
         if (is_root == FALSE) {
-          shiba_fatal("Elevated privileges required to run a -s%s scan!\nTerminating due to insufficient privilege level!", opt_arg);
+          shiba_fatal("FATAL: Elevated privileges required to run a -s%s scan!\nTerminating due to insufficient privilege level!", opt_arg);
       }
       break;
 
@@ -71,6 +71,16 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
       default:
       shiba_fatal("smap -- Unknown argument: %c", arg);
     }
+  }
+
+  // TODO: Grab IP's here since all other args are finished. start with 1 ip
+  if (opt_index < argc) {
+    while (opt_index < argc) {
+      printf("Next arg: %s\n", argv[opt_index++]);
+    }
+  }
+  else {
+    shiba_fatal("FATAL: Target address not specified! Try smap -h");
   }
 
   return 0;
