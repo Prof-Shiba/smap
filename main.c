@@ -12,16 +12,13 @@
 
 int main(int argc, char *argv[]) {
   scan_info_t* s = malloc(sizeof(*s));
-  if (!s) {
-    fprintf(stderr, "Failed to allocate space for scan information!\n");
-    return 1;
-  }
+  if (!s) shiba_fatal("Failed to create scan info!");
   init_scan_info(s);
 
-  if (parse_args(argc, argv, s) != 0) {
-    fprintf(stderr, "Failed to parse args!\n");
-    return 1;
-  }
+  // TODO: Get current time, show how long it took for program to finish
+
+  if (parse_args(argc, argv, s) != 0)
+    shiba_fatal("Failed to parse args!");
 
   for (int i = 1; i <= MAX_PORT; i++) {
     if (s->port_list[i] == TRUE)
@@ -30,8 +27,7 @@ int main(int argc, char *argv[]) {
       s->ignored_ports++;
   }
   printf("%d ports ignored for scanning!\n", s->ignored_ports);
-
-  // s->targets = argv[argc - 1]; // FIXME: what if we want multiple IP addresses? Let's just assume all extra input are addresses
+  printf("%d ports being scanned!\n", s->num_ports);
 
   // TODO: Call network handling functions. Will validate address, scan ports, etc
 
