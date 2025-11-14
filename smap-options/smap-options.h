@@ -16,6 +16,11 @@
 #include <Windows.h>
 #endif
 
+typedef struct target_t {
+  char* target;
+  struct target_t* next;
+} target_t;
+
 typedef enum {
   SCAN_TCP,
   SCAN_UDP,
@@ -32,9 +37,9 @@ typedef enum {
 } port_state_t;
 
 typedef struct {
-  char* targets;
+  target_t* targets;
   boolean port_list[MAX_PORT + 1];
-  scan_type_t scan_type; // enums are 4 bytes
+  scan_type_t scan_type;
   uint16 num_ports;
   uint16 closed_ports;
   uint16 open_ports;
@@ -43,3 +48,4 @@ typedef struct {
 
 extern boolean check_if_root(void);
 extern void init_scan_info(scan_info_t* s);
+extern void scan_info_cleanup(scan_info_t* s);
