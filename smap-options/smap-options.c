@@ -30,7 +30,12 @@ Cleanup:
 }
 
 void init_scan_info(scan_info_t* s) {
-  s->targets = NULL;
+  s->targets = malloc(sizeof(*s->targets));
+  if (!s->targets)
+  	shiba_fatal("FATAL: Failed to allocate space for scan info targets! (init_scan_info)");
+
+  s->targets->target = NULL;
+  s->targets->next = NULL;
   s->num_ports = 0;
   s->closed_ports = 0;
   s->open_ports = 0;
@@ -39,4 +44,17 @@ void init_scan_info(scan_info_t* s) {
 
   for (int i = 0; i < MAX_PORT + 1; i++)
     s->port_list[i] = FALSE;
+}
+
+void scan_info_cleanup(scan_info_t *s) {
+	target_t* last = NULL;
+
+	while (s->targets) {
+		last = s->targets;
+		s->targets = s->targets->next;
+		free(last);
+	}
+
+	free(s);
+	s = NULL;
 }
