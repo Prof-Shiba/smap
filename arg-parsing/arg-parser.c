@@ -73,10 +73,23 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
     }
   }
 
-  // TODO: Grab IP's here since all other args are finished. start with 1 ip
   if (opt_index < argc) {
+    target_t* last = NULL;
+
     while (opt_index < argc) {
-      printf("Next arg: %s\n", argv[opt_index++]);
+      if (!s->targets->target)
+        s->targets->target = argv[opt_index++];
+      else {
+        target_t* current_target = malloc(sizeof(*current_target));
+        current_target->target = argv[opt_index++];
+
+        if (!s->targets->next)
+          s->targets->next = current_target;
+        else
+          last->next = current_target;
+
+        last = current_target;
+      }
     }
   }
   else {
