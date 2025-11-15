@@ -36,9 +36,9 @@ boolean shiba_network_is_valid_port(const int32 port) {
   return 0;
 }
 
-// This currently is basically only for windows,
-// but in the future, maybe some UNIX stuff can
-// get done here.
+/* This currently is basically only for windows,
+ but in the future, maybe some UNIX stuff can
+ get done here. */
 boolean shiba_network_init(void) {
 #if defined _WIN32
   int result = WSAStartup(MAKEWORD(2, 2), &wsa_data);

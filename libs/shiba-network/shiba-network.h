@@ -30,9 +30,11 @@ typedef struct shiba_network_socket_t {
 extern int shiba_network_is_valid_ip_address(const char* ip_addr);
 extern boolean shiba_network_is_valid_port(const int32 port);
 
-// mostly for windows currently
+/* Init and cleanup functions needed for windows */
 extern boolean shiba_network_init(void);
 extern void shiba_network_cleanup(void);
 
+/*Creates a shiba_network_socket_t* and returns it. Returns NULL if fails */
 extern shiba_network_socket_t* shiba_network_create_socket(int AF, int TYPE, int PROTOCOL);
+/* Closes and frees a shiba_network_socket_t* */
 extern void shiba_network_destroy_socket(shiba_network_socket_t* socket);
