@@ -69,7 +69,7 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
       break;
 
       default:
-      shiba_fatal("smap -- Unknown argument: %c", arg);
+      shiba_fatal("smap -- default switch argument reached (arg-parser). You entered: %c", arg);
     }
   }
 
