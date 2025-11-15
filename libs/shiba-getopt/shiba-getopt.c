@@ -26,7 +26,7 @@ static int _get_opt(int argc, char* argv[], const char* opts) {
   if(char_index) { // we're in the middle of parsing -abc for example
     opt_opt = argv[opt_index][char_index]; // get current character we are processing
 
-    for(s = opts + off; *s; s++) // go thru opts to see if char is valid opt. like "hv:f::" NOTE: ask
+    for(s = opts + off; *s; s++) // go thru opts to see if char is valid opt. like "hv:f::"
       if(opt_opt == *s) {
         char_index++;
 
