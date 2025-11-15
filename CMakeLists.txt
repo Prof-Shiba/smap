@@ -27,6 +27,7 @@ add_subdirectory(libs/shiba-getopt)
 add_subdirectory(arg-parsing)
 add_subdirectory(smap-options)
 add_subdirectory(port-engine)
+add_subdirectory(scan-engine)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
   arg-parser
@@ -36,6 +37,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   shiba-core
   shiba-network
   shiba-threads
+  scan-engine
 )
 
 if(WIN32)
