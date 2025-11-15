@@ -4,19 +4,26 @@
   static WSADATA wsa_data;
 #endif
 
-boolean shiba_network_is_valid_ipv4_address(const char* ip_addr) {
+int shiba_network_is_valid_ip_address(const char* ip_addr) {
   if (!ip_addr)
     return 1;
 
 #ifdef _WIN32
+  // FIXME: add ipv6 checks too
   int result = inet_addr(ip_addr);
   if (result == INADDR_NONE || result == INADDR_ANY)
       return 1;
   return 0;
 #else
-  struct in_addr addr;
-  return inet_pton(AF_INET, ip_addr, &addr) == 1;
+  char buf[INET6_ADDRSTRLEN];
+
+  if (inet_pton(AF_INET, ip_addr, buf))
+    return 4;
+  else if (inet_pton(AF_INET6, ip_addr, buf))
+    return 6;
 #endif
+
+return 1;
 }
 
 boolean shiba_network_is_valid_port(const int32 port) {

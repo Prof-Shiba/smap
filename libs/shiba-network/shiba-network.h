@@ -25,7 +25,9 @@ typedef struct shiba_network_socket_t {
   #endif
 }shiba_network_socket_t;
 
-extern boolean shiba_network_is_valid_ipv4_address(const char* ip_addr);
+/* validates an ip, whether v4 or v6. returns 4 on IPv4 success,
+ * 6 on IPv6 success, or 1 if invalid */
+extern int shiba_network_is_valid_ip_address(const char* ip_addr);
 extern boolean shiba_network_is_valid_port(const int32 port);
 
 // mostly for windows currently
