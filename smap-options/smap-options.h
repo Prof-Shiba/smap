@@ -6,13 +6,13 @@
 #include "../libs/shiba-core/shiba.h"
 #define MAX_PORT 65535
 
-#ifdef _WIN32
-#define WIN32_LEAN_AND_MEAN 
-#endif
-
 #ifndef _WIN32
 #include <unistd.h>
+#include <sys/socket.h>
 #else
+#define WIN32_LEAN_AND_MEAN
+#include <winsock2.h>
+#include <ws2tcpip.h>
 #include <Windows.h>
 #endif
 
@@ -30,10 +30,10 @@ typedef enum {
 } scan_type_t;
 
 typedef enum {
-  OPEN,
-  CLOSED,
-  FILTERED,
-  FAILED
+  PORT_OPEN,
+  PORT_CLOSED,
+  PORT_FILTERED,
+  PORT_FAILED
 } port_state_t;
 
 typedef struct {
@@ -44,6 +44,7 @@ typedef struct {
   uint16 closed_ports;
   uint16 open_ports;
   uint16 ignored_ports;
+  uint16 af;
 } scan_info_t;
 
 extern boolean check_if_root(void);
