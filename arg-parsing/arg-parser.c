@@ -30,46 +30,46 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
     switch (arg) {
 
       case '?':
-      print_usage(argv);
-      exit(1);
+        print_usage(argv);
+        exit(1);
       break;
 
       case 'h':
-      print_usage(argv);
-      exit(0);
+        print_usage(argv);
+        exit(0);
       break;
 
       case 's':
-      if (strcmp(opt_arg, "T") == 0)
-        s->scan_type = SCAN_TCP;
-      else if (strcmp(opt_arg, "S") == 0)
-        s->scan_type = SCAN_SYN;
-      else if (strcmp(opt_arg, "U") == 0)
-        s->scan_type = SCAN_UDP;
-      else if (strcmp(opt_arg, "F") == 0)
-        s->scan_type = SCAN_FIN;
-      else if (strcmp(opt_arg, "N") == 0)
-        s->scan_type = SCAN_PING;
-      else {
-        shiba_fatal("Unknown scan type: %s", opt_arg);
-      }
-      if (s->scan_type == SCAN_SYN || s->scan_type == SCAN_UDP || s->scan_type == SCAN_FIN)
-        if (is_root == FALSE) {
-          shiba_fatal("FATAL: Elevated privileges required to run a -s%s scan!\nTerminating due to insufficient privilege level!", opt_arg);
-      }
+        if (strcmp(opt_arg, "T") == 0)
+          s->scan_type = SCAN_TCP;
+        else if (strcmp(opt_arg, "S") == 0)
+          s->scan_type = SCAN_SYN;
+        else if (strcmp(opt_arg, "U") == 0)
+          s->scan_type = SCAN_UDP;
+        else if (strcmp(opt_arg, "F") == 0)
+          s->scan_type = SCAN_FIN;
+        else if (strcmp(opt_arg, "N") == 0)
+          s->scan_type = SCAN_PING;
+        else {
+          shiba_fatal("Unknown scan type: %s", opt_arg);
+        }
+        if (s->scan_type == SCAN_SYN || s->scan_type == SCAN_UDP || s->scan_type == SCAN_FIN)
+          if (is_root == FALSE) {
+            shiba_fatal("FATAL: Elevated privileges required to run a -s%s scan!\nTerminating due to insufficient privilege level!", opt_arg);
+        }
       break;
 
       case 'p':
-      get_ports(opt_arg, s);
+        get_ports(opt_arg, s);
       break;
 
       case 'v':
-      print_version(argv);
-      exit(0);
+        print_version(argv);
+        exit(0);
       break;
 
       default:
-      shiba_fatal("smap -- default switch argument reached (arg-parser). You entered: %c", arg);
+        shiba_fatal("smap -- default switch argument reached (arg-parser). You entered: %c", arg);
     }
   }
 
