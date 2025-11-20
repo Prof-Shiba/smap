@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <stdint.h>
+
 /*  _____                       */
 /* |_   _|   _ _ __   ___  ___  */
 /*   | || | | | '_ \ / _ \/ __| */
@@ -12,17 +14,17 @@
 #if !defined(TYPES_H)
 #define TYPES_H
 
-typedef signed char int8;
-typedef unsigned char uint8;
-typedef signed short int16;
-typedef unsigned short uint16;
-typedef signed int int32;
-typedef unsigned int uint32;
-typedef float fint32;
-typedef double fint64;
+typedef int8_t        int8;
+typedef uint8_t       uint8;
+typedef int16_t       int16;
+typedef uint16_t      uint16;
+typedef int32_t       int32;
+typedef uint32_t      uint32;
+typedef float         fint32;
+typedef double        fint64;
+typedef int64_t       int64;
+typedef uint64_t      uint64;
 typedef unsigned char boolean;
-typedef signed long long int64;
-typedef unsigned long long uint64;
 
 #if !defined(TRUE)
 #define TRUE 1
