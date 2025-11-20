@@ -34,7 +34,7 @@ int get_ports(const char* ports, scan_info_t* s) {
           s->num_ports++;
         }
         else {
-          printf("You've entered that port (%lld) already! Pay attention, you might bring a whole network down!\n", current_port);
+          printf("You've entered that port (%ld) already! Pay attention, you might bring a whole network down!\n", current_port);
         }
         memset(temp, 0, sizeof(temp));
         arr_index = 0;
