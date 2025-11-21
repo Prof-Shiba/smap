@@ -8,20 +8,11 @@ int shiba_network_is_valid_ip_address(const char* ip_addr) {
   if (!ip_addr)
     return 1;
 
-#ifdef _WIN32
-  // FIXME: add ipv6 checks too
-  int result = inet_addr(ip_addr);
-  if (result == INADDR_NONE || result == INADDR_ANY)
-      return 1;
-  return 0;
-#else
-  char buf[INET6_ADDRSTRLEN];
-
-  if (inet_pton(AF_INET, ip_addr, buf))
+  struct in6_addr addr;
+  if (inet_pton(AF_INET, ip_addr, &addr))
     return 4;
-  else if (inet_pton(AF_INET6, ip_addr, buf))
+  else if (inet_pton(AF_INET6, ip_addr, &addr))
     return 6;
-#endif
 
 return 1;
 }
