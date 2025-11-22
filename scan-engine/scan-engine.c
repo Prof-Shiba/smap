@@ -6,12 +6,42 @@
 // 3. -su UDP scanning
 // 4. -sn ping scanning
 
+// We need to create a function (or some way) to make a socket
+// for the correct scan type. I think in every function we 
+// can just call a single create_shiba_socket function that
+// returns the FD
+
+void scan_ports(scan_info_t* s) {
+  target_t* head = s->targets;
+
+  // FIXME: This NEEDS to be heavily optimized fairly soon,
+  // im just making sure the logic works as i expect currently.
+  // We probably shouldn't be using an array here and blindly
+  // iterating thru the entire thing when we may only have a 
+  // handful of ports to scan. Find a better way ASAP!
+  while (s->targets) {
+    for (int i = 1; i <= MAX_PORT; i++) {
+      if (s->port_list[i] == TRUE) {
+        if (scan_port(s, i) == 0) {
+          s->open_ports++;
+        }
+        else {
+          s->closed_ports++;
+        }
+      }
+    }
+    s->targets = s->targets->next;
+  }
+
+  s->targets = head;
+}
+
 int scan_port(const scan_info_t* s, const uint16 port) {
   // we need to craft packets and get a socket
   // ready for each scan type
   switch(s->scan_type) {
     case SCAN_TCP:
-      // TODO:
+      return open_tcp_connect(s, port);
     break;
 
     case SCAN_SYN:
@@ -31,10 +61,8 @@ int scan_port(const scan_info_t* s, const uint16 port) {
     break;
 
     default:
-    shiba_fatal("FATAL: Unknown scan type somehow passed to scan_ports in scan-engine.c!");
+    return 1;
   }
+  return 0;
 }
 
-void scan_ports(const scan_info_t* s) {
-    // TODO: Loop through all ports and call scan_port
-}
