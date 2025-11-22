@@ -40,16 +40,26 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
       break;
 
       case 's':
-        if (strcmp(opt_arg, "T") == 0)
+        if (strcmp(opt_arg, "T") == 0) {
           s->scan_type = SCAN_TCP;
-        else if (strcmp(opt_arg, "S") == 0)
+          s->sock_type = SOCK_STREAM;
+        }
+        else if (strcmp(opt_arg, "S") == 0) {
           s->scan_type = SCAN_SYN;
-        else if (strcmp(opt_arg, "U") == 0)
+          s->sock_type = SOCK_RAW;
+        }
+        else if (strcmp(opt_arg, "U") == 0) {
           s->scan_type = SCAN_UDP;
-        else if (strcmp(opt_arg, "F") == 0)
+          s->sock_type = SOCK_RAW;
+        }
+        else if (strcmp(opt_arg, "F") == 0) {
           s->scan_type = SCAN_FIN;
-        else if (strcmp(opt_arg, "N") == 0)
+          s->sock_type = SOCK_RAW;
+        }
+        else if (strcmp(opt_arg, "N") == 0) {
           s->scan_type = SCAN_PING;
+          // TODO: Need to find out what this will be.
+        }
         else {
           shiba_fatal("Unknown scan type: %s", opt_arg);
         }
@@ -69,7 +79,7 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
       break;
 
       default:
-        shiba_fatal("smap -- default switch argument reached (arg-parser). You entered: %c", arg);
+        shiba_fatal("smap -- default switch argument reached (%s). You entered: %c", __FILE_NAME__, arg);
     }
   }
 
@@ -77,8 +87,17 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
     target_t* last = NULL;
 
     while (opt_index < argc) {
-      if (!s->targets->target)
-        s->targets->target = argv[opt_index++];
+      if (shiba_network_is_valid_ip_address(argv[opt_index]) != 1) {
+        // skip
+      }
+      else {
+          printf("Invalid IP address! (%s)\n", argv[opt_index++]);
+          continue;
+      }
+
+      if (!s->targets->target) {
+          s->targets->target = argv[opt_index++];
+      }
       else {
         target_t* current_target = malloc(sizeof(*current_target));
         current_target->target = argv[opt_index++];
