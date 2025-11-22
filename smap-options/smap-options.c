@@ -30,18 +30,23 @@ Cleanup:
 }
 
 void init_scan_info(scan_info_t* s) {
+	// We will init the network stuff here so it isn't
+	// potentially called multiple times in other functions
+ 	shiba_network_init();
+
   s->targets = malloc(sizeof(*s->targets));
   if (!s->targets)
-  	shiba_fatal("FATAL: Failed to allocate space for scan info targets! (init_scan_info)");
+  	shiba_fatal("FATAL: Failed to allocate space for scan info targets! (%s)", __FILE_NAME__);
 
   s->targets->target = NULL;
   s->targets->next = NULL;
   s->num_ports = 0;
   s->closed_ports = 0;
   s->open_ports = 0;
-  s->scan_type = SCAN_TCP; // Default to TCP for time being. TODO: Default to SYN later
+  s->scan_type = SCAN_TCP; // TODO: Default to SYN later
  	s->ignored_ports = 0;
  	s->af = AF_INET;
+ 	s->sock_type = SOCK_STREAM;
 
   for (int i = 0; i < MAX_PORT + 1; i++)
     s->port_list[i] = FALSE;
