@@ -12,4 +12,4 @@ extern void scan_ports(scan_info_t* s);
 
 // scan an individual port by calling the appropriate function
 // for the scan type specified
-extern int scan_port(const scan_info_t* s, const uint16 port);
+extern int scan_port(scan_info_t* s, const uint16 port);

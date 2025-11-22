@@ -36,7 +36,7 @@ void scan_ports(scan_info_t* s) {
   s->targets = head;
 }
 
-int scan_port(const scan_info_t* s, const uint16 port) {
+int scan_port(scan_info_t* s, const uint16 port) {
   // we need to craft packets and get a socket
   // ready for each scan type
   switch(s->scan_type) {
