@@ -3,7 +3,8 @@
 #if defined _WIN32
   static WSADATA wsa_data;
 #endif
-
+// NOTE: i may want to rename this to return ip addr type, and note that
+// it can be used as an ip addr validator on top of that.
 int shiba_network_is_valid_ip_address(const char* ip_addr) {
   if (!ip_addr)
     return 1;
@@ -33,10 +34,8 @@ boolean shiba_network_is_valid_port(const int32 port) {
 boolean shiba_network_init(void) {
 #if defined _WIN32
   int result = WSAStartup(MAKEWORD(2, 2), &wsa_data);
-  if (result != 0) {
-    fprintf(stderr, "WSA Startup Failed! Error: %d\n", GetLastError());
-    exit(1);
-  }
+  if (result != 0)
+    shiba_fatal("WSA Startup Failed! Error: %d", GetLastError());
 
   return TRUE;
 #else
@@ -55,7 +54,7 @@ void shiba_network_cleanup(void) {
 // NOTE: If we need sudo privs, then kill it with a message. otherwise
 // it is probably recoverable. we may run out of FD's when doing multi-threading.
 // It should be left up to the caller how to handle the error.
-shiba_network_socket_t* shiba_network_create_socket(int AF, int TYPE, int PROTOCOL) {
+shiba_network_socket_t* shiba_network_create_socket(const int AF, const int TYPE, const int PROTOCOL) {
 shiba_network_socket_t* sock = malloc(sizeof(*sock));
 if (!sock) return NULL;
 #if defined _WIN32
@@ -94,4 +93,8 @@ if (!socket) return;
   close(socket->handle);
 #endif
   free(socket);
+}
+
+int shiba_network_inet_pton(int af_type, const char* target, in_addr_t* sock_addr) {
+  // TODO:
 }
