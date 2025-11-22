@@ -4,6 +4,7 @@
 // scan types, and functions needed to help with these
 
 #include "../libs/shiba-core/shiba.h"
+#include "../libs/shiba-network/shiba-network.h"
 #define MAX_PORT 65535
 
 #ifndef _WIN32
@@ -45,6 +46,7 @@ typedef struct {
   uint16 open_ports;
   uint16 ignored_ports;
   uint16 af;
+  uint16 sock_type;
 } scan_info_t;
 
 extern boolean check_if_root(void);
