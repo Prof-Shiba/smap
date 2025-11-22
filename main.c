@@ -24,8 +24,6 @@ int main(int argc, char *argv[]) {
       printf("%s is a valid IPv4 Address!\n", s->targets->target);
     else if (shiba_network_is_valid_ip_address(s->targets->target) == 6)
       printf("%s is a valid IPv6 Address!\n", s->targets->target);
-    else
-      printf("INVALID IP ADDRESS\n");
     s->targets = s->targets->next;
   }
 
