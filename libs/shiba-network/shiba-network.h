@@ -35,7 +35,11 @@ extern boolean shiba_network_is_valid_port(const int32 port);
 extern boolean shiba_network_init(void);
 extern void shiba_network_cleanup(void);
 
-/*Creates a shiba_network_socket_t* and returns it. Returns NULL if fails */
-extern shiba_network_socket_t* shiba_network_create_socket(int AF, int TYPE, int PROTOCOL);
+/*Creates a shiba_network_socket_t pointer and returns it. Returns NULL if fails. 
+ * NOTE: Call shiba_network_destroy_socket after to free! */
+extern shiba_network_socket_t* shiba_network_create_socket(const int af, const int type, const int protocol);
 /* Closes and frees a shiba_network_socket_t* */
 extern void shiba_network_destroy_socket(shiba_network_socket_t* socket);
+
+// cross platform present to network function. Returns 0 on success, 1 on fail.
+extern int shiba_network_inet_pton(int af_type, const char* target, in_addr_t* sock_addr);
