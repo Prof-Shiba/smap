@@ -94,6 +94,20 @@ if (!socket) return;
   free(socket);
 }
 
-int shiba_network_inet_pton(int af_type, const char* target, in_addr_t* sock_addr) {
+static int _shiba_network_inet_pton_v4(const char* target, in_addr_t* sock_addr) {
   // TODO:
 }
+
+static int _shiba_network_inet_pton_v6(const char* target, in_addr_t* sock_addr) {
+  // TODO:
+}
+
+int shiba_network_inet_pton(int af_type, const char* target, in_addr_t* sock_addr) {
+  if (af_type == AF_INET)
+    return _shiba_network_inet_pton_v4(target, sock_addr);
+  else if (af_type == AF_INET6)
+    return _shiba_network_inet_pton_v6(target, sock_addr);
+  else
+    return 1;
+}
+
