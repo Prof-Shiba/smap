@@ -20,9 +20,9 @@ int main(int argc, char *argv[]) {
   // the correct function to create a socket for it, then
   // calls an individual scan_port function in a loop?
   while (s->targets) {
-    if (shiba_network_is_valid_ip_address(s->targets->target) == 4)
+    if (shiba_network_return_ip_type(s->targets->target) == 4)
       printf("%s is a valid IPv4 Address!\n", s->targets->target);
-    else if (shiba_network_is_valid_ip_address(s->targets->target) == 6)
+    else if (shiba_network_return_ip_type(s->targets->target) == 6)
       printf("%s is a valid IPv6 Address!\n", s->targets->target);
     s->targets = s->targets->next;
   }

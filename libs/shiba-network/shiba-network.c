@@ -3,9 +3,8 @@
 #if defined _WIN32
   static WSADATA wsa_data;
 #endif
-// NOTE: i may want to rename this to return ip addr type, and note that
-// it can be used as an ip addr validator on top of that.
-int shiba_network_is_valid_ip_address(const char* ip_addr) {
+
+int shiba_network_return_ip_type(const char* ip_addr) {
   if (!ip_addr)
     return 1;
 

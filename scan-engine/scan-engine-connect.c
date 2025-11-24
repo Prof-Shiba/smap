@@ -6,7 +6,7 @@ int open_tcp_connect(scan_info_t* s, const uint16 port) {
   struct sockaddr_storage addr;
   socklen_t addr_len;
 
-  if (shiba_network_is_valid_ip_address(s->targets->target) == 4)
+  if (shiba_network_return_ip_type(s->targets->target) == 4)
     s->af = AF_INET;
   else
     s->af = AF_INET6;

@@ -87,7 +87,7 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
     target_t* last = NULL;
 
     while (opt_index < argc) {
-      if (shiba_network_is_valid_ip_address(argv[opt_index]) != 1) {
+      if (shiba_network_return_ip_type(argv[opt_index]) != 1) {
         // skip
       }
       else {

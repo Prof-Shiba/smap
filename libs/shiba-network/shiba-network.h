@@ -26,9 +26,10 @@ typedef struct shiba_network_socket_t {
   #endif
 }shiba_network_socket_t;
 
-/* validates an ip, whether v4 or v6. returns 4 on IPv4 success,
- * 6 on IPv6 success, or 1 if invalid */
-extern int shiba_network_is_valid_ip_address(const char* ip_addr);
+/* Returns an IP type, whether IPv4 or IPv6. 
+ * returns 4 on IPv4 success, 6 on IPv6 success, or 1 if invalid
+ * This can also be used generally to validate if a given IP is valid */
+extern int shiba_network_return_ip_type(const char* ip_addr);
 extern boolean shiba_network_is_valid_port(const int32 port);
 
 /* Init and cleanup functions needed for windows */
