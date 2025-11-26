@@ -39,6 +39,7 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
         exit(0);
       break;
 
+      // TODO: Prevent users from entering multiple scan types
       case 's':
         if (strcmp(opt_arg, "T") == 0) {
           s->scan_type = SCAN_TCP;
@@ -82,7 +83,8 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
         shiba_fatal("smap -- default switch argument reached (%s). You entered: %c", __FILE_NAME__, arg);
     }
   }
-
+  // the rest of the args are IP(s), so we parse them, make sure
+  // its valid, then if valid add to linked list of IPs
   if (opt_index < argc) {
     target_t* last = NULL;
 
