@@ -26,7 +26,6 @@ int open_tcp_connect(scan_info_t* s, const uint16 port) {
 
     int res = connect(socket->handle, (struct sockaddr*)&addr, sizeof(addr));
     if (res == 0) {
-      printf("Connection to port %d was a success!\n", port);
       ret_val = 0;
     }
 
