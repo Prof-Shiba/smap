@@ -28,6 +28,7 @@ add_subdirectory(arg-parsing)
 add_subdirectory(smap-options)
 add_subdirectory(port-engine)
 add_subdirectory(scan-engine)
+add_subdirectory(output)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
   arg-parser
@@ -38,6 +39,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   shiba-network
   shiba-threads
   scan-engine
+  output
 )
 
 if(WIN32)
