@@ -34,6 +34,7 @@ void scan_ports(scan_info_t* s) {
   }
 
   s->targets = head;
+  set_ignored_ports(s);
 }
 
 int scan_port(scan_info_t* s, const uint16 port) {
@@ -64,3 +65,6 @@ int scan_port(scan_info_t* s, const uint16 port) {
   return 0;
 }
 
+void set_ignored_ports(scan_info_t* s) {
+  s->ignored_ports = MAX_PORT - s->num_ports;
+}
