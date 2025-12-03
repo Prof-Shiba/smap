@@ -1,6 +1,6 @@
 #include "./shiba-threads.h"
 
-uint32 shiba_threads_thread_create(shiba_threads_thread_t* handle, void* (*function) (void*), void* arg) {
+u32 shiba_threads_thread_create(shiba_threads_thread_t* handle, void* (*function) (void*), void* arg) {
   if (!handle) return 2;
   #if defined _WIN32
     shiba_threads_win_convert_t* win = malloc(sizeof(*win));
@@ -27,7 +27,7 @@ uint32 shiba_threads_thread_create(shiba_threads_thread_t* handle, void* (*funct
   #endif
 }
 
-uint32 shiba_threads_thread_join(shiba_threads_thread_t* handle, void** retval) {
+u32 shiba_threads_thread_join(shiba_threads_thread_t* handle, void** retval) {
   if (!handle) return 2;
   #if defined _WIN32
     DWORD ret = WaitForSingleObject(handle->thread, INFINITE);
@@ -49,7 +49,7 @@ uint32 shiba_threads_thread_join(shiba_threads_thread_t* handle, void** retval) 
   #endif
 }
 
-uint32 shiba_threads_mutex_init(shiba_threads_mutex_t* handle) {
+u32 shiba_threads_mutex_init(shiba_threads_mutex_t* handle) {
   if (!handle) return 2;
   #if defined _WIN32
   // im defaulting to these params to make it consistent across linux and windows
@@ -62,7 +62,7 @@ uint32 shiba_threads_mutex_init(shiba_threads_mutex_t* handle) {
   #endif
 }
 
-uint32 shiba_threads_mutex_lock(shiba_threads_mutex_t* handle) {
+u32 shiba_threads_mutex_lock(shiba_threads_mutex_t* handle) {
   if (!handle) return 2;
   #if defined _WIN32
   DWORD ret = WaitForSingleObject(handle->mutex, INFINITE);
@@ -74,7 +74,7 @@ uint32 shiba_threads_mutex_lock(shiba_threads_mutex_t* handle) {
   #endif
 }
 
-uint32 shiba_threads_mutex_unlock(shiba_threads_mutex_t* handle) {
+u32 shiba_threads_mutex_unlock(shiba_threads_mutex_t* handle) {
   if (!handle) return 2;
   #if defined _WIN32
     if (!ReleaseMutex(handle->mutex)) return 1;
@@ -85,7 +85,7 @@ uint32 shiba_threads_mutex_unlock(shiba_threads_mutex_t* handle) {
   #endif
 }
 
-uint32 shiba_threads_mutex_destroy(shiba_threads_mutex_t* handle) {
+u32 shiba_threads_mutex_destroy(shiba_threads_mutex_t* handle) {
   if (!handle) return 2;
   #if defined _WIN32
     if (!CloseHandle(handle->mutex)) return 1;
@@ -96,7 +96,7 @@ uint32 shiba_threads_mutex_destroy(shiba_threads_mutex_t* handle) {
   #endif
 }
 
-shiba_threads_semaphore_t* shiba_threads_semaphore_init(const char* name, uint32 init_value) {
+shiba_threads_semaphore_t* shiba_threads_semaphore_init(const char* name, u32 init_value) {
   shiba_threads_semaphore_t* handle = malloc(sizeof(*handle));
   if (!handle) return NULL;
   #if defined _WIN32
@@ -135,7 +135,7 @@ shiba_threads_semaphore_t* shiba_threads_semaphore_init(const char* name, uint32
   #endif
 }
 
-uint32 shiba_threads_semaphore_post(shiba_threads_semaphore_t* handle) {
+u32 shiba_threads_semaphore_post(shiba_threads_semaphore_t* handle) {
   if (!handle) return 2;
   #if defined _WIN32
   if (ReleaseSemaphore(handle->sem, 1, NULL) == 0) return 1;
@@ -146,7 +146,7 @@ uint32 shiba_threads_semaphore_post(shiba_threads_semaphore_t* handle) {
   #endif
 }
 
-uint32 shiba_threads_semaphore_wait(shiba_threads_semaphore_t* handle) {
+u32 shiba_threads_semaphore_wait(shiba_threads_semaphore_t* handle) {
   if (!handle) return 2;
   #if defined _WIN32
     DWORD ret = WaitForSingleObject(handle->sem, INFINITE);
@@ -158,7 +158,7 @@ uint32 shiba_threads_semaphore_wait(shiba_threads_semaphore_t* handle) {
   #endif
 }
 
-uint32 shiba_threads_semaphore_destroy(shiba_threads_semaphore_t* handle) {
+u32 shiba_threads_semaphore_destroy(shiba_threads_semaphore_t* handle) {
   if (!handle) return 2;
   #if defined _WIN32
     if (!CloseHandle(handle->sem)) {

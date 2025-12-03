@@ -17,7 +17,7 @@ int shiba_network_return_ip_type(const char* ip_addr) {
 return 1;
 }
 
-boolean shiba_network_is_valid_port(const int32 port) {
+boolean shiba_network_is_valid_port(const i32 port) {
   if (!port)
     return 1;
 

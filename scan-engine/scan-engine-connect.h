@@ -5,4 +5,4 @@
 // portion of scanning, as we don't need raw sockets for it
 
 // Open a normal TCP connection. Returns 0 on success, 1 on failure.
-extern int open_tcp_connect(scan_info_t* s, const uint16 port);
+extern int open_tcp_connect(scan_info_t* s, const u16 port);

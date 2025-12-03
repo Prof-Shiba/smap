@@ -37,7 +37,7 @@ void scan_ports(scan_info_t* s) {
   set_ignored_ports(s);
 }
 
-int scan_port(scan_info_t* s, const uint16 port) {
+int scan_port(scan_info_t* s, const u16 port) {
   switch(s->scan_type) {
     case SCAN_TCP:
       return open_tcp_connect(s, port);

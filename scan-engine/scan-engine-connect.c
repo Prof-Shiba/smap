@@ -1,6 +1,6 @@
 #include "./scan-engine.h"
 
-int open_tcp_connect(scan_info_t* s, const uint16 port) {
+int open_tcp_connect(scan_info_t* s, const u16 port) {
   int ret_val = 1;
 
   shiba_network_socket_t* socket = shiba_network_create_socket(s->af, s->sock_type, 0);

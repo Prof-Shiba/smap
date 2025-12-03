@@ -7,7 +7,6 @@
 // TODO: Fix the port_list and generally the scan_info_t type ASAP!
 // print_report really highlights how fucking awfully this is designed!
 
-
 #include "./libs/shiba-core/shiba.h"
 #include "./smap-options/smap-options.h"
 #include "./libs/shiba-network/shiba-network.h"

@@ -1,14 +1,14 @@
 #include "shiba.h"
 
-uint32 shiba_random_int(uint32 num) {
+u32 shiba_random_int(u32 num) {
   num = (num << 13) ^ num;
   return ((num * (num * num * 15731 + 789221) + 1376312589) & 0x7fffffff);
 }
 
-fint32 shiba_fast_inv_square_root(fint32 number) {
-  int64 i = 0;
-	fint32 x2 = 0, y = 0;
-	const fint32 threehalfs = 1.5F;
+f32 shiba_fast_inv_square_root(f32 number) {
+  i64 i = 0;
+	f32 x2 = 0, y = 0;
+	const f32 threehalfs = 1.5F;
 
 	x2 = number * 0.5F;
 	y  = number;

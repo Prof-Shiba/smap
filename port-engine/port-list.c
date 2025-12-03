@@ -1,8 +1,8 @@
 #include "./port-list.h"
 
 int get_ports(const char* ports, scan_info_t* s) {
-  uint16 arr_index = 0;
-  int64 current_port = 0;
+  u16 arr_index = 0;
+  i64 current_port = 0;
   char temp[8] = "";
   char* endptr;
 
