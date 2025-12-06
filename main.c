@@ -18,6 +18,7 @@
 int main(int argc, char *argv[]) {
   scan_info_t* s = malloc(sizeof(*s));
   if (!s) shiba_fatal("FATAL: Failed to allocate space for scan info! (main)");
+  shiba_network_init();
   init_scan_info(s);
 
   // TODO: Get current time, show how long it took for program to finish
