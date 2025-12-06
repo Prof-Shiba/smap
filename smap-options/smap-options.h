@@ -5,7 +5,11 @@
 
 #include "../libs/shiba-core/shiba.h"
 #include "../libs/shiba-network/shiba-network.h"
+
 #define MAX_PORT 65535
+// we assume the user enters 20 ports max
+// before doubling the port_nums size if needed
+#define PORT_MAGIC_SIZE 20
 
 #ifndef _WIN32
   #include <unistd.h>
@@ -43,25 +47,15 @@ typedef struct target_t {
   char* target;
 } target_t;
 
-/*
-  How can i store the port lists? I would like to have a
-  port_t inside ideally an array of port_lists that only
-  stores the amount of ports we need, and it would have the
-  port num and state, so we could go port_list[445]->port.state == PORT_OPEN
-  or something similar. Is this the most effecient though? I want a list of ports
-  that we are actually scanning, and then we just iterate through that list to scan them
-  and check their status. So we can probably dynamically allocate one
-*/
-
 typedef struct {
   target_t* targets;
-  boolean port_list[MAX_PORT + 1];
+  port_t port_list[MAX_PORT + 1]; 
   scan_type_t scan_type;
-  u16 num_ports;
+  u32* port_nums;
+  u16 num_ports_to_scan;
   u16 closed_ports;
   u16 open_ports;
   u16 ignored_ports;
-  u16 scanned_ports;
   u16 af;
   u16 sock_type;
 } scan_info_t;
