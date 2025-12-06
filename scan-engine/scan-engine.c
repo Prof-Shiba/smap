@@ -6,35 +6,25 @@
 // 3. -su UDP scanning
 // 4. -sn ping scanning
 
-// We need to create a function (or some way) to make a socket
-// for the correct scan type. I think in every function we 
-// can just call a single create_shiba_socket function that
-// returns the FD
-
 void scan_ports(scan_info_t* s) {
   target_t* head = s->targets;
 
-  // FIXME: This NEEDS to be heavily optimized fairly soon,
-  // im just making sure the logic works as i expect currently.
-  // We probably shouldn't be using an array here and blindly
-  // iterating thru the entire thing when we may only have a 
-  // handful of ports to scan. Find a better way ASAP!
   while (s->targets) {
-    for (int i = 1; i <= MAX_PORT; i++) {
-      if (s->port_list[i] == TRUE) {
-        if (scan_port(s, i) == 0) {
-          s->open_ports++;
-        }
-        else {
-          s->closed_ports++;
-        }
+    // TODO: because it's per IP, I think we need some way to connect
+    // the output messages, or make a backlog or something.
+    // i dont really want scan_ports.c calling the print output messages.
+    for (int i = 0; i < s->num_ports_to_scan; i++) {
+      if (scan_port(s, s->port_nums[i]) == 0) {
+        s->port_list[s->port_nums[i]].state = PORT_OPEN;
+        s->open_ports++;
+      }
+      else {
+        s->port_list[s->port_nums[i]].state = PORT_CLOSED;
+        s->closed_ports++;
       }
     }
-    s->targets = s->targets->next;
   }
 
-  s->targets = head;
-  set_ignored_ports(s);
 }
 
 int scan_port(scan_info_t* s, const u16 port) {
@@ -66,5 +56,5 @@ int scan_port(scan_info_t* s, const u16 port) {
 }
 
 void set_ignored_ports(scan_info_t* s) {
-  s->ignored_ports = MAX_PORT - s->num_ports;
+  s->ignored_ports = MAX_PORT - s->num_ports_to_scan;
 }
