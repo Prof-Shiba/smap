@@ -8,10 +8,13 @@ int get_ports(const char* ports, scan_info_t* s) {
 
   // special case, '-p-' means scan all ports
   if (strcmp(ports, "-") == 0) {
-    for (int i = 1; i <= MAX_PORT; i++)
-      s->port_list[i] = TRUE;
+    s->port_nums = realloc(s->port_nums, sizeof(*s->port_nums) * MAX_PORT);
 
-    s->num_ports = MAX_PORT;
+    // FIXME: This isnt doing anything
+    for (int i = 1; i <= MAX_PORT; i++)
+      s->port_nums[i] = i;
+
+    s->num_ports_to_scan = MAX_PORT;
     return 0;
   }
   else {
@@ -28,10 +31,10 @@ int get_ports(const char* ports, scan_info_t* s) {
           || current_port <= 0 || current_port > MAX_PORT) {
           shiba_fatal("Invalid port passed to -p! Ports must be an integer between 1-65535");
         }
-
-        if (s->port_list[current_port] == FALSE) {
-          s->port_list[current_port] = TRUE;
-          s->num_ports++;
+        // FIXME: Check if port_nums is too small for the current capacity
+        if (s->port_list[current_port].port_num == 0) {
+          s->num_ports_to_scan++;
+          s->port_list[current_port].port_num = current_port;
         }
         else {
           printf("You've entered that port (%ld) already! Pay attention, you might bring a whole network down!\n", current_port);
