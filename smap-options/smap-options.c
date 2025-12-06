@@ -36,7 +36,7 @@ void init_scan_info(scan_info_t* s) {
 
   s->port_nums = calloc(PORT_MAGIC_SIZE, sizeof(*s->port_nums));
 
-  for (int i = 0; i < MAX_PORT + 1; i++) {
+  for (int i = 0; i <= MAX_PORT; i++) {
   	s->port_list[i].port_num = 0;
   	s->port_list[i].state = PORT_UNKNOWN;
   }
