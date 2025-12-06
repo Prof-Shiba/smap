@@ -23,8 +23,10 @@ void scan_ports(scan_info_t* s) {
         s->closed_ports++;
       }
     }
+    s->targets = s->targets->next;
   }
 
+  s->targets = head;
 }
 
 int scan_port(scan_info_t* s, const u16 port) {
