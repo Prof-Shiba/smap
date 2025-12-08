@@ -34,7 +34,11 @@ void init_scan_info(scan_info_t* s) {
   if (!s->targets)
   	shiba_fatal("FATAL: Failed to allocate space for scan info targets! (%s)", __FILE_NAME__);
 
-  s->port_nums = calloc(PORT_MAGIC_SIZE, sizeof(*s->port_nums));
+	// port_max_size tracks the max capacity of port_nums.
+	// increases if user enters numerous ports
+  s->port_max_size = 20;
+
+  s->port_nums = calloc(s->port_max_size, sizeof(*s->port_nums));
   if (!s->port_nums)
   	shiba_fatal("FATAL: Calloc failed for port nums! (%s)", __FILE_NAME__);
 
