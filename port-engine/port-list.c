@@ -1,5 +1,10 @@
 #include "./port-list.h"
 
+// FIXME: If i manually put port 8000, it doesnt find it
+// -p- WILL find it, but it will display random shit too
+// This makes me think it might be 2 problems. Ones a port initialization
+// or buffer overrun issue, the others a actual port scanning function issue
+
 int get_ports(const char* ports, scan_info_t* s) {
   u16 arr_index = 0;
   i64 current_port = 0;
@@ -8,7 +13,9 @@ int get_ports(const char* ports, scan_info_t* s) {
 
   // special case, '-p-' means scan all ports
   if (strcmp(ports, "-") == 0) {
-    s->port_nums = realloc(s->port_nums, sizeof(*s->port_nums) * MAX_PORT);
+    s->port_nums = realloc(s->port_nums, sizeof(*s->port_nums) * (MAX_PORT + 1));
+    if (!s->port_nums)
+      shiba_fatal("Realloc failed for port nums! (%s)", __FILE_NAME__);
 
     // FIXME: This isnt doing anything
     for (int i = 1; i <= MAX_PORT; i++)
