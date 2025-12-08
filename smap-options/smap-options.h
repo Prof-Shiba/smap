@@ -7,9 +7,6 @@
 #include "../libs/shiba-network/shiba-network.h"
 
 #define MAX_PORT 65535
-// we assume the user enters 20 ports max
-// before doubling the port_nums size if needed
-#define PORT_MAGIC_SIZE 20
 
 #ifndef _WIN32
   #include <unistd.h>
@@ -52,6 +49,7 @@ typedef struct {
   port_t port_list[MAX_PORT + 1]; 
   scan_type_t scan_type;
   u32* port_nums;
+  u16 port_max_size;
   u16 num_ports_to_scan;
   u16 closed_ports;
   u16 open_ports;
