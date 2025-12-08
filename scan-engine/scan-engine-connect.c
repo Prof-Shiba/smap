@@ -28,8 +28,6 @@ int open_tcp_connect(scan_info_t* s, const u16 port) {
     if (res == 0) {
       ret_val = 0;
     }
-
-    goto Cleanup;
   }
   else {
     // TODO: IPv6 work
