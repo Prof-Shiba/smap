@@ -1,7 +1,6 @@
 #include "./port-list.h"
 
-// FIXME: If i manually put port 8000, it doesnt find it
-// -p- WILL find it, but it will display random shit too
+// FIXME: -p- displays random shit in unpredictable amounts
 
 int get_ports(const char* ports, scan_info_t* s) {
   u16 j = 0;
