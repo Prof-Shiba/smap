@@ -3,10 +3,6 @@
 // or fails outright under [x] circumstance, and then throw threading
 // on top of it to make everything worse and harder to debug!
 
-
-// TODO: Fix the port_list and generally the scan_info_t type ASAP!
-// print_report really highlights how fucking awfully this is designed!
-
 #include "./libs/shiba-core/shiba.h"
 #include "./smap-options/smap-options.h"
 #include "./libs/shiba-network/shiba-network.h"
@@ -37,6 +33,7 @@ int main(int argc, char *argv[]) {
   // }
   // s->targets = head;
 
+  printf("Starting smap scan for %s\n", s->targets->target);
   scan_ports(s);
   print_report(s);
 
