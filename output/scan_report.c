@@ -3,7 +3,6 @@
 // FIXME: WE ARE ONLY ASSUMING 1 IP ADDR FOR NOW. FIX LATER
 void print_report(const scan_info_t* s) {
   fflush(stdout);
-  printf("Starting smap scan for %s\n", s->targets->target);
   printf("smap scan results for: %s\n", s->targets->target);
   printf("Scanned: %d port(s)\t", s->num_ports_to_scan);
   printf("Ignored: %d port(s)\t", s->ignored_ports);
@@ -37,7 +36,7 @@ void print_report(const scan_info_t* s) {
           break;
 
         default:
-          printf("(DEBUG ME) Reached end case of switch statement in: %s", __FILE__);
+          printf("(DEBUG ME) Reached default case of switch statement in (%s)", __FILE_NAME__);
           break;
       }
     }
