@@ -11,9 +11,13 @@ int get_ports(const char* ports, scan_info_t* s) {
 
   // special case, '-p-' means scan all ports
   if (strcmp(ports, "-") == 0) {
-    s->port_nums = realloc(s->port_nums, sizeof(*s->port_nums) * (MAX_PORT + 1));
-    if (!s->port_nums)
+    s->port_max_size = MAX_PORT;
+
+    u32* tmp = realloc(s->port_nums, sizeof(*s->port_nums) * (s->port_max_size + 1));
+    if (!tmp)
       shiba_fatal("Realloc failed for port nums! (%s)", __FILE_NAME__);
+
+    s->port_nums = tmp;
 
     for (int i = 1; i <= MAX_PORT; i++)
       s->port_nums[i] = i;
@@ -21,6 +25,7 @@ int get_ports(const char* ports, scan_info_t* s) {
     s->num_ports_to_scan = MAX_PORT;
     return 0;
   }
+  // TODO: add check here later for a -, indicating a range of ports to scan
   else {
     for (int i = 0; i <= strlen(ports); i++) {
       if (ports[i] != ',' && ports[i] != '\0') {
