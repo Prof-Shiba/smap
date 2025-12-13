@@ -24,6 +24,15 @@ int open_tcp_connect(scan_info_t* s, const u16 port) {
       goto Cleanup;
     }
 
+    #ifdef _WIN32
+      // windows stuff
+    #else
+      struct timeval timeout;
+      timeout.tv_sec = s->timeout;
+      setsockopt(socket->handle, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
+      setsockopt(socket->handle, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout));
+    #endif
+
     int res = connect(socket->handle, (struct sockaddr*)&addr, sizeof(addr));
     if (res == 0) {
       ret_val = 0;
