@@ -42,7 +42,7 @@ void init_scan_info(scan_info_t* s) {
   if (!s->port_nums)
   	shiba_fatal("FATAL: Calloc failed for port nums! (%s)", __FILE_NAME__);
 
-  for (int i = 0; i <= MAX_PORT; i++) {
+  for (int i = 0; i <= MAX_PORT + 1; i++) {
   	s->port_list[i].port_num = 0;
   	s->port_list[i].state = PORT_UNKNOWN;
   }
@@ -56,6 +56,7 @@ void init_scan_info(scan_info_t* s) {
  	s->ignored_ports = 0;
  	s->af = AF_INET;
  	s->sock_type = SOCK_STREAM;
+ 	s->timeout = 6; // seconds TODO: add a flag for this in arg parser
 }
 
 void scan_info_cleanup(scan_info_t *s) {

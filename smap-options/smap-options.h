@@ -46,9 +46,10 @@ typedef struct target_t {
 
 typedef struct {
   target_t* targets;
-  port_t port_list[MAX_PORT + 1]; 
+  port_t port_list[MAX_PORT + 1]; // we arent using element 0
   scan_type_t scan_type;
   u32* port_nums;
+  u32 timeout;
   u16 port_max_size;
   u16 num_ports_to_scan;
   u16 closed_ports;
