@@ -6,6 +6,10 @@
 // 3. -su UDP scanning
 // 4. -sn ping scanning
 
+// FIXME: When i add a random character to the end of the IP address,
+// it displays every single port as being opened. 
+// smap -p- 172.31.11.195c does this. Also doesnt scan port 65535
+
 void scan_ports(scan_info_t* s) {
   target_t* head = s->targets;
 
