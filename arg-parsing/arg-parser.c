@@ -133,4 +133,5 @@ void print_usage(char* argv[]) {
   printf("%s --help\n", argv[0]);
   printf("%s -v\n", argv[0]);
   printf("smap -p 22,80,443,445 8.8.8.8\n");
+  printf("smap 8.8.8.8 -p-\n");
 }
