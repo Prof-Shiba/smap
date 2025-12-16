@@ -5,6 +5,7 @@
 
 #include "../libs/shiba-core/shiba.h"
 #include "../libs/shiba-network/shiba-network.h"
+#include <string.h>
 
 #define MAX_PORT 65535
 
