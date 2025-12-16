@@ -38,10 +38,11 @@ void init_scan_info(scan_info_t* s) {
 	// increases if user enters numerous ports
   s->port_max_size = 20;
 
-  s->port_nums = calloc(s->port_max_size, sizeof(*s->port_nums));
+  s->port_nums = malloc(s->port_max_size * sizeof(*s->port_nums));
   if (!s->port_nums)
-  	shiba_fatal("FATAL: Calloc failed for port nums! (%s)", __FILE_NAME__);
+  	shiba_fatal("FATAL: Malloc failed for port nums! (%s)", __FILE_NAME__);
 
+	// NOTE: Why can i not set the port num here and why do i set it everywhere else?
   for (int i = 0; i <= MAX_PORT; i++) {
   	s->port_list[i].port_num = 0;
   	s->port_list[i].state = PORT_UNKNOWN;
@@ -53,10 +54,10 @@ void init_scan_info(scan_info_t* s) {
   s->closed_ports = 0;
   s->open_ports = 0;
   s->scan_type = SCAN_TCP; // TODO: Default to SYN later
- 	s->ignored_ports = 0;
- 	s->af = AF_INET;
- 	s->sock_type = SOCK_STREAM;
- 	s->timeout = 6; // seconds TODO: add a flag for this in arg parser
+  s->ignored_ports = 0;
+  s->af = AF_INET;
+  s->sock_type = SOCK_STREAM;
+  s->timeout = 6; // seconds TODO: add a flag for this in arg parser, make it ms too
 }
 
 void scan_info_cleanup(scan_info_t *s) {
