@@ -12,6 +12,8 @@
 #include "./output/scan_report.h"
 
 int main(int argc, char *argv[]) {
+  // shiba_memory_debug_init(NULL, NULL, NULL);
+
   scan_info_t* s = malloc(sizeof(*s));
   if (!s) shiba_fatal("FATAL: Failed to allocate space for scan info! (main)");
   shiba_network_init();
@@ -38,5 +40,17 @@ int main(int argc, char *argv[]) {
   print_report(s);
 
   printf("Exiting successfully!\n");
+
+  // if (shiba_memory_debug()) {
+  //   fprintf(stderr, "Buffer overrun detected!\n");
+  // }
+  //
+  // shiba_memory_debug_print(0);
+  //
+  // u32 leaked = shiba_memory_debug_mem_usage();
+  // if (leaked > 0) {
+  //   fprintf(stderr, "Memory leak detected: %u bytes unfreed!\n", leaked);
+  // }
+
   scan_info_cleanup(s);
 }
