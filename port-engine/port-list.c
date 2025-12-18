@@ -3,32 +3,29 @@
 // FIXME: -p- displays random shit in unpredictable amounts
 
 int get_ports(const char* ports, scan_info_t* s) {
+  i64 current_port = 0;
+
   // special case, '-p-' means scan all ports
   if (strcmp(ports, "-") == 0) {
-    s->port_max_size = MAX_PORT;
     s->num_ports_to_scan = MAX_PORT;
+    s->port_capacity = MAX_PORT;
 
-    u32* tmp = realloc(s->port_nums, MAX_PORT * sizeof(*s->port_nums));
+    u32* tmp = realloc(s->port_nums, (s->port_capacity + 1) * sizeof(*s->port_nums));
     if (!tmp)
-      shiba_fatal("Realloc failed for port nums! (%s)", __FILE_NAME__);
-
-    memset(tmp, 0, MAX_PORT * sizeof(*s->port_nums));
-
+      shiba_fatal("FATAL: Realloc failed on port nums! (%s)", __FILE_NAME__);
     s->port_nums = tmp;
 
-    for (int i = 1; i <= MAX_PORT; i++) {
-      s->port_list[i].port_num = i;
-      s->port_list[i].state = PORT_UNKNOWN;
-      s->port_nums[i - 1] = i;
+    for (current_port = 1; current_port <= MAX_PORT; current_port++) {
+      s->port_list[current_port].port_num = current_port;
+      s->port_nums[current_port] = current_port;
     }
 
     return 0;
   }
   // TODO: add check here later for a -, indicating a range of ports to scan
   else {
-    u16 j = 0;
     u16 arr_index = 0;
-    i64 current_port = 0;
+    u16 j = 0;
     char temp[8] = "";
     char* endptr;
 
@@ -50,18 +47,16 @@ int get_ports(const char* ports, scan_info_t* s) {
           s->port_list[current_port].port_num = current_port;
           s->port_nums[j++] = current_port;
 
-          if (j >= s->port_max_size) {
-            s->port_max_size *= 2;
+          if (j >= s->port_capacity) {
+            s->port_capacity *= 2;
             // this may be an issue because the extra spots are not zero'd out
-            u32* tmp = realloc(s->port_nums, s->port_max_size * sizeof(*s->port_nums));
+            u32* tmp = realloc(s->port_nums, s->port_capacity * sizeof(*s->port_nums));
             if (!tmp)
               shiba_fatal("FATAL: Realloc failed on port nums! (%s)", __FILE_NAME__);
 
             // NOTE: Debug this to verify it does whats intended
-            for (int i = s->port_max_size / 2; i < s->port_max_size; i++) {
+            for (int i = s->port_capacity / 2; i < s->port_capacity; i++) {
               tmp[i] = 0;
-              s->port_list[i].port_num = 0;
-              s->port_list[i].state = PORT_UNKNOWN;
             }
 
             s->port_nums = tmp;
