@@ -28,7 +28,8 @@ int open_tcp_connect(scan_info_t* s, const u16 port) {
       // windows stuff
     #else
       struct timeval timeout;
-      timeout.tv_sec = s->timeout;
+      timeout.tv_sec = 0;
+      timeout.tv_usec = s->timeout;
       setsockopt(socket->handle, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
       setsockopt(socket->handle, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout));
     #endif
