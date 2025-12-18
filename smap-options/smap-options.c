@@ -42,7 +42,6 @@ void init_scan_info(scan_info_t* s) {
   if (!s->port_nums)
   	shiba_fatal("FATAL: Malloc failed for port nums! (%s)", __FILE_NAME__);
 
-	// NOTE: Why can i not set the port num here and why do i set it everywhere else?
   for (int i = 0; i <= MAX_PORT; i++) {
   	s->port_list[i].port_num = 0;
   	s->port_list[i].state = PORT_UNKNOWN;
