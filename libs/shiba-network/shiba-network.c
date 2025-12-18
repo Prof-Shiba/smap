@@ -8,13 +8,15 @@ int shiba_network_return_ip_type(const char* ip_addr) {
   if (!ip_addr)
     return 1;
 
-  struct in6_addr addr;
+  struct in_addr addr;
+  struct in6_addr addr6;
+
   if (inet_pton(AF_INET, ip_addr, &addr))
     return 4;
-  else if (inet_pton(AF_INET6, ip_addr, &addr))
+  else if (inet_pton(AF_INET6, ip_addr, &addr6))
     return 6;
 
-return 1;
+  return 1;
 }
 
 boolean shiba_network_is_valid_port(const i32 port) {
