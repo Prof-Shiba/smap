@@ -59,7 +59,9 @@ int open_tcp_connect(scan_info_t* s, const u16 port) {
     }
 
     #ifdef _WIN32
-      // windows stuff
+      DWORD timeout_ms = s->timeout;
+      setsockopt(socket->handle, SOL_SOCKET, SO_RCVTIMEO, (const char*)&timeout_ms, sizeof(timeout_ms));
+      setsockopt(socket->handle, SOL_SOCKET, SO_SNDTIMEO, (const char*)&timeout_ms, sizeof(timeout_ms));
     #else
       struct timeval timeout;
       timeout.tv_sec = 0;
