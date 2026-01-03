@@ -1,7 +1,5 @@
 #include "./port-list.h"
 
-// FIXME: -p- displays random shit in unpredictable amounts
-
 int get_ports(const char* ports, scan_info_t* s) {
   i64 current_port = 0;
 
