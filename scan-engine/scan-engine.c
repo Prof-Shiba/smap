@@ -6,9 +6,6 @@
 // 3. -su UDP scanning
 // 4. -sn ping scanning
 
-// FIXME: When i add a random character to the end of the IP address,
-// it displays every single port as being opened. IPv6 also does this.
-
 void scan_ports(scan_info_t* s) {
   target_t* head = s->targets;
 

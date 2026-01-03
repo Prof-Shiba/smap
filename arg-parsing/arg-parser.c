@@ -4,6 +4,9 @@
 #include "../libs/shiba-getopt/shiba-getopt.h"
 #include "../port-engine/port-list.h"
 
+// FIXME: When i add a random character to the end of the IP address,
+// it displays every single port as being opened. IPv6 also does this.
+
 int parse_args(int argc, char *argv[], scan_info_t* s) {
   if (argc <= 1) {
     print_usage(argv);
