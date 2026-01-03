@@ -118,10 +118,7 @@ void link_ips(int argc, char* argv[], scan_info_t* s) {
     target_t* last = NULL;
 
     while (opt_index < argc) {
-      if (shiba_network_return_ip_type(argv[opt_index]) != 1) {
-        // skip
-      }
-      else {
+      if (shiba_network_return_ip_type(argv[opt_index]) == 1) {
           shiba_fatal("Invalid IP Address! (%s)", argv[opt_index]);
       }
 
