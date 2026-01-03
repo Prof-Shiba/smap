@@ -83,7 +83,7 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
       break;
 
       default:
-        shiba_fatal("smap -- default switch argument reached (%s). You entered: %c", __FILE_NAME__, arg);
+        shiba_fatal("smap -- default switch argument reached (%s). You entered: %c", __FILE__, arg);
     }
   }
   // the rest of the args are IP(s), so we parse them, make sure

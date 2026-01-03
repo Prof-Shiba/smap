@@ -32,13 +32,13 @@ Cleanup:
 void init_scan_info(scan_info_t* s) {
   s->targets = malloc(sizeof(*s->targets));
   if (!s->targets)
-  	shiba_fatal("FATAL: Failed to allocate space for scan info targets! (%s)", __FILE_NAME__);
+  	shiba_fatal("FATAL: Failed to allocate space for scan info targets! (%s)", __FILE__);
 
   s->port_capacity = 20;
 
   s->port_nums = malloc(s->port_capacity * sizeof(*s->port_nums));
   if (!s->port_nums)
-  	shiba_fatal("FATAL: Malloc failed for port nums! (%s)", __FILE_NAME__);
+  	shiba_fatal("FATAL: Malloc failed for port nums! (%s)", __FILE__);
 
   for (int i = 0; i <= MAX_PORT; i++) {
   	s->port_list[i].port_num = 0;

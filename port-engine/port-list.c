@@ -10,7 +10,7 @@ int get_ports(const char* ports, scan_info_t* s) {
 
     u32* tmp = realloc(s->port_nums, (s->port_capacity + 1) * sizeof(*s->port_nums));
     if (!tmp)
-      shiba_fatal("FATAL: Realloc failed on port nums! (%s)", __FILE_NAME__);
+      shiba_fatal("FATAL: Realloc failed on port nums! (%s)", __FILE__);
     s->port_nums = tmp;
 
     for (current_port = 1; current_port <= MAX_PORT; current_port++) {
@@ -50,7 +50,7 @@ int get_ports(const char* ports, scan_info_t* s) {
             // this may be an issue because the extra spots are not zero'd out
             u32* tmp = realloc(s->port_nums, s->port_capacity * sizeof(*s->port_nums));
             if (!tmp)
-              shiba_fatal("FATAL: Realloc failed on port nums! (%s)", __FILE_NAME__);
+              shiba_fatal("FATAL: Realloc failed on port nums! (%s)", __FILE__);
 
             // NOTE: Debug this to verify it does whats intended
             for (int i = s->port_capacity / 2; i < s->port_capacity; i++) {

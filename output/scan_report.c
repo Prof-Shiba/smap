@@ -36,7 +36,7 @@ void print_report(const scan_info_t* s) {
           break;
 
         default:
-          printf("(DEBUG ME) Reached default case of switch statement in (%s)", __FILE_NAME__);
+          printf("(DEBUG ME) Reached default case of switch statement in (%s)", __FILE__);
           break;
       }
     }
