@@ -89,32 +89,7 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
   // the rest of the args are IP(s), so we parse them, make sure
   // its valid, then if valid add to linked list of IPs
   if (opt_index < argc) {
-    target_t* last = NULL;
-
-    while (opt_index < argc) {
-      if (shiba_network_return_ip_type(argv[opt_index]) != 1) {
-        // skip
-      }
-      else {
-          printf("Invalid IP address! (%s)\n", argv[opt_index++]);
-          continue;
-      }
-
-      if (!s->targets->target) {
-          s->targets->target = argv[opt_index++];
-      }
-      else {
-        target_t* current_target = malloc(sizeof(*current_target));
-        current_target->target = argv[opt_index++];
-
-        if (!s->targets->next)
-          s->targets->next = current_target;
-        else
-          last->next = current_target;
-
-        last = current_target;
-      }
-    }
+    link_ips(argc, argv, s);
   }
   else {
     shiba_fatal("FATAL: Target address not specified! Try smap -h");
@@ -137,4 +112,32 @@ void print_usage(char* argv[]) {
   printf("%s -v\n", argv[0]);
   printf("smap -p 22,80,443,445 8.8.8.8\n");
   printf("smap 8.8.8.8 -p-\n");
+}
+
+void link_ips(int argc, char* argv[], scan_info_t* s) {
+    target_t* last = NULL;
+
+    while (opt_index < argc) {
+      if (shiba_network_return_ip_type(argv[opt_index]) != 1) {
+        // skip
+      }
+      else {
+          shiba_fatal("Invalid IP Address! (%s)", argv[opt_index]);
+      }
+
+      if (!s->targets->target) {
+          s->targets->target = argv[opt_index++];
+      }
+      else {
+        target_t* current_target = malloc(sizeof(*current_target));
+        current_target->target = argv[opt_index++];
+
+        if (!s->targets->next)
+          s->targets->next = current_target;
+        else
+          last->next = current_target;
+
+        last = current_target;
+      }
+    }
 }
