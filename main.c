@@ -24,22 +24,9 @@ int main(int argc, char *argv[]) {
   if (parse_args(argc, argv, s) != 0)
     shiba_fatal("FATAL: Failed to parse args! (main)");
 
-  // this stuff will be removed when windows testing is verified
-  // target_t* head = s->targets; 
-  // while (s->targets) {
-  //   if (shiba_network_return_ip_type(s->targets->target) == 4)
-  //     printf("%s is a valid IPv4 Address!\n", s->targets->target);
-  //   else if (shiba_network_return_ip_type(s->targets->target) == 6)
-  //     printf("%s is a valid IPv6 Address!\n", s->targets->target);
-  //   s->targets = s->targets->next;
-  // }
-  // s->targets = head;
-
   printf("Starting smap scan for %s\n", s->targets->target);
   scan_ports(s);
   print_report(s);
-
-  printf("Exiting successfully!\n");
 
   // if (shiba_memory_debug()) {
   //   fprintf(stderr, "Buffer overrun detected!\n");
