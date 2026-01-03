@@ -10,7 +10,7 @@ void print_report(const scan_info_t* s) {
   printf("%d closed port(s)\n", s->closed_ports);
   printf("PORT:\tSTATE:\n");
   
-  for (int i = 0; i < s->num_ports_to_scan; i++) {
+  for (int i = 0; i <= s->num_ports_to_scan; i++) {
     if (s->port_list[s->port_nums[i]].state == PORT_OPEN) {
       printf("%d\tOPEN", s->port_nums[i]);
 
