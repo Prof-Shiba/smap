@@ -13,7 +13,7 @@ void scan_ports(scan_info_t* s) {
     // TODO: because it's per IP, I think we need some way to connect
     // the output messages, or make a backlog or something.
     // i dont really want scan_ports.c calling the print output messages.
-    for (int i = 0; i <= s->num_ports_to_scan; i++) {
+    for (int i = 0; i < s->num_ports_to_scan; i++) {// NOTE: Double check this stuff
       if (scan_port(s, s->port_nums[i]) == 0) {
         s->port_list[s->port_nums[i]].state = PORT_OPEN;
         s->open_ports++;
