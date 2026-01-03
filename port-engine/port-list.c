@@ -15,7 +15,7 @@ int get_ports(const char* ports, scan_info_t* s) {
 
     for (current_port = 1; current_port <= MAX_PORT; current_port++) {
       s->port_list[current_port].port_num = current_port;
-      s->port_nums[current_port] = current_port;
+      s->port_nums[current_port - 1] = current_port; // NOTE: Double check this stuff
     }
 
     return 0;
