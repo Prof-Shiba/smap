@@ -1,5 +1,10 @@
 #include "./scan-engine.h"
 
+// Immediate TODOs:
+// non-blocking sockets
+// multi-threading
+
+
 // NOTE: When scanning loopback addresses, theres a small chance the src and
 // dst port will be the same, resulting in a false positive. This must be navigated around on linux.
 // this race condition only occurs on localhost because the source and destination IPs are identical,
@@ -35,6 +40,21 @@ int open_tcp_connect(scan_info_t* s, const u16 port) {
     src_addr.sin_family = AF_INET;
     src_addr.sin_addr.s_addr = INADDR_ANY;
     src_addr.sin_port = 0; // force kernel to pick the port early (0 means pick any random ephemeral port)
+
+    // set non-blocking stuff here
+    // FIXME: We are returning 0 immediately on connect() call, and with this
+    // we need to wait a bit before blindly moving on
+    #ifdef _WIN32
+      // If opt_val = 0, blocking is enabled; Sockets block by default
+      // If opt_val != 0, non-blocking mode is enabled.
+      u_long opt_val = 1;
+      int ret = ioctlsocket(socket->handle, FIONBIO, &opt_val);
+      if (ret != 0) {
+        goto Retry;
+      }
+    #else
+      // TODO:
+    #endif
     
     // TODO: Add better error checking/handling on these. We dont wanna miss sockets.
     if (bind(socket->handle, (struct sockaddr*)&src_addr, sizeof(src_addr)) < 0) {
