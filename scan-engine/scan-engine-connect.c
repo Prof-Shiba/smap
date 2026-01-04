@@ -28,6 +28,27 @@ int open_tcp_connect(scan_info_t* s, const u16 port) {
   if (!socket)
     return ret_val;
 
+  // set non-blocking stuff here
+  #ifdef _WIN32
+    // If opt_val = 0, blocking is enabled; Sockets block by default
+    // If opt_val != 0, non-blocking mode is enabled.
+    u_long opt_val = 1;
+    int ret = ioctlsocket(socket->handle, FIONBIO, &opt_val);
+    if (ret != 0) {
+      goto Retry;
+    }
+  #else
+    int flags = fcntl(socket->handle, F_GETFL, 0);
+    if (flags < 0) {
+      goto Retry;
+    }
+
+    flags |= O_NONBLOCK;
+    if (fcntl(socket->handle, F_SETFL, flags) < 0) {
+      goto Retry;
+    }
+  #endif
+
   struct sockaddr_storage addr = {0};
 
   if (s->af == AF_INET) {
@@ -40,21 +61,6 @@ int open_tcp_connect(scan_info_t* s, const u16 port) {
     src_addr.sin_family = AF_INET;
     src_addr.sin_addr.s_addr = INADDR_ANY;
     src_addr.sin_port = 0; // force kernel to pick the port early (0 means pick any random ephemeral port)
-
-    // set non-blocking stuff here
-    // FIXME: We are returning 0 immediately on connect() call, and with this
-    // we need to wait a bit before blindly moving on
-    #ifdef _WIN32
-      // If opt_val = 0, blocking is enabled; Sockets block by default
-      // If opt_val != 0, non-blocking mode is enabled.
-      u_long opt_val = 1;
-      int ret = ioctlsocket(socket->handle, FIONBIO, &opt_val);
-      if (ret != 0) {
-        goto Retry;
-      }
-    #else
-      // TODO:
-    #endif
     
     // TODO: Add better error checking/handling on these. We dont wanna miss sockets.
     if (bind(socket->handle, (struct sockaddr*)&src_addr, sizeof(src_addr)) < 0) {
@@ -78,21 +84,33 @@ int open_tcp_connect(scan_info_t* s, const u16 port) {
       goto Cleanup;
     }
 
-    #ifdef _WIN32
-      DWORD timeout_ms = s->timeout;
-      setsockopt(socket->handle, SOL_SOCKET, SO_RCVTIMEO, (const char*)&timeout_ms, sizeof(timeout_ms));
-      setsockopt(socket->handle, SOL_SOCKET, SO_SNDTIMEO, (const char*)&timeout_ms, sizeof(timeout_ms));
-    #else
-      struct timeval timeout;
-      timeout.tv_sec = 0;
-      timeout.tv_usec = s->timeout;
-      setsockopt(socket->handle, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
-      setsockopt(socket->handle, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout));
-    #endif
-
     int res = connect(socket->handle, (struct sockaddr*)&addr, sizeof(addr));
     if (res == 0) {
-      ret_val = 0;
+      ret_val = 0; // might get hit on localhost scans
+    }
+    else if (res == -1 && errno == EINPROGRESS) {
+      #ifndef _WIN32
+        fd_set write_fd;
+        FD_ZERO(&write_fd);
+        FD_SET(socket->handle, &write_fd);
+
+        struct timeval tv;
+        tv.tv_sec = s->timeout / 1000000;
+        tv.tv_usec = s->timeout % 1000000;
+
+        res = select(socket->handle + 1, NULL, &write_fd, NULL, &tv);
+        if (res <= 0) {
+          goto Retry;
+        }
+
+        int error = 0;
+        socklen_t error_len = sizeof(error);
+        if (getsockopt(socket->handle, SOL_SOCKET, SO_ERROR, &error, &error_len) == -1 || error != 0) {
+          goto Cleanup;
+        }
+
+        ret_val = 0;
+      #endif
     }
   }
   else {
