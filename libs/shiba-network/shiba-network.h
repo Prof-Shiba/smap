@@ -7,15 +7,16 @@
 #include <errno.h>
 
 #if defined _WIN32
-#include <WinSock2.h>
-#include <ws2tcpip.h>
+  #include <WinSock2.h>
+  #include <ws2tcpip.h>
 #else
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <sys/time.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <unistd.h>
+  #include <sys/socket.h>
+  #include <sys/types.h>
+  #include <sys/time.h>
+  #include <netinet/in.h>
+  #include <arpa/inet.h>
+  #include <unistd.h>
+  #include <fcntl.h>
 #endif
 
 typedef struct shiba_network_socket_t {
