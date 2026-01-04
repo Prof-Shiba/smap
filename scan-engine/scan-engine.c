@@ -5,6 +5,7 @@
 // 2. -sf FIN scanning
 // 3. -su UDP scanning
 // 4. -sn ping scanning
+// TODO: Filtered connections do not show as open
 
 void scan_ports(scan_info_t* s) {
   target_t* head = s->targets;
