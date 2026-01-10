@@ -1,7 +1,7 @@
 #include "./scan-engine.h"
 
 // Immediate TODOs:
-// multi-threading
+// multi-threading. plan out how and where it needs to be done
 
 // NOTE: When scanning loopback addresses, theres a small chance the src and
 // dst port will be the same, resulting in a false positive. This must be navigated around on linux.
@@ -54,7 +54,7 @@ int open_tcp_connect(scan_info_t* s, const u16 port) {
     new_addr->sin_family = s->af;
     new_addr->sin_port = htons(port);
 
-    // TODO: Check if its a loopback addr before doing all this. Also validate for windows!
+    // TODO: Check if its a loopback addr before doing all this.
     struct sockaddr_in src_addr = {0};
     src_addr.sin_family = AF_INET;
     src_addr.sin_addr.s_addr = INADDR_ANY;
@@ -110,7 +110,7 @@ int open_tcp_connect(scan_info_t* s, const u16 port) {
       };
 
       res = select(socket->handle + 1, NULL, &write_fd, &except_fd, &tv);
-      if (res < 0) { // hitting this infinitely on windows and overflowing stack when res <= 0. res == 0. TODO: Test on linux
+      if (res < 0) { // hitting this infinitely on windows and overflowing stack when res <= 0. res equaled 0.
         goto Retry;
       }
       else if (res == 0) {
@@ -130,7 +130,7 @@ int open_tcp_connect(scan_info_t* s, const u16 port) {
   }
   else {
       // this is just for testing. we have an issue to fix with IPv6 characters
-      // not being accepted properly atm
+      // not being accepted properly atm due to a general parsing bug
       shiba_fatal("Successfully entered IPv6 block!");
   }
 
