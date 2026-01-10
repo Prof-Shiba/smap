@@ -1,9 +1,7 @@
 #include "./scan-engine.h"
 
 // Immediate TODOs:
-// non-blocking sockets
 // multi-threading
-
 
 // NOTE: When scanning loopback addresses, theres a small chance the src and
 // dst port will be the same, resulting in a false positive. This must be navigated around on linux.
@@ -30,11 +28,11 @@ int open_tcp_connect(scan_info_t* s, const u16 port) {
 
   // set non-blocking stuff here
   #ifdef _WIN32
-    // If opt_val = 0, blocking is enabled; Sockets block by default
+    // If opt_val == 0, blocking is enabled; Sockets block by default
     // If opt_val != 0, non-blocking mode is enabled.
     u_long opt_val = 1;
     int ret = ioctlsocket(socket->handle, FIONBIO, &opt_val);
-    if (ret != 0) {
+    if (ret == SOCKET_ERROR) {
       goto Retry;
     }
   #else
@@ -88,64 +86,52 @@ int open_tcp_connect(scan_info_t* s, const u16 port) {
     if (res == 0) {
       ret_val = 0; // might get hit on localhost scans
     }
-    else if (res == -1 && errno == EINPROGRESS) {
-      #ifndef _WIN32
-        fd_set write_fd;
-        FD_ZERO(&write_fd);
-        FD_SET(socket->handle, &write_fd);
-
-        struct timeval tv;
-        tv.tv_sec = s->timeout / 1000000;
-        tv.tv_usec = s->timeout % 1000000;
-
-        res = select(socket->handle + 1, NULL, &write_fd, NULL, &tv);
-        if (res <= 0) {
-          goto Retry;
-        }
-
-        int error = 0;
-        socklen_t error_len = sizeof(error);
-        if (getsockopt(socket->handle, SOL_SOCKET, SO_ERROR, &error, &error_len) == -1 || error != 0) {
+    else {
+      #ifdef _WIN32
+        if (res == SOCKET_ERROR && WSAGetLastError() != WSAEWOULDBLOCK) {
           goto Cleanup;
         }
-
-        ret_val = 0;
+      #else
+        if (errno != EINPROGRESS) {
+          goto Cleanup;
+        }
       #endif
     }
+
+      fd_set write_fd, except_fd;
+      FD_ZERO(&write_fd);
+      FD_SET(socket->handle, &write_fd);
+      FD_ZERO(&except_fd);
+      FD_SET(socket->handle, &except_fd);
+
+      struct timeval tv = {
+        .tv_sec  = s->timeout / 1000,
+        .tv_usec = (s->timeout % 1000) * 1000
+      };
+
+      res = select(socket->handle + 1, NULL, &write_fd, &except_fd, &tv);
+      if (res < 0) { // hitting this infinitely on windows and overflowing stack when res <= 0. res == 0. TODO: Test on linux
+        goto Retry;
+      }
+      else if (res == 0) {
+        goto Cleanup;
+      }
+      if (FD_ISSET(socket->handle, &except_fd)) {
+        goto Cleanup;
+      }
+
+      int error = 0;
+      socklen_t error_len = sizeof(error);
+      if (getsockopt(socket->handle, SOL_SOCKET, SO_ERROR, &error, &error_len) == -1 || error != 0) {
+        goto Cleanup;
+      }
+
+      ret_val = 0;
   }
   else {
-    // NOTE: Untested. Interrupted by bug with unknown characters spamming screen.
-    struct sockaddr_in6* new_addr6 = (struct sockaddr_in6*)&addr;
-    new_addr6->sin6_family = AF_INET6;
-    new_addr6->sin6_port = htons(port);
-
-    struct sockaddr_in6 src_addr = {0};
-    src_addr.sin6_family = AF_INET6;
-    src_addr.sin6_addr = in6addr_any;
-    src_addr.sin6_port = 0;
-    
-    // TODO: Add better error checking/handling on these. We dont wanna miss sockets.
-    if (bind(socket->handle, (struct sockaddr*)&src_addr, sizeof(src_addr)) < 0) {
-        goto Cleanup;
-    }
-
-    struct sockaddr_in6 assigned;
-    socklen_t len = sizeof(assigned);
-    if (getsockname(socket->handle, (struct sockaddr*)&assigned, &len) < 0) {
-        goto Cleanup;
-    }
-
-    u16 src_port = ntohs(assigned.sin6_port);
-    if (src_port == port) {
-      goto Retry;
-    }
-
-    int pton_res = inet_pton(s->af, s->targets->target, &new_addr6->sin6_addr.s6_addr);
-    if (pton_res <= 0) {
-      goto Cleanup;
-    }
-
-    ret_val = 0;
+      // this is just for testing. we have an issue to fix with IPv6 characters
+      // not being accepted properly atm
+      shiba_fatal("Successfully entered IPv6 block!");
   }
 
   Cleanup:
