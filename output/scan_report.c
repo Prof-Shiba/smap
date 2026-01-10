@@ -1,6 +1,7 @@
 #include "./scan_report.h"
 
 // FIXME: WE ARE ONLY ASSUMING 1 IP ADDR FOR NOW. FIX LATER
+// FIXME: Print them in order of smallest to largest port
 void print_report(const scan_info_t* s) {
   fflush(stdout);
   printf("smap scan results for: %s\n", s->targets->target);
