@@ -24,12 +24,13 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
 
     // probe stuff
     {"port", NULL, required_argument, 'p'},
+    {"timeout", NULL, required_argument, 't'},
 
     // NULL TERM
     {0, 0, 0, 0}
   };
 
-  while ((arg = getopt_long_only(argc, argv, "hvp:s:", long_options, &option_index)) != EOF) {
+  while ((arg = getopt_long_only(argc, argv, "hvp:s:t:", long_options, &option_index)) != EOF) {
     switch (arg) {
 
       case '?':
@@ -82,6 +83,10 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
         exit(0);
       break;
 
+      case 't':
+        parse_timeout(opt_arg, s);
+      break;
+
       default:
         shiba_fatal("smap -- default switch argument reached (%s). You entered: %c", __FILE__, arg);
     }
@@ -112,6 +117,21 @@ void print_usage(char* argv[]) {
   printf("%s -v\n", argv[0]);
   printf("smap -p 22,80,443,445 8.8.8.8\n");
   printf("smap 8.8.8.8 -p-\n");
+}
+
+void parse_timeout(const char* timeout, scan_info_t* s) {
+  char* endptr;
+  u32 new_timeout;
+
+  if (strlen(timeout) >= 10) {
+    shiba_fatal("Your timeout value is unusually large. Try smap -h.\nTerminating.");
+  }
+
+  new_timeout = strtol(timeout, &endptr, 10);
+  if (endptr == timeout || *endptr != '\0') {
+    shiba_fatal("Invalid timeout parameter passed!\nTerminating.");
+  }
+  s->timeout = new_timeout;
 }
 
 void link_ips(int argc, char* argv[], scan_info_t* s) {
