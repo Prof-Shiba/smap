@@ -5,7 +5,8 @@
 
 #include "../smap-options/smap-options.h"
 
-int parse_args(int argc, char* argv[], scan_info_t* s);
-void print_usage(char* argv[]);
-void print_version(char* argv[]);
-void link_ips(int argc, char* argv[], scan_info_t* s);
+extern int parse_args(int argc, char* argv[], scan_info_t* s);
+extern void parse_timeout(const char* opt_arg, scan_info_t* s);
+extern void print_usage(char* argv[]);
+extern void print_version(char* argv[]);
+extern void link_ips(int argc, char* argv[], scan_info_t* s);
