@@ -54,7 +54,7 @@ void init_scan_info(scan_info_t* s) {
   s->ignored_ports = 0;
   s->af = AF_INET;
   s->sock_type = SOCK_STREAM;
-  s->timeout = 2000; // MS  TODO: add a flag for this in arg parser
+  s->timeout = 2000; // milliseconds
 }
 
 void scan_info_cleanup(scan_info_t *s) {
