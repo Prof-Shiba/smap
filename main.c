@@ -1,8 +1,3 @@
-// NOTE: A lot of stuff will be added before we add multi-threading,
-// i dont want to add broken stuff that somehow conflicts with each other
-// or fails outright under [x] circumstance, and then throw threading
-// on top of it to make everything worse and harder to debug!
-
 #include "./libs/shiba-core/shiba.h"
 #include "./smap-options/smap-options.h"
 #include "./libs/shiba-network/shiba-network.h"
