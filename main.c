@@ -3,8 +3,9 @@
 #include "./libs/shiba-network/shiba-network.h"
 #include "./libs/shiba-threads/shiba-threads.h"
 #include "./arg-parsing/arg-parser.h"
-#include "scan-engine/scan-engine.h"
+#include "./scan-engine/scan-engine.h"
 #include "./output/scan_report.h"
+#include "./output/print_time.h"
 
 // maybe we dont want this? Because we could only scan a handful of ports
 // and maybe we just want to make as many threads for as many ports as there
@@ -28,7 +29,7 @@ int main(int argc, char *argv[]) {
     shiba_fatal("FATAL: Failed to parse args! (main)");
   }
 
-  printf("Starting smap scan for %s\n", s->targets->target);
+  printf("Starting smap scan for %s on %s\n", s->targets->target, print_time());
 
   scan_ports(s);
   print_report(s);
