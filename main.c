@@ -11,20 +11,30 @@
 #include "scan-engine/scan-engine.h"
 #include "./output/scan_report.h"
 
+// maybe we dont want this? Because we could only scan a handful of ports
+// and maybe we just want to make as many threads for as many ports as there
+// are, until we hit MAX_THREADS? In that case, should it even be managed here?
+#define MAX_THREADS 50
+
 int main(int argc, char *argv[]) {
   // shiba_memory_debug_init(NULL, NULL, NULL);
 
   scan_info_t* s = malloc(sizeof(*s));
-  if (!s) shiba_fatal("FATAL: Failed to allocate space for scan info! (main)");
+  if (!s) {
+    shiba_fatal("FATAL: Failed to allocate space for scan info! (main)");
+  }
+
   shiba_network_init();
   init_scan_info(s);
 
   // TODO: Get current time, show how long it took for program to finish
 
-  if (parse_args(argc, argv, s) != 0)
+  if (parse_args(argc, argv, s) != 0) {
     shiba_fatal("FATAL: Failed to parse args! (main)");
+  }
 
   printf("Starting smap scan for %s\n", s->targets->target);
+
   scan_ports(s);
   print_report(s);
 
