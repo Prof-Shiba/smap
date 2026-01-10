@@ -10,8 +10,12 @@ void print_report(const scan_info_t* s) {
   printf("Found %d open port(s)\t", s->open_ports);
   printf("%d closed port(s)\n", s->closed_ports);
   printf("PORT:\tSTATE:\n");
-  
-  for (int i = 0; i <= s->num_ports_to_scan; i++) {
+ 
+  // TODO: Check on linux if -p- scans still hit 65535
+  // i removed the <= and made it < because on windows
+  // i hit an OOB access violation on smaller scans.
+  // Look into it!
+  for (int i = 0; i < s->num_ports_to_scan; i++) {
     if (s->port_list[s->port_nums[i]].state == PORT_OPEN) {
       printf("%d\tOPEN", s->port_nums[i]);
 
