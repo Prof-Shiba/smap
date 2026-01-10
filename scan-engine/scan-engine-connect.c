@@ -138,7 +138,10 @@ int open_tcp_connect(scan_info_t* s, const u16 port) {
     shiba_network_destroy_socket(socket);
     return ret_val;
 
+  // TODO: I can (and should) probably replace this with a loop, in the rare case that we
+  // constantly get the same src and dst ports. I dont think it'll ever happen in practice
+  // but that also could be what the unluckiest person who ever uses this program runs into
   Retry:
     shiba_network_destroy_socket(socket);
-    return open_tcp_connect(s, port); // tail recursion should be optimized away by compiler
+    return open_tcp_connect(s, port);
 }
