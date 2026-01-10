@@ -82,5 +82,5 @@ extern u32 shiba_memory_debug_mem_usage();
 extern u32 shiba_random_int(u32 num);
 // fast inverse square root calculation
 extern f32 shiba_fast_inv_square_root(f32 number);
-// fatal error. print message and kill prog
+// fatal error. print message and kill prog. Does NOT require newline.
 extern void shiba_fatal(const char* message, ...);
