@@ -2,7 +2,7 @@
 
 // FIXME: WE ARE ONLY ASSUMING 1 IP ADDR FOR NOW. FIX LATER
 // FIXME: Print them in order of smallest to largest port
-void print_report(const scan_info_t* s) {
+void print_report(const scan_info_t* s, const f32 cpu_time) {
   fflush(stdout);
   printf("smap scan results for: %s\n", s->targets->target);
   printf("Scanned: %d port(s)\t", s->num_ports_to_scan);
@@ -42,4 +42,8 @@ void print_report(const scan_info_t* s) {
       }
     }
   }
+
+  (s->num_targets == 1) ?
+    printf("\n1 address scanned in %f seconds!\n", cpu_time) :
+    printf("\n%d addresses scanned in %f seconds!\n", s->num_targets, cpu_time);
 }

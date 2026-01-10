@@ -144,6 +144,7 @@ void link_ips(int argc, char* argv[], scan_info_t* s) {
 
       if (!s->targets->target) {
           s->targets->target = argv[opt_index++];
+          s->num_targets++;
       }
       else {
         target_t* current_target = malloc(sizeof(*current_target));
@@ -155,6 +156,7 @@ void link_ips(int argc, char* argv[], scan_info_t* s) {
           last->next = current_target;
 
         last = current_target;
+        s->num_targets++;
       }
     }
 }

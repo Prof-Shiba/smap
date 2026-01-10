@@ -53,6 +53,7 @@ typedef struct {
   u32 timeout;
   u16 port_capacity;
   u16 num_ports_to_scan;
+  u16 num_targets;
   u16 closed_ports;
   u16 open_ports;
   u16 ignored_ports;

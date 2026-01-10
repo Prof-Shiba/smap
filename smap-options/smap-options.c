@@ -48,6 +48,7 @@ void init_scan_info(scan_info_t* s) {
   s->targets->target = NULL;
   s->targets->next = NULL;
   s->num_ports_to_scan = 0;
+  s->num_targets = 0;
   s->closed_ports = 0;
   s->open_ports = 0;
   s->scan_type = SCAN_TCP; // TODO: Default to SYN later

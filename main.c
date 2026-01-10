@@ -14,6 +14,8 @@
 
 int main(int argc, char *argv[]) {
   // shiba_memory_debug_init(NULL, NULL, NULL);
+  clock_t start, end;
+  f32 cpu_time;
 
   scan_info_t* s = malloc(sizeof(*s));
   if (!s) {
@@ -31,8 +33,13 @@ int main(int argc, char *argv[]) {
 
   printf("Starting smap scan for %s on %s\n", s->targets->target, print_time());
 
+
+  start = clock();
   scan_ports(s);
-  print_report(s);
+  end = clock();
+
+  cpu_time = ((f32) (end - start)) / CLOCKS_PER_SEC;
+  print_report(s, cpu_time);
 
   // if (shiba_memory_debug()) {
   //   fprintf(stderr, "Buffer overrun detected!\n");
