@@ -104,19 +104,23 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
 }
 
 void print_version(char* argv[]) {
-  printf("smap version 0.1 -- made by ProfShiba\n");
+  printf("smap version 0.3 -- by ProfShiba\n");
 }
 
 void print_usage(char* argv[]) {
-  printf("smap (shiba mapper)\nUsage: %s <FLAGS> <TARGET>\n", argv[0]);
+  printf("smap (shiba mapper). A free and simple port scanner.\nUsage: %s <FLAGS> <TARGET>\n", argv[0]);
   printf("\nOPTIONS:\n");
-  printf("-h,  --help    Display this help message\n");
+  printf("-h,  --help       Display this help message\n");
   printf("-v,  --version    Display the version information\n");
+  printf("-t,  --timeout    Set the timeout in milliseconds for scans\n");
+  printf("-p,  --port       Set the port(s) to be scanned\n");
+  printf("-s,               Set the scan type (-sT, -sS, -sU) *note: sS and sU not yet implemented*\n");
   printf("\nEXAMPLES:\n");
   printf("%s --help\n", argv[0]);
   printf("%s -v\n", argv[0]);
   printf("smap -p 22,80,443,445 8.8.8.8\n");
   printf("smap 8.8.8.8 -p-\n");
+  printf("smap 127.0.0.1 -sT -p22 --timeout 2000\n");
 }
 
 void parse_timeout(const char* timeout, scan_info_t* s) {
@@ -124,7 +128,7 @@ void parse_timeout(const char* timeout, scan_info_t* s) {
   u32 new_timeout;
 
   if (strlen(timeout) >= 10) {
-    shiba_fatal("Your timeout value is unusually large. Try smap -h.\nTerminating.");
+    shiba_fatal("Your timeout value is unusually large. Try lowering it.\nTerminating.");
   }
 
   new_timeout = strtol(timeout, &endptr, 10);
