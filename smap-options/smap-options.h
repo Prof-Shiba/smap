@@ -1,7 +1,7 @@
 #pragma once
 
 // This file includes things such as scan information, port state information,
-// scan types, and functions needed to help with these
+// scan types, and declares functions needed to help with these
 
 #include "../libs/shiba-core/shiba.h"
 #include "../libs/shiba-network/shiba-network.h"
@@ -38,15 +38,21 @@ typedef enum {
 typedef struct port_t {
   port_state_t state;
   u16 port_num;
+  u16 closed_ports;
+  u16 open_ports;
+  u16 ignored_ports;
 } port_t;
 
 typedef struct target_t {
+  port_t port_list[MAX_PORT + 1]; // we arent using element 0
   struct target_t* next;
+  struct port_t* port;
   char* target;
 } target_t;
 
+// fundamental issue. each target needs its own
+// ports etc so we know whats open on each
 typedef struct {
-  port_t port_list[MAX_PORT + 1]; // we arent using element 0
   scan_type_t scan_type;
   target_t* targets;
   u32* port_nums;
@@ -54,9 +60,6 @@ typedef struct {
   u16 port_capacity;
   u16 num_ports_to_scan;
   u16 num_targets;
-  u16 closed_ports;
-  u16 open_ports;
-  u16 ignored_ports;
   u16 af;
   u16 sock_type;
 } scan_info_t;

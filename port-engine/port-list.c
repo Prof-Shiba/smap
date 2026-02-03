@@ -14,7 +14,7 @@ int get_ports(const char* ports, scan_info_t* s) {
     s->port_nums = tmp;
 
     for (current_port = 1; current_port <= MAX_PORT; current_port++) {
-      s->port_list[current_port].port_num = current_port;
+      s->targets->port_list[current_port].port_num = current_port;
       s->port_nums[current_port - 1] = current_port; // NOTE: Double check this stuff
     }
 
@@ -40,9 +40,9 @@ int get_ports(const char* ports, scan_info_t* s) {
           || current_port <= 0 || current_port > MAX_PORT) {
           shiba_fatal("Invalid port passed to -p! Ports must be an integer between 1-65535");
         }
-        if (s->port_list[current_port].port_num == 0) {
+        if (s->targets->port_list[current_port].port_num == 0) {
           s->num_ports_to_scan++;
-          s->port_list[current_port].port_num = current_port;
+          s->targets->port_list[current_port].port_num = current_port;
           s->port_nums[j++] = current_port;
 
           if (j >= s->port_capacity) {

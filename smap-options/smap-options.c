@@ -40,19 +40,20 @@ void init_scan_info(scan_info_t* s) {
   if (!s->port_nums)
   	shiba_fatal("FATAL: Malloc failed for port nums! (%s)", __FILE__);
 
-  for (int i = 0; i <= MAX_PORT; i++) {
-  	s->port_list[i].port_num = 0;
-  	s->port_list[i].state = PORT_UNKNOWN;
-  }
+	// TODO: i prolly need to init these again for each target
+  // for (int i = 0; i <= MAX_PORT; i++) {
+  // 	s->port_list[i].port_num = 0;
+  // 	s->port_list[i].state = PORT_UNKNOWN;
+  // }
 
   s->targets->target = NULL;
   s->targets->next = NULL;
   s->num_ports_to_scan = 0;
   s->num_targets = 0;
-  s->closed_ports = 0;
-  s->open_ports = 0;
+  // s->closed_ports = 0;
+  // s->open_ports = 0;
   s->scan_type = SCAN_TCP; // TODO: Default to SYN later
-  s->ignored_ports = 0;
+  // s->ignored_ports = 0;
   s->af = AF_INET;
   s->sock_type = SOCK_STREAM;
   s->timeout = 2000; // milliseconds
