@@ -1,6 +1,7 @@
 #include "./scan_report.h"
 
 // FIXME: Print them in order of smallest to largest port
+// when individually passed in
 void print_report(scan_info_t* s, const f32 cpu_time) {
   fflush(stdout);
 
