@@ -3,6 +3,7 @@
 #include "../libs/shiba-core/shiba.h"
 #include "../libs/shiba-getopt/shiba-getopt.h"
 #include "../port-engine/port-list.h"
+#include "../output/html.h"
 
 // FIXME: When i add a random character to the end of the IP address,
 // it displays every single port as being opened. IPv6 also does this.
@@ -26,11 +27,14 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
     {"port", NULL, required_argument, 'p'},
     {"timeout", NULL, required_argument, 't'},
 
+    //output related fields (file format etc)
+    {"output", NULL, optional_argument, 'o'},
+
     // NULL TERM
     {0, 0, 0, 0}
   };
 
-  while ((arg = getopt_long_only(argc, argv, "hvp:s:t:", long_options, &option_index)) != EOF) {
+  while ((arg = getopt_long_only(argc, argv, "hvp:s:t:o::", long_options, &option_index)) != EOF) {
     switch (arg) {
 
       case '?':
@@ -87,6 +91,15 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
         parse_timeout(opt_arg, s);
       break;
 
+      case 'o':
+        if (strcmp(opt_arg, "H") == 0) {
+          // we need to create the html stuff
+        }
+        else {
+          shiba_fatal("Unknown output argument: %s", opt_arg);
+        }
+      break;
+
       default:
         shiba_fatal("smap -- default switch argument reached (%s). You entered: %c", __FILE__, arg);
     }
@@ -104,23 +117,26 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
 }
 
 void print_version(char* argv[]) {
-  printf("smap version 0.3 -- by ProfShiba\n");
+  printf("smap version 0.4 -- by ProfShiba\n");
 }
 
 void print_usage(char* argv[]) {
-  printf("smap (shiba mapper). A free and simple port scanner.\nUsage: %s <FLAGS> <TARGET>\n", argv[0]);
+  printf("smap (shiba mapper). A simple port scanner.\nUsage: %s <FLAGS> <TARGET>\n", argv[0]);
   printf("\nOPTIONS:\n");
   printf("-h,  --help       Display this help message\n");
   printf("-v,  --version    Display the version information\n");
   printf("-t,  --timeout    Set the timeout in milliseconds for scans\n");
   printf("-p,  --port       Set the port(s) to be scanned\n");
   printf("-s,               Set the scan type (-sT, -sS, -sU) *note: sS and sU not yet implemented*\n");
+  printf("-o,  --output     Output scan results to a file. Takes the file type as a parameter, and an optional parameter, which is the name\n");
+  printf("-oH,              Output scan results to a HTML file.\n");
   printf("\nEXAMPLES:\n");
   printf("%s --help\n", argv[0]);
   printf("%s -v\n", argv[0]);
   printf("smap -p 22,80,443,445 8.8.8.8\n");
   printf("smap 8.8.8.8 -p-\n");
   printf("smap 127.0.0.1 -sT -p22 --timeout 2000\n");
+  printf("smap -p- 127.0.0.1 172.33.11.195 -oH scan_results");
 }
 
 void parse_timeout(const char* timeout, scan_info_t* s) {
