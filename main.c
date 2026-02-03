@@ -7,11 +7,6 @@
 #include "./output/scan_report.h"
 #include "./output/print_time.h"
 
-// maybe we dont want this? Because we could only scan a handful of ports
-// and maybe we just want to make as many threads for as many ports as there
-// are, until we hit MAX_THREADS? In that case, should it even be managed here?
-#define MAX_THREADS 50
-
 int main(int argc, char *argv[]) {
   // shiba_memory_debug_init(NULL, NULL, NULL);
   clock_t start, end;
@@ -31,8 +26,7 @@ int main(int argc, char *argv[]) {
     shiba_fatal("FATAL: Failed to parse args! (main)");
   }
 
-  printf("Starting smap scan for %s on %s\n", s->targets->target, print_time());
-
+  printf("Starting smap scan for %d target(s) on %s", s->num_targets, print_time());
 
   start = clock();
   scan_ports(s);
