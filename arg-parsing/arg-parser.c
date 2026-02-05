@@ -27,16 +27,17 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
     {"port", NULL, required_argument, 'p'},
     {"timeout", NULL, required_argument, 't'},
 
-    //output related fields (file format etc)
+    //output related fields (file format)
     {"output", NULL, required_argument, 'o'},
+    {"html", NULL, required_argument, 'H'},
+    {"css", NULL, no_argument, 'C'},
 
     // NULL TERM
     {0, 0, 0, 0}
   };
 
-  while ((arg = getopt_long_only(argc, argv, "hvp:s:t:o:", long_options, &option_index)) != EOF) {
+  while ((arg = getopt_long_only(argc, argv, "hvp:s:t:O:H:C", long_options, &option_index)) != EOF) {
     switch (arg) {
-
       case '?':
         print_usage(argv);
         exit(1);
@@ -91,17 +92,24 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
         parse_timeout(opt_arg, s);
       break;
 
-      case 'o':
-        if (strcmp(opt_arg, "H") == 0) {
-          create_html_template(++opt_arg); // TODO: test
-        }
-        else {
-          shiba_fatal("Unknown output argument: %s. Try smap --help", opt_arg);
-        }
+      case 'O':
+        s->output_args.should_output = 1;
+        s->output_args.file_name = opt_arg;
+        s->output_args.smap_file = 1;
+      break;
+      
+      case 'H':
+        s->output_args.should_output = 1;
+        s->output_args.file_name = opt_arg;
+        s->output_args.html_file = 1;
+      break;
+
+      case 'C':
+        // call smap_style.css func here
       break;
 
       default:
-        shiba_fatal("smap -- default switch argument reached (%s). You entered: %c", __FILE__, arg);
+        shiba_fatal("smap -- default switch statement reached (%s). You entered: %c", __FILE__, arg);
     }
   }
   // the rest of the args are IP(s), so we parse them, make sure
@@ -134,8 +142,8 @@ void print_usage(char* argv[]) {
   printf("-s,               Set the scan type (-sT, -sS, -sU) *note: sS and sU not yet implemented*\n");
 
   printf("Output Options:\n");
-  printf("-o,               Output scan results to a file. Takes the file type and file name as parameters. See below options.\n");
-  printf("-oH,              Output scan results to a HTML file. Includes custom smap_css styling by default.\n");
+  printf("-O,               Output scan results to a smap file. Takes the file name as a parameter.\n");
+  printf("-H,               Output scan results to a HTML file. Takes the file name as a parameter.\n");
 
   printf("\nEXAMPLES:\n");
   printf("%s --help\n", argv[0]);
