@@ -11,8 +11,9 @@
 #ifndef SMAP_HTML_TAGS
 #define SMAP_HTML_TAGS
 
+// TODO: possibly add more if needed and finished implementation file
 #define DOCTYPE fprintf(f, "<!DOCTYPE html>")
-#define HTML_LANG fprintf(f, "<html lang=\"%s\">", (lang))
+#define HTML_LANG(lang) fprintf(f, "<html lang=\"%s\">", lang)
 #define HTML_CLOSE fprintf(f, "</html>")
 #define HEAD fprintf(f, "<head>\n\n</head>")
 #define CHARSET fprintf(f, "<meta charset=\"UTF-8\">")
