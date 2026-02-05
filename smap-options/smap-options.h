@@ -50,9 +50,16 @@ typedef struct target_t {
   char* target;
 } target_t;
 
-// fundamental issue. each target needs its own
-// ports etc so we know whats open on each
+typedef struct output_t {
+  int should_output;
+  int smap_file; // basically just a text file. TODO:
+  int html_file;
+  int greppable_file; // TODO:
+  char* file_name;
+} output_t;
+
 typedef struct {
+  output_t output_args;
   scan_type_t scan_type;
   target_t* targets;
   u32* port_nums;
