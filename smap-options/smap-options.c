@@ -57,6 +57,11 @@ void init_scan_info(scan_info_t* s) {
   s->af = AF_INET;
   s->sock_type = SOCK_STREAM;
   s->timeout = 2000; // milliseconds
+  s->output_args.should_output = 0;
+  s->output_args.file_name = NULL;
+  s->output_args.html_file = 0;
+  s->output_args.smap_file = 0;
+  s->output_args.greppable_file = 0;
 }
 
 void scan_info_cleanup(scan_info_t *s) {
