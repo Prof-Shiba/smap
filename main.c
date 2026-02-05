@@ -5,7 +5,6 @@
 #include "./arg-parsing/arg-parser.h"
 #include "./scan-engine/scan-engine.h"
 #include "./output/scan_report.h"
-#include "./output/print_time.h"
 
 int main(int argc, char *argv[]) {
   // shiba_memory_debug_init(NULL, NULL, NULL);
@@ -26,14 +25,12 @@ int main(int argc, char *argv[]) {
     shiba_fatal("FATAL: Failed to parse args! (main)");
   }
 
-  printf("Starting smap scan for %d target(s) on %s", s->num_targets, print_time());
-
   start = clock();
   scan_ports(s);
   end = clock();
 
   cpu_time = ((f32) (end - start)) / CLOCKS_PER_SEC;
-  print_report(s, cpu_time);
+  handle_report(s, cpu_time);
 
   // if (shiba_memory_debug()) {
   //   fprintf(stderr, "Buffer overrun detected!\n");
