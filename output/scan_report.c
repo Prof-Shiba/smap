@@ -95,7 +95,7 @@ void print_html_report(scan_info_t* s, FILE* f, const f32 cpu_time) {
     HTML_H3_CLOSE;
 
     HTML_UL_OPEN("port_list");
-    // everything above works
+
     for (int i = 0; i < s->num_ports_to_scan; i++) {
       if (s->targets->port_list[s->port_nums[i]].state == PORT_OPEN) {
         HTML_LIST_OPEN;
@@ -136,7 +136,7 @@ void print_html_report(scan_info_t* s, FILE* f, const f32 cpu_time) {
       }
     }
     HTML_UL_CLOSE;
-    //everything below works
+
     s->targets = s->targets->next;
   }
 
