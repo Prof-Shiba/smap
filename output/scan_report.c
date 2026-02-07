@@ -8,39 +8,59 @@
 // to both stdout and the FD stream so that i dont run 2 functions
 // and just square the time needed to print everything
 
+// TODO: I really should just write to file -> print to screen
+// too much overhead. "works for now" but will work on it soon
 void handle_report(scan_info_t* s, const f32 cpu_time) {
-  FILE* f = stdout;
-  strcat(s->output_args.file_name, ".html");
+  FILE* stream = stdout;
 
   if (s->output_args.should_output == 1) {
-    f = fopen(s->output_args.file_name, "w");
-    if (!f) {
-      shiba_fatal("Failed to write to file %s when outputting!", s->output_args.file_name);
-    }
-
     if (s->output_args.html_file == 1) {
-      print_html_report(s, f, cpu_time);
-      f = stdout;
-      print_report(s, f, cpu_time);
+      strcat(s->output_args.file_name, ".html");
+
+      stream = fopen(s->output_args.file_name, "w");
+      if (!stream) {
+        shiba_fatal("Failed to write to file %s when outputting!", s->output_args.file_name);
+      }
+
+      print_html_report(s, stream, cpu_time);
+
+      stream = stdout;
+      print_report(s, stream, cpu_time);
     }
     else if (s->output_args.greppable_file == 1) {
-      print_greppable_report(s, f, cpu_time);
-      f = stdout;
-      print_report(s, f, cpu_time);
+      strcat(s->output_args.file_name, ".grep");
+
+      stream = fopen(s->output_args.file_name, "w");
+      if (!stream) {
+        shiba_fatal("Failed to write to file %s when outputting!", s->output_args.file_name);
+      }
+      // TODO:
+      print_greppable_report(s, stream, cpu_time);
+
+      stream = stdout;
+      print_report(s, stream, cpu_time);
     }
     else if (s->output_args.smap_file == 1) {
-      print_smap_file_report(s, f, cpu_time);
-      f = stdout;
-      print_report(s, f, cpu_time);
+      strcat(s->output_args.file_name, ".smap");
+
+      stream = fopen(s->output_args.file_name, "w");
+      if (!stream) {
+        shiba_fatal("Failed to write to file %s when outputting!", s->output_args.file_name);
+      }
+
+      print_smap_file_report(s, stream, cpu_time);
+
+      stream = stdout;
+      print_report(s, stream, cpu_time);
     }
   }
   else {
-    print_report(s, f, cpu_time);
+    print_report(s, stream, cpu_time);
   }
 }
 
-void print_html_report(scan_info_t* s, FILE* f, const f32 cpu_time) {
-  fflush(f);
+void print_html_report(scan_info_t* s, FILE* stream, const f32 cpu_time) {
+  fflush(stream);
 
   // boilerplate
   HTML_DOCTYPE;
@@ -55,15 +75,15 @@ void print_html_report(scan_info_t* s, FILE* f, const f32 cpu_time) {
 
   HTML_HEAD_OPEN;
   HTML_H1_OPEN;
-  fprintf(f, "Smap Scan Results");
+  fprintf(stream, "Smap Scan Results");
   HTML_H1_CLOSE;
 
   HTML_PARAGRAPH_OPEN("scan");
   if (s->num_targets == 1) {
-    fprintf(f, "Started smap scan on 1 target on %s", print_time());
+    fprintf(stream, "Started smap scan for 1 target on %s", print_time());
   }
   else {
-    fprintf(f, "Started smap scan on %d targets on %s", s->num_targets, print_time());
+    fprintf(stream, "Started smap scan for %d targets on %s", s->num_targets, print_time());
   }
   HTML_BR;
   HTML_PARAGRAPH_CLOSE;
@@ -77,21 +97,21 @@ void print_html_report(scan_info_t* s, FILE* f, const f32 cpu_time) {
   
   while (s->targets) {
     HTML_H3_OPEN;
-    fprintf(f, "\n%s\n", s->targets->target);
+    fprintf(stream, "\n%s\n", s->targets->target);
     HTML_H3_CLOSE;
 
     HTML_PARAGRAPH_OPEN("host");
-    fprintf(f, "Scanned: %d ports • Ignored: %d ports", s->num_ports_to_scan, s->targets->port_list->ignored_ports);
+    fprintf(stream, "Scanned: %d ports • Ignored: %d ports", s->num_ports_to_scan, s->targets->port_list->ignored_ports);
     HTML_PARAGRAPH_CLOSE;
 
     HTML_PARAGRAPH_OPEN("scan_info");
     HTML_STRONG_OPEN;
-    fprintf(f, "Found %d open ports • %d closed ports", s->targets->port_list->open_ports, s->targets->port_list->closed_ports);
+    fprintf(stream, "Found %d open ports • %d closed ports", s->targets->port_list->open_ports, s->targets->port_list->closed_ports);
     HTML_STRONG_CLOSE;
     HTML_PARAGRAPH_CLOSE;
 
     HTML_H3_OPEN;
-    fprintf(f, "Open Ports");
+    fprintf(stream, "Open Ports");
     HTML_H3_CLOSE;
 
     HTML_UL_OPEN("port_list");
@@ -100,35 +120,35 @@ void print_html_report(scan_info_t* s, FILE* f, const f32 cpu_time) {
       if (s->targets->port_list[s->port_nums[i]].state == PORT_OPEN) {
         HTML_LIST_OPEN;
         HTML_SPAN_OPEN("state open");
-        fprintf(f, "%d\tOPEN", s->port_nums[i]);
+        fprintf(stream, "%d\tOPEN", s->port_nums[i]);
 
         switch(s->scan_type) {
           case SCAN_TCP:
-            fprintf(f, "/TCP\n");
+            fprintf(stream, "/TCP\n");
             HTML_LIST_CLOSE;
             HTML_SPAN_CLOSE;
             break;
 
           case SCAN_SYN:
-            fprintf(f, "/SYN\n");
+            fprintf(stream, "/SYN\n");
             HTML_LIST_CLOSE;
             HTML_SPAN_CLOSE;
             break;
 
           case SCAN_UDP:
-            fprintf(f, "/UDP\n");
+            fprintf(stream, "/UDP\n");
             HTML_LIST_CLOSE;
             HTML_SPAN_CLOSE;
             break;
 
           case SCAN_FIN:
-            fprintf(f, "/FIN\n");
+            fprintf(stream, "/FIN\n");
             HTML_LIST_CLOSE;
             HTML_SPAN_CLOSE;
             break;
 
           case SCAN_PING:
-            fprintf(f, "/PING\n");
+            fprintf(stream, "/PING\n");
             HTML_LIST_CLOSE;
             HTML_SPAN_CLOSE;
             break;
@@ -142,8 +162,8 @@ void print_html_report(scan_info_t* s, FILE* f, const f32 cpu_time) {
 
   HTML_H2_OPEN;
   (s->num_targets == 1) ?
-  fprintf(f,"\n1 address scanned in %f seconds!\n", cpu_time) :
-  fprintf(f,"\n%d addresses scanned in %f seconds!\n", s->num_targets, cpu_time);
+  fprintf(stream,"\n1 address scanned in %f seconds!\n", cpu_time) :
+  fprintf(stream,"\n%d addresses scanned in %f seconds!\n", s->num_targets, cpu_time);
   HTML_H2_CLOSE;
 
   HTML_MAIN_CLOSE;
@@ -151,7 +171,7 @@ void print_html_report(scan_info_t* s, FILE* f, const f32 cpu_time) {
 
   HTML_FOOTER_OPEN;
   HTML_PARAGRAPH_OPEN("end");
-  fprintf(f, "Autogenerated by Smap");
+  fprintf(stream, "Autogenerated by Smap");
   HTML_PARAGRAPH_CLOSE;
   HTML_FOOTER_CLOSE;
 
@@ -161,44 +181,42 @@ void print_html_report(scan_info_t* s, FILE* f, const f32 cpu_time) {
   s->targets = head;
 }
 
-void print_report(scan_info_t* s, FILE* f, const f32 cpu_time) {
-  fflush(f);
+void print_report(scan_info_t* s, FILE* stream, const f32 cpu_time) {
+  fflush(stream);
+
+  target_t* head = s->targets;
 
   while (s->targets) {
-    fprintf(f, "\nsmap scan results for: %s\n", s->targets->target);
-    fprintf(f, "Scanned: %d ports\t", s->num_ports_to_scan);
-    fprintf(f, "Ignored: %d ports\t", s->targets->port_list->ignored_ports);
-    fprintf(f, "Found %d open ports\t", s->targets->port_list->open_ports);
-    fprintf(f, "%d closed ports\n", s->targets->port_list->closed_ports);
-    fprintf(f, "PORT:\tSTATE:\n");
+    fprintf(stream, "\nsmap scan results for: %s\n", s->targets->target);
+    fprintf(stream, "Scanned: %d ports\t", s->num_ports_to_scan);
+    fprintf(stream, "Ignored: %d ports\t", s->targets->port_list->ignored_ports);
+    fprintf(stream, "Found %d open ports\t", s->targets->port_list->open_ports);
+    fprintf(stream, "%d closed ports\n", s->targets->port_list->closed_ports);
+    fprintf(stream, "PORT:\tSTATE:\n");
   
     for (int i = 0; i < s->num_ports_to_scan; i++) {
       if (s->targets->port_list[s->port_nums[i]].state == PORT_OPEN) {
-        printf("%d\tOPEN", s->port_nums[i]);
+        fprintf(stream, "%d\tOPEN", s->port_nums[i]);
 
         switch(s->scan_type) {
           case SCAN_TCP:
-            printf("/TCP\n");
+            fprintf(stream, "/TCP\n");
             break;
 
           case SCAN_SYN:
-            printf("/SYN\n");
+            fprintf(stream, "/SYN\n");
             break;
 
           case SCAN_UDP:
-            printf("/UDP\n");
+            fprintf(stream,"/UDP\n");
             break;
 
           case SCAN_FIN:
-            printf("/FIN\n");
+            fprintf(stream, "/FIN\n");
             break;
 
           case SCAN_PING:
-            printf("/PING\n");
-            break;
-
-          default:
-            printf("Reached default case of switch statement in (%s)", __FILE__);
+            fprintf(stream, "/PING\n");
             break;
         }
       }
@@ -208,15 +226,17 @@ void print_report(scan_info_t* s, FILE* f, const f32 cpu_time) {
   }
 
   (s->num_targets == 1) ?
-    printf("\n1 address scanned in %f seconds!\n", cpu_time) :
-    printf("\n%d addresses scanned in %f seconds!\n", s->num_targets, cpu_time);
+    fprintf(stream, "\n1 address scanned in %f seconds!\n", cpu_time) :
+    fprintf(stream, "\n%d addresses scanned in %f seconds!\n", s->num_targets, cpu_time);
+
+  s->targets = head;
 }
 
-void print_greppable_report(scan_info_t* s, FILE* f, const f32 cpu_time) {
+void print_greppable_report(scan_info_t* s, FILE* stream, const f32 cpu_time) {
   // TODO:
 }
 
 
-void print_smap_file_report(scan_info_t* s, FILE* f, const f32 cpu_time) {
-  // TODO:
+void print_smap_file_report(scan_info_t* s, FILE* stream, const f32 cpu_time) {
+  print_report(s, stream, cpu_time);
 }
