@@ -4,12 +4,11 @@
 // FIXME: Print them in order of smallest to largest port
 // when individually passed in
 //
-// NOTE: There also very well may be a better/faster way of printing
-// to both stdout and the FD stream so that i dont run 2 functions
-// and just square the time needed to print everything
 
-// TODO: I really should just write to file -> print to screen
-// too much overhead. "works for now" but will work on it soon
+// TODO: I really should just write to file -> print to screen, this seems like
+// too much overhead. "works for now" but will work on it soon.
+// This whole file gives me some weird vibes. i wanna do it cleaner
+
 void handle_report(scan_info_t* s, const f32 cpu_time) {
   FILE* stream = stdout;
 
