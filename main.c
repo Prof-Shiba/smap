@@ -25,6 +25,10 @@ int main(int argc, char *argv[]) {
     shiba_fatal("FATAL: Failed to parse args! (main)");
   }
 
+  (s->num_targets == 1) ?
+    printf("Starting smap scan for 1 target on %s", print_time()) :
+    printf("Starting smap scan for %d targets on %s", s->num_targets, print_time());
+
   start = clock();
   scan_ports(s);
   end = clock();
