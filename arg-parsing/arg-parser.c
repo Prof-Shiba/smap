@@ -123,6 +123,10 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
     shiba_fatal("FATAL: Target address not specified! Try smap --help");
   }
 
+  // TODO: Sort ports in order of smallest to largest
+  // when individually passed in. This is so if the user
+  // passes them in a weird order they will still print nicely.
+
   return 0;
 }
 

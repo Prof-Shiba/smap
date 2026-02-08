@@ -1,10 +1,6 @@
 #include "./scan_report.h"
 #include "html.h"
 
-// FIXME: Sort ports in order of smallest to largest
-// when individually passed in. This is so if the user
-// passes them in a weird order they will still print nicely.
-
 void handle_report(scan_info_t* s, const f32 cpu_time) {
   FILE* stream = stdout;
 
