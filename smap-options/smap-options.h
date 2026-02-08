@@ -9,6 +9,10 @@
 
 #define MAX_PORT 65535
 
+#define SMAP_FILE_FORMAT ".smap"
+#define HTML_FILE_FORMAT ".html"
+#define GREP_FILE_FORMAT ".grep"
+
 #ifndef _WIN32
   #include <unistd.h>
   #include <sys/socket.h>
@@ -51,11 +55,9 @@ typedef struct target_t {
 } target_t;
 
 typedef struct output_t {
-  int should_output;
-  int smap_file; // basically just a text file. TODO:
-  int html_file;
-  int greppable_file; // TODO:
   char* file_name;
+  char* file_format;
+  boolean should_output;
 } output_t;
 
 typedef struct {
