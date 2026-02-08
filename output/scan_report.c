@@ -1,57 +1,33 @@
 #include "./scan_report.h"
 #include "html.h"
 
-// FIXME: Print them in order of smallest to largest port
-// when individually passed in
-//
-
-// TODO: I really should just write to file -> print to screen, this seems like
-// too much overhead. "works for now" but will work on it soon.
-// This whole file gives me some weird vibes. i wanna do it cleaner
+// FIXME: Sort ports in order of smallest to largest
+// when individually passed in. This is so if the user
+// passes them in a weird order they will still print nicely.
 
 void handle_report(scan_info_t* s, const f32 cpu_time) {
   FILE* stream = stdout;
 
-  if (s->output_args.should_output == 1) {
-    if (s->output_args.html_file == 1) {
-      strcat(s->output_args.file_name, ".html");
+  if (s->output_args.should_output == TRUE) {
+    strcat(s->output_args.file_name, s->output_args.file_format);
 
-      stream = fopen(s->output_args.file_name, "w");
-      if (!stream) {
-        shiba_fatal("Failed to write to file %s when outputting!", s->output_args.file_name);
-      }
+    stream = fopen(s->output_args.file_name, "w");
+    if (!stream) { // TODO: clarify what went wrong (out of space etc)
+      shiba_fatal("Failed to write to file %s when outputting!", s->output_args.file_name);
+    }
 
+    if (strcmp(s->output_args.file_format, HTML_FILE_FORMAT) == 0) {
       print_html_report(s, stream, cpu_time);
-
-      stream = stdout;
-      print_report(s, stream, cpu_time);
     }
-    else if (s->output_args.greppable_file == 1) {
-      strcat(s->output_args.file_name, ".grep");
-
-      stream = fopen(s->output_args.file_name, "w");
-      if (!stream) {
-        shiba_fatal("Failed to write to file %s when outputting!", s->output_args.file_name);
-      }
-      // TODO:
-      print_greppable_report(s, stream, cpu_time);
-
-      stream = stdout;
-      print_report(s, stream, cpu_time);
-    }
-    else if (s->output_args.smap_file == 1) {
-      strcat(s->output_args.file_name, ".smap");
-
-      stream = fopen(s->output_args.file_name, "w");
-      if (!stream) {
-        shiba_fatal("Failed to write to file %s when outputting!", s->output_args.file_name);
-      }
-
+    else if (strcmp(s->output_args.file_format, SMAP_FILE_FORMAT) == 0) {
       print_smap_file_report(s, stream, cpu_time);
-
-      stream = stdout;
-      print_report(s, stream, cpu_time);
     }
+    else {
+      print_greppable_report(s, stream, cpu_time);
+    }
+
+    stream = stdout;
+    print_report(s, stream, cpu_time);
   }
   else {
     print_report(s, stream, cpu_time);
