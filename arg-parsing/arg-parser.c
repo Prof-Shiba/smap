@@ -95,13 +95,13 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
       case 'O':
         s->output_args.should_output = 1;
         s->output_args.file_name = opt_arg;
-        s->output_args.smap_file = 1;
+        s->output_args.file_format = SMAP_FILE_FORMAT;
       break;
       
       case 'H':
         s->output_args.should_output = 1;
         s->output_args.file_name = opt_arg;
-        s->output_args.html_file = 1;
+        s->output_args.file_format = HTML_FILE_FORMAT;
       break;
 
       case 'C':
@@ -112,8 +112,10 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
         shiba_fatal("smap -- default switch statement reached (%s). You entered: %c", __FILE__, arg);
     }
   }
-  // the rest of the args are IP(s), so we parse them, make sure
-  // its valid, then if valid add to linked list of IPs
+  // the rest of the args are assumed to be IP(s), so we parse them, make sure
+  // its valid, then if valid add to linked list of IPs.
+  // NOTE: due to arg parsing problems, make sure im not accidentally doing something
+  // stupid when verifying IPs
   if (opt_index < argc) {
     link_ips(argc, argv, s);
   }
