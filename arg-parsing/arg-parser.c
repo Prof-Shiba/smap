@@ -112,7 +112,7 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
         shiba_fatal("smap -- default switch statement reached (%s). You entered: %c", __FILE__, arg);
     }
   }
-  // the rest of the args are assumed to be IP(s), so we parse them, make sure
+  // the rest of the args are assumed to be IPs, so we parse them, make sure
   // its valid, then if valid add to linked list of IPs.
   // NOTE: due to arg parsing problems, make sure im not accidentally doing something
   // stupid when verifying IPs
@@ -123,9 +123,12 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
     shiba_fatal("FATAL: Target address not specified! Try smap --help");
   }
 
+  init_ip_port_list(s);
+
   // TODO: Sort ports in order of smallest to largest
   // when individually passed in. This is so if the user
   // passes them in a weird order they will still print nicely.
+
 
   return 0;
 }
@@ -200,4 +203,22 @@ void link_ips(int argc, char* argv[], scan_info_t* s) {
         s->num_targets++;
       }
     }
+}
+
+void init_ip_port_list(scan_info_t* s) {
+  target_t* head = s->targets->target;
+
+  while (s->targets->target) {
+    s->targets->port_list->closed_ports = 0;
+    s->targets->port_list->open_ports = 0;
+    s->targets->port_list->ignored_ports = 0;
+
+    for (int i = 0; i <= MAX_PORT; i++) {
+      s->targets->port_list[i].port_num = 0;
+      s->targets->port_list[i].state = PORT_UNKNOWN;
+    }
+    s->targets->target = s->targets->next;
+  }
+
+  s->targets->target = head;
 }
