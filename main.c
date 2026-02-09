@@ -36,6 +36,7 @@ int main(int argc, char *argv[]) {
   end = clock();
 
   cpu_time = ((f32) (end - start)) / CLOCKS_PER_SEC;
+  set_ignored_ports(s);
   handle_report(s, cpu_time);
 
   // if (shiba_memory_debug()) {
