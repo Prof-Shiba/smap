@@ -6,6 +6,10 @@
 #include "./scan-engine/scan-engine.h"
 #include "./output/scan_report.h"
 
+// TODO: Fix the ignored ports not showing properly.
+// Then print closed ports.
+// Then fix windows being inconsistent and slower than nmap
+
 int main(int argc, char *argv[]) {
   // shiba_memory_debug_init(NULL, NULL, NULL);
   clock_t start, end;
