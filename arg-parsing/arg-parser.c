@@ -206,9 +206,9 @@ void link_ips(int argc, char* argv[], scan_info_t* s) {
 }
 
 void init_ip_port_list(scan_info_t* s) {
-  target_t* head = s->targets->target;
+  target_t* head = s->targets;
 
-  while (s->targets->target) {
+  while (s->targets) {
     s->targets->port_list->closed_ports = 0;
     s->targets->port_list->open_ports = 0;
     s->targets->port_list->ignored_ports = 0;
@@ -217,8 +217,8 @@ void init_ip_port_list(scan_info_t* s) {
       s->targets->port_list[i].port_num = 0;
       s->targets->port_list[i].state = PORT_UNKNOWN;
     }
-    s->targets->target = s->targets->next;
+    s->targets = s->targets->next;
   }
 
-  s->targets->target = head;
+  s->targets = head;
 }
