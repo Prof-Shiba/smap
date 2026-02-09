@@ -19,8 +19,6 @@ int main(int argc, char *argv[]) {
   shiba_network_init();
   init_scan_info(s);
 
-  // TODO: Get current time, show how long it took for program to finish
-
   if (parse_args(argc, argv, s) != 0) {
     shiba_fatal("FATAL: Failed to parse args! (main)");
   }
