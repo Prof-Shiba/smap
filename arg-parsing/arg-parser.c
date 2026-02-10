@@ -112,7 +112,7 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
       break;
 
       case 'P':
-        // call smap_style.css func here
+        print_css_file();
       break;
 
       default:
@@ -168,7 +168,7 @@ void print_usage(char* argv[]) {
   printf("smap -p 22,80,443,445 8.8.8.8\n");
   printf("smap 8.8.8.8 -p-\n");
   printf("smap 127.0.0.1 -sT -p22 --timeout 2000\n");
-  printf("smap -p- 127.0.0.1 172.33.11.195 -H scan_results\n");
+  printf("smap -p- 127.0.0.1 172.33.11.195 -H scan_results --pretty\n");
 }
 
 void parse_timeout(const char* timeout, scan_info_t* s) {
