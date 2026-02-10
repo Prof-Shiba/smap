@@ -141,7 +141,7 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
 }
 
 void print_version(char* argv[]) {
-  printf("smap version 0.4 -- by ProfShiba\n");
+  printf("smap version 0.5 -- by ProfShiba\n");
 }
 
 void print_usage(char* argv[]) {
@@ -161,6 +161,7 @@ void print_usage(char* argv[]) {
   printf("-O,               Output scan results to a smap file. Takes the file name as a parameter.\n");
   printf("-G,               Output scan results to a grep file. Takes the file name as a parameter.\n");
   printf("-H,               Output scan results to a HTML file. Takes the file name as a parameter.\n");
+  printf("-P,  --pretty     Output a CSS file to make the HTML file look pretty.\n");
 
   printf("\nEXAMPLES:\n");
   printf("%s --help\n", argv[0]);
