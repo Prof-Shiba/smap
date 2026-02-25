@@ -1,20 +1,25 @@
 #include "./scan-engine.h"
-
-// Immediate TODOs:
-// multi-threading. plan out how and where it needs to be done
-
+ 
 // NOTE: When scanning loopback addresses, theres a small chance the src and
 // dst port will be the same, resulting in a false positive. This must be navigated around on linux.
-// this race condition only occurs on localhost because the source and destination IPs are identical,
+// this condition only occurs on localhost because the source and destination IPs can be identical,
 // (src IP, src port, dst IP, dst port) collapse into a loop if src port == dst port
 // https://stackoverflow.com/questions/24077625/how-to-see-if-i-connected-to-an-ephemeral-port - 186 views from 11 yrs ago
 //
 // I spent countless hours debugging this 100% convinced it was my fault until i began to give up
 // and suspect it was a kernel issue...and it was. Im going to leave this comment here because it was
-// absurdly annoying and i unironically started to lose my mind. I'll probably change this open_tcp_connect
-// function in the future anyways as im sure theres a better way to do things but it works for now.
+// absurdly annoying and i unironically started to lose my mind. TCP isn't as good as say SYN scanning anyways
+// typically, but it's still worth being aware that this can happen
 
 int open_tcp_connect(scan_info_t* s, const u16 port) {
+  static const int max_num_retries = 5;
+  static int num_retries = 0;
+
+  if (num_retries >= max_num_retries) {
+    num_retries = 0;
+    return 1;
+  }
+
   int ret_val = 1;
 
   if (shiba_network_return_ip_type(s->targets->target) == 4)
@@ -65,9 +70,8 @@ int open_tcp_connect(scan_info_t* s, const u16 port) {
         goto Cleanup;
     }
 
-    struct sockaddr_in assigned;
+    struct sockaddr_in assigned = { 0 };
     socklen_t len = sizeof(assigned);
-    // give us the port the stupid ass kernel chose
     if (getsockname(socket->handle, (struct sockaddr*)&assigned, &len) < 0) {
         goto Cleanup;
     }
@@ -130,7 +134,7 @@ int open_tcp_connect(scan_info_t* s, const u16 port) {
   }
   else {
       // this is just for testing. we have an issue to fix with IPv6 characters
-      // not being accepted properly atm due to a general parsing bug
+      // not being accepted properly atm due to a general parsing bug in arg-parser
       shiba_fatal("Successfully entered IPv6 block!");
   }
 
@@ -138,10 +142,8 @@ int open_tcp_connect(scan_info_t* s, const u16 port) {
     shiba_network_destroy_socket(socket);
     return ret_val;
 
-  // TODO: I can (and should) probably replace this with a loop, in the rare case that we
-  // constantly get the same src and dst ports. I dont think it'll ever happen in practice
-  // but that also could be what the unluckiest person who ever uses this program runs into
   Retry:
+    num_retries++;
     shiba_network_destroy_socket(socket);
     return open_tcp_connect(s, port);
 }
