@@ -29,6 +29,9 @@ void scan_ports(scan_info_t* s) {
 
 int scan_port(scan_info_t* s, const u16 port) {
   switch(s->scan_type) {
+    // TODO: after other scan modes are added, make TCP scanning
+    // done in an async manner. It will slightly speed it up on windows
+    // on linux the difference isn't noticeable since its so fast
     case SCAN_TCP:
       return open_tcp_connect(s, port);
     break;
