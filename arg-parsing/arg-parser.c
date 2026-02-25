@@ -30,13 +30,13 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
     //output related fields (file format)
     {"output", NULL, required_argument, 'o'},
     {"html", NULL, required_argument, 'H'},
-    {"css", NULL, no_argument, 'C'},
+    {"pretty", NULL, no_argument, 'P'},
 
     // NULL TERM
     {0, 0, 0, 0}
   };
 
-  while ((arg = getopt_long_only(argc, argv, "hvp:s:t:O:H:C", long_options, &option_index)) != EOF) {
+  while ((arg = getopt_long_only(argc, argv, "hvp:s:t:O:H:PG:", long_options, &option_index)) != EOF) {
     switch (arg) {
       case '?':
         print_usage(argv);
@@ -92,6 +92,7 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
         parse_timeout(opt_arg, s);
       break;
 
+      // TODO: there is definitely a way to truncate these outputs into one case
       case 'O':
         s->output_args.should_output = 1;
         s->output_args.file_name = opt_arg;
@@ -103,9 +104,15 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
         s->output_args.file_name = opt_arg;
         s->output_args.file_format = HTML_FILE_FORMAT;
       break;
+      // TODO:
+      case 'G':
+        s->output_args.should_output = 1;
+        s->output_args.file_name = opt_arg;
+        s->output_args.file_format = GREP_FILE_FORMAT;
+      break;
 
-      case 'C':
-        // call smap_style.css func here
+      case 'P':
+        print_css_file();
       break;
 
       default:
@@ -134,7 +141,7 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
 }
 
 void print_version(char* argv[]) {
-  printf("smap version 0.4 -- by ProfShiba\n");
+  printf("smap version 0.5 -- by ProfShiba\n");
 }
 
 void print_usage(char* argv[]) {
@@ -152,7 +159,9 @@ void print_usage(char* argv[]) {
 
   printf("Output Options:\n");
   printf("-O,               Output scan results to a smap file. Takes the file name as a parameter.\n");
+  printf("-G,               Output scan results to a grep file. Takes the file name as a parameter.\n");
   printf("-H,               Output scan results to a HTML file. Takes the file name as a parameter.\n");
+  printf("-P,  --pretty     Output a CSS file to make the HTML file look pretty.\n");
 
   printf("\nEXAMPLES:\n");
   printf("%s --help\n", argv[0]);
@@ -160,7 +169,7 @@ void print_usage(char* argv[]) {
   printf("smap -p 22,80,443,445 8.8.8.8\n");
   printf("smap 8.8.8.8 -p-\n");
   printf("smap 127.0.0.1 -sT -p22 --timeout 2000\n");
-  printf("smap -p- 127.0.0.1 172.33.11.195 -oH scan_results\n");
+  printf("smap -p- 127.0.0.1 172.33.11.195 -H scan_results --pretty\n");
 }
 
 void parse_timeout(const char* timeout, scan_info_t* s) {
@@ -206,9 +215,9 @@ void link_ips(int argc, char* argv[], scan_info_t* s) {
 }
 
 void init_ip_port_list(scan_info_t* s) {
-  target_t* head = s->targets->target;
+  target_t* head = s->targets;
 
-  while (s->targets->target) {
+  while (s->targets) {
     s->targets->port_list->closed_ports = 0;
     s->targets->port_list->open_ports = 0;
     s->targets->port_list->ignored_ports = 0;
@@ -217,8 +226,8 @@ void init_ip_port_list(scan_info_t* s) {
       s->targets->port_list[i].port_num = 0;
       s->targets->port_list[i].state = PORT_UNKNOWN;
     }
-    s->targets->target = s->targets->next;
+    s->targets = s->targets->next;
   }
 
-  s->targets->target = head;
+  s->targets = head;
 }

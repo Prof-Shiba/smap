@@ -4,6 +4,7 @@
 // print_usage and version functions, which are only used here
 
 #include "../smap-options/smap-options.h"
+#include "../output/scan_report.h"
 
 extern int parse_args(int argc, char* argv[], scan_info_t* s);
 extern void parse_timeout(const char* opt_arg, scan_info_t* s);
