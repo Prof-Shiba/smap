@@ -205,7 +205,53 @@ void print_report(scan_info_t* s, FILE* stream, const f32 cpu_time) {
 }
 
 void print_greppable_report(scan_info_t* s, FILE* stream, const f32 cpu_time) {
-  // TODO:
+  fflush(stream);
+  fprintf(stream, "# smap scan started at: %s", print_time());
+
+  target_t* head = s->targets;
+
+  while (s->targets) {
+    fprintf(stream, "Host: %s\t", s->targets->target);
+    fprintf(stream, "Ports: ");
+
+    for (int i = 0; i < s->num_ports_to_scan; i++) {
+      if (s->targets->port_list[s->port_nums[i]].state == PORT_OPEN) {
+        fprintf(stream, "%d/OPEN", s->port_nums[i]);
+        
+        switch(s->scan_type) {
+          case SCAN_TCP:
+            fprintf(stream, "/TCP, ");
+            break;
+
+          case SCAN_SYN:
+            fprintf(stream, "/SYN, ");
+            break;
+
+          case SCAN_UDP:
+            fprintf(stream,"/UDP, ");
+            break;
+
+          case SCAN_FIN:
+            fprintf(stream, "/FIN, ");
+            break;
+
+          case SCAN_PING:
+            fprintf(stream, "/PING, ");
+            break;
+        }
+      }
+    }
+
+    fprintf(stream, " Scanned: %d ports, ", s->num_ports_to_scan);
+    fprintf(stream, " Ignored: %d ports\n", s->targets->port_list->ignored_ports);
+    s->targets = s->targets->next;
+  }
+
+  (s->num_targets == 1) ?
+    fprintf(stream, "# 1 address scanned in %f seconds!\n", cpu_time) :
+    fprintf(stream, "# %d addresses scanned in %f seconds!\n", s->num_targets, cpu_time);
+
+  s->targets = head;
 }
 
 
