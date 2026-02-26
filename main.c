@@ -6,7 +6,8 @@
 #include "./scan-engine/scan-engine.h"
 #include "./output/scan_report.h"
 
-// TODO: Detection for when the host is down.
+// TODO: PING the host(s) first to confirm they are up.
+// Add DNS lookup
 // After that, we search for any bugs we can find (eg. parsing bugs)
 // Double check to see if anything needs a refactor, such as output arg parser
 // then when everythings good, we add SYN stealth scanning using raw packets
