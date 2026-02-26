@@ -72,7 +72,7 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
         }
         if (s->scan_type == SCAN_SYN || s->scan_type == SCAN_UDP || s->scan_type == SCAN_FIN)
           if (is_root == FALSE) {
-            shiba_fatal("FATAL: Elevated privileges required to run a -s%s scan!\nTerminating due to insufficient privilege level!", opt_arg);
+            shiba_fatal("Elevated privileges required to run a -s%s scan!\nTerminating due to insufficient privilege level!", opt_arg);
         }
       break;
 
@@ -116,24 +116,15 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
         shiba_fatal("smap -- default switch statement reached (%s). You entered: %c", __FILE__, arg);
     }
   }
-  // the rest of the args are assumed to be IPs, so we parse them, make sure
-  // its valid, then if valid add to linked list of IPs.
-  // NOTE: due to arg parsing problems, make sure im not accidentally doing something
-  // stupid when verifying IPs
+
   if (opt_index < argc) {
     link_ips(argc, argv, s);
   }
   else {
-    shiba_fatal("FATAL: Target address not specified! Try smap --help");
+    shiba_fatal("Target address not specified! Try smap --help");
   }
 
   init_ip_port_list(s);
-
-  // TODO: Sort ports in order of smallest to largest
-  // when individually passed in. This is so if the user
-  // passes them in a weird order they will still print nicely.
-
-
   return 0;
 }
 
