@@ -52,10 +52,10 @@ void print_html_report(scan_info_t* s, FILE* stream, const f32 cpu_time) {
 
   HTML_PARAGRAPH_OPEN("scan");
     if (s->num_targets == 1) {
-      fprintf(stream, "Started smap scan for 1 target on %s", print_time());
+      fprintf(stream, "Smap scan for 1 target started at %s", print_time());
     }
     else {
-      fprintf(stream, "Started smap scan for %d targets on %s", s->num_targets, print_time());
+      fprintf(stream, "Smap scan for %d targets started at %s", s->num_targets, print_time());
     }
   HTML_BR;
   HTML_PARAGRAPH_CLOSE;
@@ -322,6 +322,9 @@ void print_css_file() {
   fputs(
       "body {\n"
       "  margin: 0;\n"
+      "  min-height: 100vh;\n"
+      "  display: flex;\n"
+      "  flex-direction: column;\n"
       "}\n\n"
       "*:focus-visible {\n"
       "  outline: 2px solid;\n"
@@ -384,6 +387,7 @@ void print_css_file() {
       ":where(main) {\n"
       "  padding-block: 2rem;\n"
       "  overflow-x: clip;\n"
+      "  flex: 1;\n"
       "}\n\n",
       f);
 
