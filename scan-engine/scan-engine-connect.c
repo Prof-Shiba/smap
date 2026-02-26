@@ -133,9 +133,82 @@ int open_tcp_connect(scan_info_t* s, const u16 port) {
       ret_val = 0;
   }
   else {
-      // this is just for testing. we have an issue to fix with IPv6 characters
-      // not being accepted properly atm due to a general parsing bug in arg-parser
-      shiba_fatal("Successfully entered IPv6 block!");
+    struct sockaddr_in6* new_addr6 = (struct sockaddr_in6*)&addr;
+    new_addr6->sin6_family = s->af;
+    new_addr6->sin6_port = htons(port);
+
+    // TODO: Check if its a loopback addr before doing all this.
+    struct sockaddr_in6 src_addr = {0};
+    src_addr.sin6_family = AF_INET6;
+    src_addr.sin6_addr = in6addr_any;
+    src_addr.sin6_port = 0;
+    
+    // TODO: Add better error checking/handling on these. We dont wanna miss sockets.
+    if (bind(socket->handle, (struct sockaddr*)&src_addr, sizeof(src_addr)) < 0) {
+        goto Cleanup;
+    }
+
+    struct sockaddr_in assigned = { 0 };
+    socklen_t len = sizeof(assigned);
+    if (getsockname(socket->handle, (struct sockaddr*)&assigned, &len) < 0) {
+        goto Cleanup;
+    }
+
+    u16 src_port = ntohs(assigned.sin_port);
+    if (src_port == port) {
+      goto Retry;
+    }
+
+    int pton_res = inet_pton(s->af, s->targets->target, &new_addr6->sin6_addr.s6_addr);
+    if (pton_res <= 0) {
+      goto Cleanup;
+    }
+
+    int res = connect(socket->handle, (struct sockaddr*)&addr, sizeof(addr));
+    if (res == 0) {
+      ret_val = 0; // might get hit on localhost scans
+    }
+    else {
+      #ifdef _WIN32
+        if (res == SOCKET_ERROR && WSAGetLastError() != WSAEWOULDBLOCK) {
+          goto Cleanup;
+        }
+      #else
+        if (errno != EINPROGRESS) {
+          goto Cleanup;
+        }
+      #endif
+    }
+
+      fd_set write_fd, except_fd;
+      FD_ZERO(&write_fd);
+      FD_SET(socket->handle, &write_fd);
+      FD_ZERO(&except_fd);
+      FD_SET(socket->handle, &except_fd);
+
+      struct timeval tv = {
+        .tv_sec  = s->timeout / 1000,
+        .tv_usec = (s->timeout % 1000) * 1000
+      };
+
+      res = select(socket->handle + 1, NULL, &write_fd, &except_fd, &tv);
+      if (res < 0) { // hitting this infinitely on windows and overflowing stack when res <= 0. res equaled 0.
+        goto Retry;
+      }
+      else if (res == 0) {
+        goto Cleanup;
+      }
+      if (FD_ISSET(socket->handle, &except_fd)) {
+        goto Cleanup;
+      }
+
+      int error = 0;
+      socklen_t error_len = sizeof(error);
+      if (getsockopt(socket->handle, SOL_SOCKET, SO_ERROR, &error, &error_len) == -1 || error != 0) {
+        goto Cleanup;
+      }
+
+    ret_val = 0;
   }
 
   Cleanup:
