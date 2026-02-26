@@ -1,5 +1,7 @@
 #include "./port-list.h"
 
+// TODO: add check here later for a -, indicating a range of ports to scan
+
 int get_ports(const char* ports, scan_info_t* s) {
   i64 current_port = 0;
 
@@ -20,7 +22,6 @@ int get_ports(const char* ports, scan_info_t* s) {
 
     return 0;
   }
-  // TODO: add check here later for a -, indicating a range of ports to scan
   else {
     u16 arr_index = 0;
     u16 j = 0;
@@ -49,8 +50,9 @@ int get_ports(const char* ports, scan_info_t* s) {
             s->port_capacity *= 2;
             // this may be an issue because the extra spots are not zero'd out
             u32* tmp = realloc(s->port_nums, s->port_capacity * sizeof(*s->port_nums));
-            if (!tmp)
+            if (!tmp) {
               shiba_fatal("FATAL: Realloc failed on port nums! (%s)", __FILE__);
+            }
 
             // NOTE: Debug this to verify it does whats intended
             for (int i = s->port_capacity / 2; i < s->port_capacity; i++) {
@@ -67,7 +69,26 @@ int get_ports(const char* ports, scan_info_t* s) {
         arr_index = 0;
       }
     }
+    // users are probably not manually passing 50+ ports,
+    // let alone 100+, so a slow but simple alg is fine here
+    if (s->num_ports_to_scan > 1) {
+      insertion_sort(s->port_nums, s->num_ports_to_scan);
+    }
   }
 
   return 0;
+}
+
+void insertion_sort(u32 arr[], int length) {
+  for (int i = 1; i < length; i++) {
+    int curr = arr[i];
+    int prev = i - 1;
+
+    while (prev >= 0 && arr[prev] > curr) {
+      arr[prev + 1] = arr[prev];
+      prev--;
+    }
+
+    arr[prev + 1] = curr;
+  }
 }

@@ -10,3 +10,4 @@
 
 // parses and gets ports entered by user. Kills program on fail, 0 on success
 extern int get_ports(const char* ports, scan_info_t* s);
+extern void insertion_sort(u32 arr[], int length);
