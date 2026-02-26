@@ -6,14 +6,6 @@
 #include "./scan-engine/scan-engine.h"
 #include "./output/scan_report.h"
 
-// TODO: fix windows being inconsistent and extremely slow
-// (1.5 second on average per port on windows). TCP
-// port scans WILL be VERY slow on windows, but currently
-// its way slower than nmap is. -p- TCP scanning on windows
-// takes forever, even on nmap. I dont think theres
-// a way around it besides swapping to sS or something else,
-// since nmap would likely be using that way around by now
-
 int main(int argc, char *argv[]) {
   // shiba_memory_debug_init(NULL, NULL, NULL);
   clock_t start, end;
