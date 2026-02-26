@@ -6,6 +6,10 @@
 #include "./scan-engine/scan-engine.h"
 #include "./output/scan_report.h"
 
+// TODO: We need some detection for when the host is down.
+// After that, we search for any bugs we can find (eg. parsing bugs)
+// then when everythings good, we add SYN stealth scanning using raw packets
+
 int main(int argc, char *argv[]) {
   // shiba_memory_debug_init(NULL, NULL, NULL);
   clock_t start, end;
