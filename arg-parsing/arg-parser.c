@@ -29,7 +29,6 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
     {"html", NULL, required_argument, 'H'},
     {"pretty", NULL, no_argument, 'P'},
 
-    // NULL TERM
     {0, 0, 0, 0}
   };
 
@@ -65,12 +64,12 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
         }
         else if (strcmp(opt_arg, "N") == 0) {
           s->scan_type = SCAN_PING;
-          // TODO: Need to find out what this will be.
+          s->sock_type = SOCK_RAW;
         }
         else {
           shiba_fatal("Unknown scan type: %s", opt_arg);
         }
-        if (s->scan_type == SCAN_SYN || s->scan_type == SCAN_UDP || s->scan_type == SCAN_FIN)
+        if (s->scan_type == SCAN_SYN || s->scan_type == SCAN_UDP || s->scan_type == SCAN_FIN || s->scan_type == SCAN_PING)
           if (is_root == FALSE) {
             shiba_fatal("Elevated privileges required to run a -s%s scan!\nTerminating due to insufficient privilege level!", opt_arg);
         }
@@ -101,7 +100,7 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
         s->output_args.file_name = opt_arg;
         s->output_args.file_format = HTML_FILE_FORMAT;
       break;
-      // TODO:
+
       case 'G':
         s->output_args.should_output = 1;
         s->output_args.file_name = opt_arg;
@@ -158,6 +157,7 @@ void print_usage(char* argv[]) {
   printf("smap 8.8.8.8 -p-\n");
   printf("smap 127.0.0.1 -sT -p22 --timeout 2000\n");
   printf("smap -p- 127.0.0.1 172.33.11.195 -H scan_results --pretty\n");
+  printf("smap -p 21,22,445,1716 ::1 -G greppable_file\n");
 }
 
 void parse_timeout(const char* timeout, scan_info_t* s) {
