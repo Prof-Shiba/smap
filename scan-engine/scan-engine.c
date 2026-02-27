@@ -11,7 +11,7 @@ void scan_ports(scan_info_t* s) {
   target_t* head = s->targets;
 
   while (s->targets) {
-    for (int i = 0; i < s->num_ports_to_scan; i++) {// NOTE: Double check this stuff
+    for (int i = 0; i < s->num_ports_to_scan; i++) {
       if (scan_port(s, s->port_nums[i]) == 0) {
         s->targets->port_list[s->port_nums[i]].state = PORT_OPEN;
         s->targets->port_list->open_ports++;
