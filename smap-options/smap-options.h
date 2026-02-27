@@ -49,8 +49,8 @@ typedef struct port_t {
 
 typedef struct target_t {
   port_t port_list[MAX_PORT + 1]; // we arent using element 0
+  struct port_t port;
   struct target_t* next;
-  struct port_t* port;
   char* target;
 } target_t;
 
