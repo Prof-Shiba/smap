@@ -5,6 +5,9 @@
 #include "../port-engine/port-list.h"
 #include "../output/html.h"
 
+char* buffer_for_output;
+char* file_name;
+
 int parse_args(int argc, char *argv[], scan_info_t* s) {
   if (argc <= 1) {
     print_usage(argv);
@@ -14,6 +17,9 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
   int option_index = 0;
   int arg = 0;
   boolean is_root = check_if_root(); // we need elevated privs for packet manipulation
+  // these are for the output params (if needed)
+  char file_arg[2] = {0};
+  char file_delim[2] = {0};
 
   struct option long_options[] = {
     // misc stuff
@@ -26,6 +32,7 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
 
     //output related fields (file format)
     {"output", NULL, required_argument, 'o'},
+    {"pretty", NULL, no_argument, 'P'},
 
     {0, 0, 0, 0}
   };
@@ -90,33 +97,45 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
         parse_timeout(opt_arg, s);
       break;
 
-      // TODO: otp_arg is being used currently, and we need
-      // to find a way around that as the prev version wasnt scalable,
-      // but we cant require 2 perms using getopt so we need to find a fix.
-      // if we go OOB the terminal will display some vars, so we need to verify
-      // user input somehow
-      // -oH:file_name
+      // Formatted as: -oH:file_name
       case 'o':
-        // H:file_name as one arg
-        shiba_fatal("%s", opt_arg);
-        s->output_args.should_output = 1;
-        s->output_args.file_name = opt_arg; // TODO: this is the problem, opt_arg is used when we want -oH for example
+        buffer_for_output = malloc(sizeof *opt_arg + 1);
+        file_name = malloc(sizeof *opt_arg + 1);
+        
+        strcpy(buffer_for_output, opt_arg);
+        if (!buffer_for_output || !file_name) {
+          shiba_fatal("Failed to allocate space for file names!");
+        }
 
-        if (strcmp(opt_arg, "S") == 0) {
+        file_arg[0] = buffer_for_output[0];
+        file_arg[1] = '\0';
+
+        file_delim[0] = buffer_for_output[1];
+        file_delim[1] = '\0';
+
+        if (strcmp(file_delim, ":") != 0) {
+          shiba_fatal("Invalid output arguments. Format: -oH:file_name. See smap --help for more information.\nQuitting.");
+        }
+
+        // ignore the first 2 chars (the arg and delimiter) to just get the file name
+        strncpy(file_name, buffer_for_output + 2, strlen(buffer_for_output) - 2);
+
+        s->output_args.should_output = 1;
+        s->output_args.file_name = file_name;
+        // FIXME: Theres only one filename so i cant output multiple types
+        // because its getting overwritten.
+        if (strcmp(file_arg, "S") == 0) {
           s->output_args.file_format = SMAP_FILE_FORMAT;
         }
-        else if (strcmp(opt_arg, "H") == 0) {
+        else if (strcmp(file_arg, "H") == 0) {
           s->output_args.file_format = HTML_FILE_FORMAT;
         }
-        else if (strcmp(opt_arg, "G") == 0) {
+        else if (strcmp(file_arg, "G") == 0) {
           s->output_args.file_format = GREP_FILE_FORMAT;
         }
-        else if (strcmp(opt_arg, "P") == 0) {
-          print_css_file();
-        }
-        // TODO: add option for all file type -oA
+        // TODO: add option for all file types -oA
         else {
-          shiba_fatal("Unknown output type: %s\nQuitting.", opt_arg);
+          shiba_fatal("Unknown output type: %s\nQuitting.", file_arg);
         }
       break;
       
@@ -137,6 +156,8 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
   }
 
   init_ip_port_list(s);
+
+  free(buffer_for_output);
   return 0;
 }
 
