@@ -53,5 +53,7 @@ int main(int argc, char *argv[]) {
   //   fprintf(stderr, "Memory leak detected: %u bytes unfreed!\n", leaked);
   // }
 
+  // leftover from arg parser
+  free(file_name);
   scan_info_cleanup(s);
 }
