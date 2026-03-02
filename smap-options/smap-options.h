@@ -70,6 +70,7 @@ typedef struct {
   u16 num_targets;
   u16 af;
   u16 sock_type;
+  boolean scan_type_set;
 } scan_info_t;
 
 extern boolean check_if_root(void);

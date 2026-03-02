@@ -51,6 +51,7 @@ void init_scan_info(scan_info_t* s) {
   s->output_args.should_output = 0;
   s->output_args.file_name = NULL;
   s->output_args.file_format = NULL;
+  s->scan_type_set = FALSE;
 }
 
 void scan_info_cleanup(scan_info_t *s) {
