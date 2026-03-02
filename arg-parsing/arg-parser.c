@@ -28,6 +28,7 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
     {"output", NULL, required_argument, 'O'},
     {"html", NULL, required_argument, 'H'},
     {"pretty", NULL, no_argument, 'P'},
+    {"grep", NULL, no_argument, 'G'},
 
     {0, 0, 0, 0}
   };
