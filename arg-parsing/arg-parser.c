@@ -25,7 +25,7 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
     {"timeout", NULL, required_argument, 't'},
 
     //output related fields (file format)
-    {"output", NULL, required_argument, 'o'},
+    {"output", NULL, required_argument, 'O'},
     {"html", NULL, required_argument, 'H'},
     {"pretty", NULL, no_argument, 'P'},
 
