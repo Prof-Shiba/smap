@@ -182,8 +182,8 @@ void print_usage(char* argv[]) {
   printf("-o,               Output scan results to a smap file. Takes the file name as a parameter.\n");
   printf("-oG,              Output scan results to a grep file. Takes the file name as a parameter.\n");
   printf("-oH,              Output scan results to a HTML file. Takes the file name as a parameter.\n");
-  printf("-oP,              Output a CSS file to make the HTML file look pretty.\n");
   printf("-oA,              Save output in all file types at once.\n");
+  printf("-P,  --pretty     Output a CSS file to make the HTML file look prettier.\n");
 
   printf("\nEXAMPLES:\n");
   printf("%s --help\n", argv[0]);
@@ -191,8 +191,8 @@ void print_usage(char* argv[]) {
   printf("smap -p 22,80,443,445 8.8.8.8\n");
   printf("smap 8.8.8.8 -p-\n");
   printf("smap 127.0.0.1 -sT -p22 --timeout 2000\n");
-  printf("smap -p- 127.0.0.1 172.33.11.195 -oH scan_results -oP\n");
-  printf("smap -p 21,22,445,1716 ::1 -oG greppable_file\n");
+  printf("smap -p- 127.0.0.1 172.33.11.195 -oH:html_scan_results --pretty\n");
+  printf("smap -p 21,22,445,1716 ::1 -oG:greppable_file\n");
 }
 
 void parse_timeout(const char* timeout, scan_info_t* s) {
