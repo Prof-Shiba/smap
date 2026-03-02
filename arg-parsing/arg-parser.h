@@ -6,6 +6,9 @@
 #include "../smap-options/smap-options.h"
 #include "../output/scan_report.h"
 
+extern char* buffer_for_output;
+extern char* file_name;
+
 extern int parse_args(int argc, char* argv[], scan_info_t* s);
 extern void parse_timeout(const char* opt_arg, scan_info_t* s);
 extern void print_usage(char* argv[]);
