@@ -42,16 +42,16 @@ typedef enum {
 typedef struct port_t {
   port_state_t state;
   u16 port_num;
-  u16 closed_ports;
-  u16 open_ports;
-  u16 ignored_ports;
 } port_t;
 
 typedef struct target_t {
   port_t port_list[MAX_PORT + 1]; // we arent using element 0
-  struct port_t port;
+  struct port_t port_stats;
   struct target_t* next;
   char* target;
+  u16 closed_ports;
+  u16 open_ports;
+  u16 ignored_ports;
 } target_t;
 
 typedef struct output_t {
