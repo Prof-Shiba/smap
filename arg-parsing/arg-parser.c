@@ -5,8 +5,11 @@
 #include "../port-engine/port-list.h"
 #include "../output/html.h"
 
+// these are for the output params (if needed)
 char* buffer_for_output;
 char* file_name;
+char file_arg[2] = {0};
+char file_delim[2] = {0};
 
 int parse_args(int argc, char *argv[], scan_info_t* s) {
   if (argc <= 1) {
@@ -17,9 +20,6 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
   int option_index = 0;
   int arg = 0;
   boolean is_root = check_if_root(); // we need elevated privs for packet manipulation
-  // these are for the output params (if needed)
-  char file_arg[2] = {0};
-  char file_delim[2] = {0};
 
   struct option long_options[] = {
     // misc stuff
@@ -99,27 +99,7 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
 
       // Formatted as: -oH:file_name
       case 'o':
-        buffer_for_output = malloc(sizeof *opt_arg + 1);
-        file_name = malloc(sizeof *opt_arg + 1);
-        
-        strcpy(buffer_for_output, opt_arg);
-        if (!buffer_for_output || !file_name) {
-          shiba_fatal("Failed to allocate space for file names!");
-        }
-
-        file_arg[0] = buffer_for_output[0];
-        file_arg[1] = '\0';
-
-        file_delim[0] = buffer_for_output[1];
-        file_delim[1] = '\0';
-
-        if (strcmp(file_delim, ":") != 0) {
-          shiba_fatal("Invalid output arguments. Format: -oH:file_name. See smap --help for more information.\nQuitting.");
-        }
-
-        // ignore the first 2 chars (the arg and delimiter) to just get the file name
-        strncpy(file_name, buffer_for_output + 2, strlen(buffer_for_output) - 2);
-
+        prep_file_types(s);
         s->output_args.should_output = 1;
         s->output_args.file_name = file_name;
         // FIXME: Theres only one filename so i cant output multiple types
@@ -179,7 +159,7 @@ void print_usage(char* argv[]) {
   printf("-s,               Set the scan type (-sT, -sS, -sU) *note: sS and sU not yet implemented*\n");
 
   printf("Output Options:\n");
-  printf("-o,               Output scan results to a smap file. Takes the file name as a parameter.\n");
+  printf("-oS,              Output scan results to a smap file. Takes the file name as a parameter.\n");
   printf("-oG,              Output scan results to a grep file. Takes the file name as a parameter.\n");
   printf("-oH,              Output scan results to a HTML file. Takes the file name as a parameter.\n");
   printf("-oA,              Save output in all file types at once.\n");
@@ -249,4 +229,31 @@ void init_ip_port_list(scan_info_t* s) {
   }
 
   s->targets = head;
+}
+
+// FIXME: Passing a massive string crashes
+// malloc(): corrupted top size
+// fish: Job 1, './smap 172.31.11.195 127.0.0.1 …' terminated by signal SIGABRT (Abort)
+void prep_file_types(scan_info_t* s) {
+  buffer_for_output = malloc(sizeof *opt_arg + 1);
+  file_name = malloc(sizeof *opt_arg + 1);
+  
+  strcpy(buffer_for_output, opt_arg);
+  if (!buffer_for_output || !file_name) {
+    shiba_fatal("Failed to allocate space for file names!");
+  }
+
+  file_arg[0] = buffer_for_output[0];
+  file_arg[1] = '\0';
+
+  file_delim[0] = buffer_for_output[1];
+  file_delim[1] = '\0';
+
+  if (strcmp(file_delim, ":") != 0) {
+    shiba_fatal("Invalid output arguments. Format: -oH:file_name. See smap --help for more information.\nQuitting.");
+  }
+
+  // ignore the first 2 chars (the arg and delimiter) to just get the file name
+  strncpy(file_name, buffer_for_output + 2, strlen(buffer_for_output) - 2);
+  return;
 }
