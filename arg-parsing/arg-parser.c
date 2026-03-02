@@ -25,15 +25,12 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
     {"timeout", NULL, required_argument, 't'},
 
     //output related fields (file format)
-    {"output", NULL, required_argument, 'O'},
-    {"html", NULL, required_argument, 'H'},
-    {"pretty", NULL, no_argument, 'P'},
-    {"grep", NULL, no_argument, 'G'},
+    {"output", NULL, required_argument, 'o'},
 
     {0, 0, 0, 0}
   };
 
-  while ((arg = getopt_long_only(argc, argv, "hvp:s:t:O:H:PG:", long_options, &option_index)) != EOF) {
+  while ((arg = getopt_long_only(argc, argv, "hvp:s:t:O:H:PG:o:", long_options, &option_index)) != EOF) {
     switch (arg) {
       case '?':
         print_usage(argv);
@@ -47,7 +44,7 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
 
       case 's':
         if (s->scan_type_set == TRUE) {
-          shiba_fatal("Provided multiple scan types! Make up your mind!\nTerminating");
+          shiba_fatal("Provided multiple scan types! Make up your mind!\nTerminating.");
         }
         s->scan_type_set = TRUE;
 
@@ -93,25 +90,36 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
         parse_timeout(opt_arg, s);
       break;
 
-      // TODO: there is definitely a way to truncate these outputs into one case
-      case 'O':
+      // TODO: otp_arg is being used currently, and we need
+      // to find a way around that as the prev version wasnt scalable,
+      // but we cant require 2 perms using getopt so we need to find a fix.
+      // if we go OOB the terminal will display some vars, so we need to verify
+      // user input somehow
+      // -oH:file_name
+      case 'o':
+        // H:file_name as one arg
+        shiba_fatal("%s", opt_arg);
         s->output_args.should_output = 1;
-        s->output_args.file_name = opt_arg;
-        s->output_args.file_format = SMAP_FILE_FORMAT;
+        s->output_args.file_name = opt_arg; // TODO: this is the problem, opt_arg is used when we want -oH for example
+
+        if (strcmp(opt_arg, "S") == 0) {
+          s->output_args.file_format = SMAP_FILE_FORMAT;
+        }
+        else if (strcmp(opt_arg, "H") == 0) {
+          s->output_args.file_format = HTML_FILE_FORMAT;
+        }
+        else if (strcmp(opt_arg, "G") == 0) {
+          s->output_args.file_format = GREP_FILE_FORMAT;
+        }
+        else if (strcmp(opt_arg, "P") == 0) {
+          print_css_file();
+        }
+        // TODO: add option for all file type -oA
+        else {
+          shiba_fatal("Unknown output type: %s\nQuitting.", opt_arg);
+        }
       break;
       
-      case 'H':
-        s->output_args.should_output = 1;
-        s->output_args.file_name = opt_arg;
-        s->output_args.file_format = HTML_FILE_FORMAT;
-      break;
-
-      case 'G':
-        s->output_args.should_output = 1;
-        s->output_args.file_name = opt_arg;
-        s->output_args.file_format = GREP_FILE_FORMAT;
-      break;
-
       case 'P':
         print_css_file();
       break;
@@ -150,10 +158,11 @@ void print_usage(char* argv[]) {
   printf("-s,               Set the scan type (-sT, -sS, -sU) *note: sS and sU not yet implemented*\n");
 
   printf("Output Options:\n");
-  printf("-O,               Output scan results to a smap file. Takes the file name as a parameter.\n");
-  printf("-G,               Output scan results to a grep file. Takes the file name as a parameter.\n");
-  printf("-H,               Output scan results to a HTML file. Takes the file name as a parameter.\n");
-  printf("-P,  --pretty     Output a CSS file to make the HTML file look pretty.\n");
+  printf("-o,               Output scan results to a smap file. Takes the file name as a parameter.\n");
+  printf("-oG,              Output scan results to a grep file. Takes the file name as a parameter.\n");
+  printf("-oH,              Output scan results to a HTML file. Takes the file name as a parameter.\n");
+  printf("-oP,              Output a CSS file to make the HTML file look pretty.\n");
+  printf("-oA,              Save output in all file types at once.\n");
 
   printf("\nEXAMPLES:\n");
   printf("%s --help\n", argv[0]);
@@ -161,8 +170,8 @@ void print_usage(char* argv[]) {
   printf("smap -p 22,80,443,445 8.8.8.8\n");
   printf("smap 8.8.8.8 -p-\n");
   printf("smap 127.0.0.1 -sT -p22 --timeout 2000\n");
-  printf("smap -p- 127.0.0.1 172.33.11.195 -H scan_results --pretty\n");
-  printf("smap -p 21,22,445,1716 ::1 -G greppable_file\n");
+  printf("smap -p- 127.0.0.1 172.33.11.195 -oH scan_results -oP\n");
+  printf("smap -p 21,22,445,1716 ::1 -oG greppable_file\n");
 }
 
 void parse_timeout(const char* timeout, scan_info_t* s) {
