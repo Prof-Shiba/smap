@@ -18,8 +18,12 @@ void handle_report(scan_info_t* s, const f32 cpu_time) {
     else if (strcmp(s->output_args.file_format, SMAP_FILE_FORMAT) == 0) {
       print_smap_file_report(s, stream, cpu_time);
     }
-    else {
+    else if (strcmp(s->output_args.file_format, GREP_FILE_FORMAT) == 0) {
       print_greppable_report(s, stream, cpu_time);
+    }
+    // -oA
+    else {
+      // TODO: Add some -oA functionality
     }
     
     fclose(stream);
