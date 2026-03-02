@@ -45,8 +45,12 @@ int parse_args(int argc, char *argv[], scan_info_t* s) {
         exit(0);
       break;
 
-      // TODO: Prevent users from entering multiple scan types
       case 's':
+        if (s->scan_type_set == TRUE) {
+          shiba_fatal("Provided multiple scan types! Make up your mind!\nTerminating");
+        }
+        s->scan_type_set = TRUE;
+
         if (strcmp(opt_arg, "T") == 0) {
           s->scan_type = SCAN_TCP;
           s->sock_type = SOCK_STREAM;
