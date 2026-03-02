@@ -24,7 +24,7 @@
 #endif
 
 typedef enum {
-  SCAN_TCP,
+  SCAN_TCP = 0,
   SCAN_UDP,
   SCAN_SYN,
   SCAN_FIN,
@@ -32,11 +32,11 @@ typedef enum {
 } scan_type_t;
 
 typedef enum {
+  PORT_UNKNOWN = 0,
   PORT_OPEN,
   PORT_CLOSED,
   PORT_FILTERED,
-  PORT_FAILED,
-  PORT_UNKNOWN
+  PORT_FAILED
 } port_state_t;
 
 typedef struct port_t {

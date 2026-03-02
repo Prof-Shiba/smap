@@ -210,11 +210,7 @@ void init_ip_port_list(scan_info_t* s) {
     s->targets->closed_ports = 0;
     s->targets->open_ports = 0;
     s->targets->ignored_ports = 0;
-
-    for (int i = 0; i <= MAX_PORT; i++) {
-      s->targets->port_list[i].port_num = 0;
-      s->targets->port_list[i].state = PORT_UNKNOWN;
-    }
+    memset(s->targets->port_list, PORT_UNKNOWN, sizeof(s->targets->port_list));
     s->targets = s->targets->next;
   }
 
