@@ -15,3 +15,4 @@ extern void print_usage(char* argv[]);
 extern void print_version(char* argv[]);
 extern void link_ips(int argc, char* argv[], scan_info_t* s);
 extern void init_ip_port_list(scan_info_t* s);
+extern void prep_file_types(scan_info_t* s);
