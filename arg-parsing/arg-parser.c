@@ -206,9 +206,9 @@ void init_ip_port_list(scan_info_t* s) {
   target_t* head = s->targets;
 
   while (s->targets) {
-    s->targets->port_list->closed_ports = 0;
-    s->targets->port_list->open_ports = 0;
-    s->targets->port_list->ignored_ports = 0;
+    s->targets->closed_ports = 0;
+    s->targets->open_ports = 0;
+    s->targets->ignored_ports = 0;
 
     for (int i = 0; i <= MAX_PORT; i++) {
       s->targets->port_list[i].port_num = 0;

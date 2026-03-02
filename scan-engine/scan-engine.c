@@ -14,11 +14,11 @@ void scan_ports(scan_info_t* s) {
     for (int i = 0; i < s->num_ports_to_scan; i++) {
       if (scan_port(s, s->port_nums[i]) == 0) {
         s->targets->port_list[s->port_nums[i]].state = PORT_OPEN;
-        s->targets->port_list->open_ports++;
+        s->targets->open_ports++;
       }
       else {
         s->targets->port_list[s->port_nums[i]].state = PORT_CLOSED;
-        s->targets->port_list->closed_ports++;
+        s->targets->closed_ports++;
       }
     }
     s->targets = s->targets->next;
@@ -59,7 +59,7 @@ void set_ignored_ports(scan_info_t* s) {
   target_t* head = s->targets;
 
   while (s->targets) {
-    s->targets->port_list->ignored_ports = MAX_PORT - s->num_ports_to_scan;
+    s->targets->ignored_ports = MAX_PORT - s->num_ports_to_scan;
     s->targets = s->targets->next;
   }
 

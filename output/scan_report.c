@@ -73,12 +73,12 @@ void print_html_report(scan_info_t* s, FILE* stream, const f32 cpu_time) {
     HTML_H3_CLOSE;
 
     HTML_PARAGRAPH_OPEN("host");
-      fprintf(stream, "Scanned: %d ports • Ignored: %d ports", s->num_ports_to_scan, s->targets->port_list->ignored_ports);
+      fprintf(stream, "Scanned: %d ports • Ignored: %d ports", s->num_ports_to_scan, s->targets->ignored_ports);
     HTML_PARAGRAPH_CLOSE;
 
     HTML_PARAGRAPH_OPEN("scan_info");
     HTML_STRONG_OPEN;
-      fprintf(stream, "Found %d open ports • Not shown: %d closed ports", s->targets->port_list->open_ports, s->targets->port_list->closed_ports);
+      fprintf(stream, "Found %d open ports • Not shown: %d closed ports", s->targets->open_ports, s->targets->closed_ports);
     HTML_STRONG_CLOSE;
     HTML_PARAGRAPH_CLOSE;
 
@@ -161,9 +161,9 @@ void print_report(scan_info_t* s, FILE* stream, const f32 cpu_time) {
   while (s->targets) {
     fprintf(stream, "\nsmap scan results for: %s\n", s->targets->target);
     fprintf(stream, "Scanned: %d ports\t", s->num_ports_to_scan);
-    fprintf(stream, "Ignored: %d ports\t", s->targets->port_list->ignored_ports);
-    fprintf(stream, "Found %d open ports\n", s->targets->port_list->open_ports);
-    fprintf(stream, "Not shown: %d closed ports\n\n", s->targets->port_list->closed_ports);
+    fprintf(stream, "Ignored: %d ports\t", s->targets->ignored_ports);
+    fprintf(stream, "Found %d open port(s)\n", s->targets->open_ports);
+    fprintf(stream, "Not shown: %d closed port(s)\n\n", s->targets->closed_ports);
     fprintf(stream, "PORT:\tSTATE:\n");
   
     for (int i = 0; i < s->num_ports_to_scan; i++) {
@@ -243,7 +243,7 @@ void print_greppable_report(scan_info_t* s, FILE* stream, const f32 cpu_time) {
     }
 
     fprintf(stream, " Scanned: %d ports, ", s->num_ports_to_scan);
-    fprintf(stream, " Ignored: %d ports\n", s->targets->port_list->ignored_ports);
+    fprintf(stream, " Ignored: %d ports\n", s->targets->ignored_ports);
     s->targets = s->targets->next;
   }
 
