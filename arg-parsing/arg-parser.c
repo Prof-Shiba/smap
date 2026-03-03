@@ -8,6 +8,7 @@
 // these are for the output params (if needed)
 char* buffer_for_output;
 char* file_name;
+// FIXME: these are part of the problem
 char file_arg[2] = {0};
 char file_delim[2] = {0};
 
@@ -234,6 +235,7 @@ void init_ip_port_list(scan_info_t* s) {
 // FIXME: Passing a massive string crashes
 // malloc(): corrupted top size
 // fish: Job 1, './smap 172.31.11.195 127.0.0.1 …' terminated by signal SIGABRT (Abort)
+// buffer overflow
 void prep_file_types(scan_info_t* s) {
   buffer_for_output = malloc(sizeof *opt_arg + 1);
   file_name = malloc(sizeof *opt_arg + 1);
