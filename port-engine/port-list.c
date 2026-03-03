@@ -54,7 +54,6 @@ int get_ports(const char* ports, scan_info_t* s) {
               shiba_fatal("FATAL: Realloc failed on port nums! (%s)", __FILE__);
             }
 
-            // NOTE: Debug this to verify it does whats intended
             for (int i = s->port_capacity / 2; i < s->port_capacity; i++) {
               tmp[i] = 0;
             }
