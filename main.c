@@ -6,11 +6,10 @@
 #include "./scan-engine/scan-engine.h"
 #include "./output/scan_report.h"
 
-// TODO: Refactor any code that I can to make it generally nice to work with
-// PING the host(s) first to confirm they are up.
+// TODO: Refactor any code to make it generally nicer to work with
+// connect to the host(s) first to confirm they are up, then continue TCP scan
 // Add DNS lookup
 // After that, we search for any bugs we can find (eg. parsing bugs)
-// Double check to see if anything needs a refactor, such as output arg parser
 // then when everythings good, we add SYN stealth scanning using raw packets
 
 int main(int argc, char *argv[]) {
