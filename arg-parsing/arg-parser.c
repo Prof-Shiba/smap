@@ -8,7 +8,6 @@
 // these are for the output params (if needed)
 char* buffer_for_output;
 char* file_name;
-// FIXME: these are part of the problem
 char file_arg[2] = {0};
 char file_delim[2] = {0};
 
@@ -232,14 +231,10 @@ void init_ip_port_list(scan_info_t* s) {
   s->targets = head;
 }
 
-// FIXME: Passing a massive string crashes
-// malloc(): corrupted top size
-// fish: Job 1, './smap 172.31.11.195 127.0.0.1 …' terminated by signal SIGABRT (Abort)
-// buffer overflow
 void prep_file_types(scan_info_t* s) {
-  buffer_for_output = malloc(sizeof *opt_arg + 1);
-  file_name = malloc(sizeof *opt_arg + 1);
-  
+  buffer_for_output = malloc(sizeof *opt_arg * ((strlen(opt_arg)) + 1));
+  file_name = malloc(sizeof *opt_arg * ((strlen(opt_arg)) + 1));
+ 
   strcpy(buffer_for_output, opt_arg);
   if (!buffer_for_output || !file_name) {
     shiba_fatal("Failed to allocate space for file names!");
@@ -252,7 +247,7 @@ void prep_file_types(scan_info_t* s) {
   file_delim[1] = '\0';
 
   if (strcmp(file_delim, ":") != 0) {
-    shiba_fatal("Invalid output arguments. Format: -oH:file_name. See smap --help for more information.\nQuitting.");
+    shiba_fatal("Invalid output arguments. Example: -oH:file_name\nSee smap --help for more information.\nQuitting.");
   }
 
   // ignore the first 2 chars (the arg and delimiter) to just get the file name
