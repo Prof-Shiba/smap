@@ -17,6 +17,9 @@
   #include <arpa/inet.h>
   #include <unistd.h>
   #include <fcntl.h>
+  #include <netdb.h>
+  #include <netinet/ip_icmp.h>
+  #include <netinet/icmp6.h>
 #endif
 
 typedef struct shiba_network_socket_t {
