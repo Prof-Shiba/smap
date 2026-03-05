@@ -1,24 +1,19 @@
 #include "./scan-engine.h"
 
-// TODO: 
-// 1. -ss SYN scanning
-// 2. -sf FIN scanning
-// 3. -su UDP scanning
-// 4. -sn ping scanning
-// TODO: Filtered connections do not show as open
-
 void scan_ports(scan_info_t* s) {
   target_t* head = s->targets;
 
   while (s->targets) {
-    for (int i = 0; i < s->num_ports_to_scan; i++) {
-      if (scan_port(s, s->port_nums[i]) == 0) {
-        s->targets->port_list[s->port_nums[i]].state = PORT_OPEN;
-        s->targets->open_ports++;
-      }
-      else {
-        s->targets->port_list[s->port_nums[i]].state = PORT_CLOSED;
-        s->targets->closed_ports++;
+    if (s->targets->is_host_active == TRUE) {
+      for (int i = 0; i < s->num_ports_to_scan; i++) {
+        if (scan_port(s, s->port_nums[i]) == 0) {
+          s->targets->port_list[s->port_nums[i]].state = PORT_OPEN;
+          s->targets->open_ports++;
+        }
+        else {
+          s->targets->port_list[s->port_nums[i]].state = PORT_CLOSED;
+          s->targets->closed_ports++;
+        }
       }
     }
     s->targets = s->targets->next;
