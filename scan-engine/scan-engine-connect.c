@@ -110,7 +110,7 @@ int open_tcp_connect(scan_info_t* s, const u16 port) {
 
         struct timeval tv = {
           .tv_sec  = s->timeout / 1000,
-          .tv_usec = (s->timeout % 1000) * 1000
+          .tv_usec = 0
         };
 
         res = select(socket->handle + 1, NULL, &write_fd, &except_fd, &tv);
@@ -190,7 +190,7 @@ int open_tcp_connect(scan_info_t* s, const u16 port) {
 
         struct timeval tv = {
           .tv_sec  = s->timeout / 1000,
-          .tv_usec = (s->timeout % 1000) * 1000
+          .tv_usec = 0
         };
 
         res = select(socket->handle + 1, NULL, &write_fd, &except_fd, &tv);
