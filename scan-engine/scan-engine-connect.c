@@ -56,14 +56,14 @@ int open_tcp_connect(scan_info_t* s, const u16 port) {
       new_addr->sin_family = s->af;
       new_addr->sin_port = htons(port);
 
-      // TODO: Check if its a loopback addr before doing all this.
       struct sockaddr_in src_addr = {0};
       src_addr.sin_family = AF_INET;
       src_addr.sin_addr.s_addr = INADDR_ANY;
+      // NOTE: we can also customize this and set the src port manually if needed via user input
       src_addr.sin_port = 0; // force kernel to pick the port early (0 means pick any random ephemeral port)
       
-      // TODO: Add better error checking/handling on these. We dont wanna miss sockets.
       if (bind(socket->handle, (struct sockaddr*)&src_addr, sizeof(src_addr)) < 0) {
+          fprintf(stderr, "%s, Bind failed on %s. Killing socket.\n", __FILE__, s->targets->target);
           goto Cleanup;
       }
 
@@ -80,6 +80,9 @@ int open_tcp_connect(scan_info_t* s, const u16 port) {
 
       int pton_res = inet_pton(s->af, s->targets->target, &new_addr->sin_addr.s_addr);
       if (pton_res <= 0) {
+          if (pton_res == 0) {
+            fprintf(stderr, "%s, Not in presentation format. Killing socket.\n", __FILE__);
+          }
         goto Cleanup;
       }
 
@@ -142,8 +145,8 @@ int open_tcp_connect(scan_info_t* s, const u16 port) {
       src_addr.sin6_addr = in6addr_any;
       src_addr.sin6_port = 0;
       
-      // TODO: Add better error checking/handling on these. We dont wanna miss sockets.
       if (bind(socket->handle, (struct sockaddr*)&src_addr, sizeof(src_addr)) < 0) {
+          fprintf(stderr, "%s, Bind failed on %s. Killing socket.\n", __FILE__, s->targets->target);
           goto Cleanup;
       }
 
@@ -160,6 +163,9 @@ int open_tcp_connect(scan_info_t* s, const u16 port) {
 
       int pton_res = inet_pton(s->af, s->targets->target, &new_addr6->sin6_addr.s6_addr);
       if (pton_res <= 0) {
+          if (pton_res == 0) {
+            fprintf(stderr, "%s, Not in presentation format. Killing socket.\n", __FILE__);
+          }
         goto Cleanup;
       }
 
@@ -191,7 +197,7 @@ int open_tcp_connect(scan_info_t* s, const u16 port) {
         };
 
         res = select(socket->handle + 1, NULL, &write_fd, &except_fd, &tv);
-        if (res < 0) { // hitting this infinitely on windows and overflowing stack when res <= 0. res equaled 0.
+        if (res < 0) {
           goto Retry;
         }
         else if (res == 0) {
