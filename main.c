@@ -6,11 +6,14 @@
 #include "./scan-engine/scan-engine.h"
 #include "./output/scan_report.h"
 
-// TODO: Refactor any code to make it generally nicer to work with
-// connect to the host(s) first to confirm they are up, then continue TCP scan
+// TODO: Verify a host is active before scanning. Add a is_host_active flag to target_t
+// Add a debug flag for extra output
 // Add DNS lookup
-// After that, we search for any bugs we can find (eg. parsing bugs)
-// then when everythings good, we add SYN stealth scanning using raw packets
+// Filtered connections do not show as open
+// 1. -ss SYN scanning
+// 2. -sf FIN scanning
+// 3. -su UDP scanning
+// 4. -sn ping scanning
 
 int main(int argc, char *argv[]) {
   // shiba_memory_debug_init(NULL, NULL, NULL);
