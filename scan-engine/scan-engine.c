@@ -4,6 +4,11 @@ void scan_ports(scan_info_t* s) {
   target_t* head = s->targets;
 
   while (s->targets) {
+    // NOTE: Temp for testing. We need to ping host, verify its alive,
+    // and then that functions return res will determine if we set
+    // to alive or not (not handled here)
+    s->targets->is_host_alive = TRUE;
+
     if (s->targets->is_host_alive == TRUE) {
       for (int i = 0; i < s->num_ports_to_scan; i++) {
         if (scan_port(s, s->port_nums[i]) == 0) {
