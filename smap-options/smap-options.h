@@ -51,6 +51,7 @@ typedef struct target_t {
   u16 closed_ports;
   u16 open_ports;
   u16 ignored_ports;
+  boolean is_host_alive;
 } target_t;
 
 typedef struct output_t {
