@@ -1,14 +1,16 @@
 #pragma once
+
+/*
+  This header file declares functions that will eventually call
+  the actual port scanning functions, such as open_tcp_connect.
+  As well as other minor things that don't fit elsewhere, such as
+  setting the number of ports we are ignoring on a target.
+ */
+
 #include "../libs/shiba-core/shiba.h"
 #include "../libs/shiba-network/shiba-network.h"
 #include "../smap-options/smap-options.h"
 #include "./scan-engine-connect.h"
-
-// TODO: How will we scan multiple different IPs at once and store all that?
-// scan_info_t may have to change, and *possibly* scan_ports?
-
-// These functions will handle collecting responses and doing the general
-// networking business needed to collect information about the ports
 
 // scan all hosts and their ports marked by s->port_list
 extern void scan_ports(scan_info_t* s);
