@@ -164,10 +164,10 @@ void print_report(scan_info_t* s, FILE* stream, const f32 cpu_time) {
 
   while (s->targets) {
     fprintf(stream, "\nsmap scan results for: %s\n", s->targets->target);
-    fprintf(stream, "Scanned: %d ports\t", s->num_ports_to_scan);
+    fprintf(stream, "Scanned: %d port(s)\t", s->num_ports_to_scan);
     fprintf(stream, "Ignored: %d ports\t", s->targets->ignored_ports);
     fprintf(stream, "Found %d open port(s)\n", s->targets->open_ports);
-    fprintf(stream, "Not shown: %d closed port(s)\n\n", s->targets->closed_ports);
+    fprintf(stream, "Not shown: %d closed ports\n\n", s->targets->closed_ports);
     fprintf(stream, "PORT:\tSTATE:\n");
   
     for (int i = 0; i < s->num_ports_to_scan; i++) {
