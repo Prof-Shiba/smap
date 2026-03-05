@@ -92,12 +92,10 @@ int open_tcp_connect(scan_info_t* s, const u16 port) {
       }
       else {
         #ifdef _WIN32
-          // TODO: check if host is unreachable
           if (res == SOCKET_ERROR && WSAGetLastError() != WSAEWOULDBLOCK) {
             goto Cleanup;
           }
         #else
-          // TODO: check if host is unreachable
           if (errno != EINPROGRESS) {
             goto Cleanup;
           }
@@ -139,7 +137,6 @@ int open_tcp_connect(scan_info_t* s, const u16 port) {
       new_addr6->sin6_family = s->af;
       new_addr6->sin6_port = htons(port);
 
-      // TODO: Check if its a loopback addr before doing all this.
       struct sockaddr_in6 src_addr = {0};
       src_addr.sin6_family = AF_INET6;
       src_addr.sin6_addr = in6addr_any;
