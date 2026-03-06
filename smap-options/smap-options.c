@@ -53,6 +53,7 @@ void init_scan_info(scan_info_t* s) {
   s->output_args.file_name = NULL;
   s->output_args.file_format = NULL;
   s->scan_type_set = FALSE;
+  s->targets->is_host_alive = FALSE;
 }
 
 void scan_info_cleanup(scan_info_t *s) {
