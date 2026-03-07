@@ -1,7 +1,6 @@
 #pragma once
 
 #ifdef __cplusplus
-  #include <iostream>
   #include <cstdint>
   #include <cstdlib>
   #include <cstdarg>
