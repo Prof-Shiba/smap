@@ -11,6 +11,13 @@ void scan_ports(scan_info_t* s) {
 
     if (s->targets->is_host_alive == TRUE) {
       for (int i = 0; i < s->num_ports_to_scan; i++) {
+        // NOTE: i think its less work if the function called by scan_port 
+        // checks if the host is alive and returns -1 if not, right? but if
+        // we do that, then it limits our options for determing if the host is up
+        // eg. maybe a ICMP packet gets dropped due to firewall, but trying from
+        // port 53 works and we can determine the servers up. so i think
+        // i should make a separate function which will independently determine if the
+        // host is alive/dead, then we set targets->is_host_alive based on that
         if (scan_port(s, s->port_nums[i]) == 0) {
           s->targets->port_list[s->port_nums[i]].state = PORT_OPEN;
           s->targets->open_ports++;
