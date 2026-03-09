@@ -25,8 +25,9 @@ int open_tcp_connect(scan_info_t* s, const u16 port) {
       s->af = AF_INET6;
 
     shiba_network_socket_t* socket = shiba_network_create_socket(s->af, s->sock_type, 0);
-    if (!socket)
+    if (!socket) {
       return ret_val;
+    }
 
     // set non-blocking stuff here
     #ifdef _WIN32
