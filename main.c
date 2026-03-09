@@ -6,7 +6,7 @@
 #include "./scan-engine/scan-engine.h"
 #include "./output/scan_report.h"
 
-// TODO: Verify a host is active before scanning. Add a is_host_active flag to target_t
+// TODO: Verify a host is active before scanning.
 // Add a debug flag for extra output
 // Add DNS lookup
 // Filtered connections do not show as open
@@ -36,6 +36,9 @@ int main(int argc, char *argv[]) {
     printf("Starting smap scan for 1 target on %s", print_time()) :
     printf("Starting smap scan for %d targets on %s", s->num_targets, print_time());
 
+  // TODO: I think we should scan for hosts being up and handle
+  // s->targets->is_host_alive here before calling scan_ports
+  // verify_hosts_alive(s);
   start = clock();
   scan_ports(s);
   end = clock();
