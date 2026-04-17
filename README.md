@@ -2,11 +2,14 @@
 smap (shiba mapper) is a network scanning tool for both Windows and Linux. It is built using only C and no external libraries.
 
 # How to install
+**NOTE: CMake is required! You can download it using your package manager or from https://cmake.org/download/ **
+
 1. Clone the repo and `cd` into it in a terminal. Then run the following:
 2. `mkdir build`
 3. `cd build`
 4. `cmake ..`
-5. `make`
+
+From there you may be given a visual studio sln, makefile, etc depending on your system.
 
 # How to use smap
 Smap has many features, which are viewable with a simple run of `smap -h`. Keep an eye on it as more and more features are added.
