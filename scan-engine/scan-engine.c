@@ -2,6 +2,8 @@
 #include "host-alive.h"
 
 void scan_ports(scan_info_t* s) {
+  if (s == NULL || s->targets == NULL) return;
+
   target_t* head = s->targets;
 
   while (s->targets) {
@@ -24,6 +26,8 @@ void scan_ports(scan_info_t* s) {
 }
 
 int scan_port(scan_info_t* s, const u16 port) {
+  if (s == NULL) return 1;
+
   switch(s->scan_type) {
     case SCAN_TCP:
       return open_tcp_connect(s, port);
@@ -52,6 +56,8 @@ int scan_port(scan_info_t* s, const u16 port) {
 }
 
 void set_ignored_ports(scan_info_t* s) {
+  if (s == NULL || s->targets == NULL) return;
+
   target_t* head = s->targets;
 
   while (s->targets) {
