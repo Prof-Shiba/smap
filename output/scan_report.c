@@ -2,6 +2,10 @@
 #include "html.h"
 
 void handle_report(scan_info_t* s, const f32 cpu_time) {
+  if (s == NULL || s->targets == NULL || s->targets->is_host_alive == FALSE) {
+    return;
+  }
+
   FILE* stream = stdout;
 
   if (s->output_args.should_output == TRUE) {
@@ -71,7 +75,7 @@ void print_html_report(scan_info_t* s, FILE* stream, const f32 cpu_time) {
   // we store the head for print_report
   target_t* head = s->targets;
   
-  while (s->targets) {
+  while (s->targets && s->targets->is_host_alive) {
     HTML_H3_OPEN;
       fprintf(stream, "\n%s\n", s->targets->target);
     HTML_H3_CLOSE;
@@ -162,7 +166,7 @@ void print_report(scan_info_t* s, FILE* stream, const f32 cpu_time) {
 
   target_t* head = s->targets;
 
-  while (s->targets) {
+  while (s->targets && s->targets->is_host_alive == TRUE) {
     fprintf(stream, "\nsmap scan results for: %s\n", s->targets->target);
     fprintf(stream, "Scanned: %d port(s)\t", s->num_ports_to_scan);
     fprintf(stream, "Ignored: %d ports\t", s->targets->ignored_ports);
@@ -214,7 +218,7 @@ void print_greppable_report(scan_info_t* s, FILE* stream, const f32 cpu_time) {
 
   target_t* head = s->targets;
 
-  while (s->targets) {
+  while (s->targets && s->targets->is_host_alive) {
     fprintf(stream, "Host: %s\t", s->targets->target);
     fprintf(stream, "Ports: ");
 
