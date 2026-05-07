@@ -65,7 +65,7 @@ typedef struct {
   scan_type_t scan_type;
   target_t* targets;
   u32* port_nums;
-  u32 timeout;
+  u32 timeout_ms;
   u16 port_capacity;
   u16 num_ports_to_scan;
   u16 num_targets;

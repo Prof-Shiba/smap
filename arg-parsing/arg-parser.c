@@ -187,7 +187,7 @@ void parse_timeout(const char* timeout, scan_info_t* s) {
   if (endptr == timeout || *endptr != '\0') {
     shiba_fatal("Invalid timeout parameter passed!\nTerminating.");
   }
-  s->timeout = new_timeout;
+  s->timeout_ms = new_timeout;
 }
 
 void link_ips(int argc, char* argv[], scan_info_t* s) {

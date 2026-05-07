@@ -48,7 +48,7 @@ void init_scan_info(scan_info_t* s) {
   s->scan_type = SCAN_TCP; // TODO: Default to SYN later
   s->af = AF_INET;
   s->sock_type = SOCK_STREAM;
-  s->timeout = 2000; // milliseconds
+  s->timeout_ms = 2;
   s->output_args.should_output = 0;
   s->output_args.file_name = NULL;
   s->output_args.file_format = NULL;
