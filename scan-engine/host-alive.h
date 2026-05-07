@@ -40,7 +40,7 @@ typedef struct {
 
 // should I have one function that calls other functions, or just have separate functions?
 // i will (for now at least) just make an ICMP ping request function to test. But consider the above...
-void icmp4_ping_request(void);
+boolean icmp4_ping_request(scan_info_t* s);
 
 // https://www.rfc-editor.org/rfc/rfc1071 ICMP checksum here
 u16 icmp_checksum(u16* data, size_t size);
