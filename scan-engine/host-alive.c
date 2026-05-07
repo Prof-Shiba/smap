@@ -12,7 +12,9 @@ u16 icmp_checksum(u16* data, size_t size) {
   return ~((sum << 16 >> 16) + (sum >> 16));
 }
 
-boolean icmp4_ping_request(scan_info_t* s) {
+boolean icmp4_ping_request(const scan_info_t* s, const char* host) {
+  if (s == NULL || s->targets == NULL) return FALSE;
+
   shiba_network_socket_t* sock = shiba_network_create_socket(AF_INET, SOCK_DGRAM, IPPROTO_ICMP);
   if (!sock) {
     fprintf(stderr, "Failed to create shiba ICMP socket in %s on line %d!\n", __FILE__, __LINE__);
@@ -30,33 +32,52 @@ boolean icmp4_ping_request(scan_info_t* s) {
 
   struct sockaddr_in dst_addr = {0};
   dst_addr.sin_family = s->af;
-  dst_addr.sin_addr.s_addr = inet_addr(s->targets->target);
+  dst_addr.sin_addr.s_addr = inet_addr(host);
 
   struct timeval tv = {0};
   tv.tv_sec = 0;
   tv.tv_usec = s->timeout_ms;
   setsockopt(sock->handle, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof(tv));
 
-  int res = sendto(sock->handle, &icmp, sizeof(icmp), 0, (struct sockaddr*)&dst_addr, sizeof(dst_addr));
+  ssize_t res = sendto(sock->handle, &icmp, sizeof(icmp), 0, (struct sockaddr*)&dst_addr, sizeof(dst_addr));
   if (res < 0) {
     fprintf(stderr, "sendto() failed in %s!\n", __FILE__);
     return FALSE;
   }
 
-  printf("Sent %d bytes to %s!\n", res, s->targets->target);
+  // TODO: Make this a verbose option later. But useful for now imo.
+  printf("Sent %zd bytes to %s!\n", res, host);
   struct sockaddr_in client_addr = {0};
   socklen_t client_len = sizeof(client_addr);
 
   res = recvfrom(sock->handle, &icmp, sizeof(icmp), 0, (struct sockaddr*)&client_addr, &client_len);
-  // TODO: Make this a verbose option later. But useful for now imo.
   if (res == -1) {
-    fprintf(stderr, "Failed to receive any bytes from %s. Host is likely down.\n", s->targets->target);
+  // TODO: Make this a verbose option later. But useful for now imo.
+    fprintf(stderr, "Failed to receive any bytes from %s. Host is likely down.\n", host);
     return FALSE;
   }
 
-  printf("Received response from host %s!\n", s->targets->target);
+  printf("Received response from host %s!\n", host);
 
   shiba_network_destroy_socket(sock);
   return TRUE;
 }
 
+void set_host_status(scan_info_t* s) {
+  if (s == NULL || s->targets == NULL) {
+    return;
+  }
+  target_t* head = s->targets;
+
+  while (s->targets) {
+    if (icmp4_ping_request(s, s->targets->target) == TRUE) {
+      s->targets->is_host_alive = TRUE;
+    }
+    else {
+      s->targets->is_host_alive = FALSE;
+    }
+
+    s->targets = s->targets->next;
+  }
+  s->targets = head;
+}
