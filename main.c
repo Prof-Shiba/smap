@@ -5,15 +5,18 @@
 #include "./arg-parsing/arg-parser.h"
 #include "./scan-engine/scan-engine.h"
 #include "./output/scan_report.h"
+#include "scan-engine/host-alive.h"
 
-// TODO: Verify a host is active before scanning.
-// Add a debug flag for extra output
+// TODO: 
 // Add DNS lookup
+// Add a debug flag for extra output
 // Filtered connections do not show as open
 // 1. -ss SYN scanning
 // 2. -sf FIN scanning
 // 3. -su UDP scanning
 // 4. -sn ping scanning
+// Things will not scale well when scanning subnets is added, as s->targets is a linked list of target_t's.
+// That data structure will need to be changed.
 
 int main(int argc, char *argv[]) {
   // shiba_memory_debug_init(NULL, NULL, NULL);
@@ -36,9 +39,8 @@ int main(int argc, char *argv[]) {
     printf("Starting smap scan for 1 target on %s", print_time()) :
     printf("Starting smap scan for %d targets on %s", s->num_targets, print_time());
 
-  // TODO: I think we should scan for hosts being up and handle
-  // s->targets->is_host_alive here before calling scan_ports
-  // verify_hosts_alive(s);
+  set_host_status(s);
+
   start = clock();
   scan_ports(s);
   end = clock();
