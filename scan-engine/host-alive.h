@@ -37,4 +37,4 @@ boolean icmp4_ping_request(const scan_info_t* s, const char* host);
 // https://www.rfc-editor.org/rfc/rfc1071 ICMP checksum here
 u16 icmp_checksum(u16* data, size_t size);
 
-void verify_host_status(scan_info_t* s);
+void set_host_status(scan_info_t* s);
